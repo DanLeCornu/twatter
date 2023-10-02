@@ -1,0 +1,47 @@
+diff --git a/node_modules/next-auth/src/next/index.ts b/node_modules/next-auth/src/next/index.ts
+index 54afba5..5e65258 100644
+--- a/node_modules/next-auth/src/next/index.ts
++++ b/node_modules/next-auth/src/next/index.ts
+@@ -185,25 +185,27 @@ export async function getServerSession<
+   }
+ 
+   let req, res, options: AuthOptions
+-  if (isRSC) {
+-    options = Object.assign({}, args[0], { providers: [] })
+   
+-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+-    const { headers, cookies } = require("next/headers")
+-    req = {
+-      headers: Object.fromEntries(headers() as Headers),
+-      cookies: Object.fromEntries(
+-        cookies()
+-          .getAll()
+-          .map((c) => [c.name, c.value])
+-      ),
+-    }
+-    res = { getHeader() {}, setCookie() {}, setHeader() {} }
+-  } else {
++  // NOTE(DLC): https://github.com/moo2u2/next-auth-issue-6559#to-fix-the-issue
++  // if (isRSC) {
++  //   options = Object.assign({}, args[0], { providers: [] })
++
++  //   // eslint-disable-next-line @typescript-eslint/no-var-requires
++  //   const { headers, cookies } = require("next/headers")
++  //   req = {
++  //     headers: Object.fromEntries(headers() as Headers),
++  //     cookies: Object.fromEntries(
++  //       cookies()
++  //         .getAll()
++  //         .map((c) => [c.name, c.value])
++  //     ),
++  //   }
++  //   res = { getHeader() {}, setCookie() {}, setHeader() {} }
++  // } else {
+     req = args[0]
+     res = args[1]
+     options = Object.assign({}, args[2], { providers: [] })
+-  }
++  // }
+ 
+   options.secret ??= process.env.NEXTAUTH_SECRET
+ 

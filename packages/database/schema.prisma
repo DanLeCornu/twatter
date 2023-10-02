@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator typegraphql {
+  provider        = "typegraphql-prisma"
+  output          = "./node_modules/@generated"
+  emitOnly        = "inputs,enums,crudResolvers"
+  useSimpleInputs = true
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum DobPrivacy {
+  PUBLIC
+  FOLLOWERS
+  FOLLOWING
+  MUTUAL_FOLLOW
+  PRIVATE
+}
+
+enum ReportType {
+  HATE
+  ABUSE
+  VIOLENT
+  CHILD_SAFETY
+  PRIVACY
+  SPAM
+  SELF_HARM
+  DISTURBING
+  DECEPTIVE
+  EXTREMISM
+}
+
+model User {
+  id                 String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email              String     @unique
+  /// @TypeGraphQL.omit(output: true)
+  password           String
+  role               Role       @default(USER)
+  name               String     @unique @db.VarChar(50)
+  handle             String     @unique @db.VarChar(15)
+  avatar             String?
+  cover              String?
+  bio                String?    @db.VarChar(160)
+  location           String?    @db.VarChar(30)
+  website            String?    @db.VarChar(100)
+  dob                String?
+  dobDayMonthPrivacy DobPrivacy @default(PRIVATE)
+  dobYearPrivacy     DobPrivacy @default(PRIVATE)
+  createdAt          DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
+
+  pinnedPost       Post?          @relation(name: "PinnedPost", fields: [pinnedPostId], references: [id])
+  pinnedPostId     String?        @unique @db.Uuid
+  posts            Post[]
+  createdReports   Report[]       @relation(name: "ReportCreator")
+  reports          Report[]       @relation(name: "UserReports")
+  replies          Reply[]
+  views            View[]
+  likes            Like[]
+  bookmarks        Bookmark[]
+  notifications    Notification[]
+  followers        User[]         @relation("UserFollowers")
+  following        User[]         @relation("UserFollowers")
+  mutedAccounts    User[]         @relation("MutedAccounts")
+  mutedBy          User[]         @relation("MutedAccounts")
+  blockedAccounts  User[]         @relation("BlockedAccounts")
+  blockedBy        User[]         @relation("BlockedAccounts")
+  messagesSent     Message[]      @relation("MessagesSent")
+  messagesReceived Message[]      @relation("MessagesReceived")
+}
+
+model Post {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  text       String
+  image      String?
+  createdAt  DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  archivedAt DateTime? @db.Timestamptz(6)
+
+  user       User       @relation(fields: [userId], references: [id])
+  userId     String     @db.Uuid
+  pinnedUser User?      @relation(name: "PinnedPost")
+  reports    Report[]
+  replies    Reply[]
+  views      View[]
+  likes      Like[]
+  bookmark   Bookmark[]
+}
+
+model Reply {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  text      String
+  image     String?
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  reports Report[]
+  post    Post     @relation(fields: [postId], references: [id])
+  postId  String   @db.Uuid
+  user    User     @relation(fields: [userId], references: [id])
+  userId  String   @db.Uuid
+}
+
+model View {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  post   Post    @relation(fields: [postId], references: [id])
+  postId String  @db.Uuid
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @db.Uuid
+}
+
+model Like {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
+}
+
+model Bookmark {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
+}
+
+model Notification {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
+}
+
+model Message {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  sender     User   @relation(name: "MessagesSent", fields: [senderId], references: [id])
+  senderId   String @db.Uuid
+  receiver   User   @relation(name: "MessagesReceived", fields: [receiverId], references: [id])
+  receiverId String @db.Uuid
+}
+
+model Report {
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type      ReportType
+  createdAt DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
+
+  creator   User    @relation(name: "ReportCreator", fields: [creatorId], references: [id])
+  creatorId String  @db.Uuid
+  post      Post?   @relation(fields: [postId], references: [id])
+  postId    String? @db.Uuid
+  Reply     Reply?  @relation(fields: [replyId], references: [id])
+  replyId   String? @db.Uuid
+  user      User?   @relation(name: "UserReports", fields: [userId], references: [id])
+  userId    String? @db.Uuid
+}

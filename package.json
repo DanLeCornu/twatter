@@ -1,0 +1,49 @@
+{
+  "name": "root",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "dev": "turbo run dev --parallel",
+    "prettier": "turbo run prettier",
+    "prettier:fix": "turbo run prettier:fix",
+    "lint": "turbo run lint",
+    "fix": "turbo run lint:fix prettier:fix",
+    "ci": "turbo run lint prettier typecheck",
+    "lint:fix": "turbo run lint:fix",
+    "typecheck": "turbo run typecheck",
+    "db:generate": "turbo run db:generate",
+    "heroku-prebuild": "rm -rf packages/{web}",
+    "build": "turbo run build",
+    "build:web": "turbo run build --filter=!@twatter/api",
+    "build:api": "turbo run build --filter=!@twatter/web",
+    "heroku-cleanup": "turbo run db:generate"
+  },
+  "dependencies": {
+    "turbo": "^1.9.3"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "7.22.5",
+    "@typescript-eslint/eslint-plugin": "5.60.0",
+    "@typescript-eslint/parser": "5.60.0",
+    "eslint-config-prettier": "8.8.0",
+    "eslint-plugin-flowtype": "8.0.3",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jsx-a11y": "6.7.1",
+    "eslint-plugin-simple-import-sort": "10.0.0",
+    "eslint": "8.43.0",
+    "prettier-plugin-tailwindcss": "^0.3.0",
+    "prettier": "2.8.8",
+    "typescript": "^4.9.5"
+  },
+  "prisma": {
+    "schema": "./packages/database/schema.prisma"
+  },
+  "resolutions": {
+    "prettier": "2.8.8"
+  },
+  "engines": {
+    "node": "18"
+  }
+}

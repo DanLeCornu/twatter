@@ -1,0 +1,17 @@
+[phases.setup]
+
+[phases.install]
+	dependsOn = ["setup"]
+	cmds = ["rm -rf packages/web", "pnpm install"] 
+
+[phases.build]
+	dependsOn = ["install"]
+	cmds = ["pnpm build:api"]
+
+[phases.release]
+	dependsOn = ["build"]
+	cmds = ["cd packages/database && prisma migrate deploy"]
+
+[start]
+	dependsOn = ["release"]
+	cmd = "node packages/api/dist"

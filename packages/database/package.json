@@ -1,0 +1,36 @@
+{
+  "name": "@twatter/database",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./src",
+  "files": [
+    "src/index.ts",
+    "src/generated.ts"
+  ],
+  "scripts": {
+    "generate": "pnpm with-env prisma generate",
+    "db:generate": "pnpm run generate",
+    "db:push": "pnpm with-env prisma db push",
+    "db:migrate": "pnpm with-env prisma migrate dev",
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --",
+    "lint:fix": "eslint --fix --config .eslintrc.commit.js --cache --ext .ts,.tsx src",
+    "lint": "eslint --cache --ext .ts,.tsx src",
+    "prettier:fix": "prettier --ignore-path ../../.prettierignore --write 'src/**/*.ts'",
+    "build": "tsc --build",
+    "postinstall1": "pnpm run generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.15.0",
+    "dotenv-cli": "^7.1.0",
+    "graphql": "16.6.0",
+    "graphql-fields": "2.0.3",
+    "graphql-scalars": "1.22.2",
+    "prisma": "^4.15.0",
+    "tslib": "^2.5.3",
+    "type-graphql": "2.0.0-beta.2",
+    "typegraphql-prisma": "0.26.0"
+  }
+}
