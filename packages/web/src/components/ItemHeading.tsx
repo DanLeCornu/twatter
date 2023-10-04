@@ -1,6 +1,5 @@
 import * as React from "react"
 import {
-  Box,
   HStack,
   Popover,
   PopoverBody,
@@ -31,77 +30,61 @@ export function ItemHeading({ type, item, noPopover = false }: Props) {
   return (
     <NextLink href={`/${item.user.handle}`}>
       <HStack spacing={1}>
-        {noPopover ? (
-          <HStack spacing={1}>
-            <Text fontWeight="bold" fontSize="15px" noOfLines={1}>
+        <Popover
+          isLazy
+          trigger="hover"
+          placement="bottom-start"
+          openDelay={500}
+          isOpen={noPopover ? false : undefined}
+        >
+          <PopoverTrigger>
+            <Text
+              fontSize="15px"
+              fontWeight="bold"
+              minW="32px" // magic number to ensure at least 3 letters of the name always gets shown
+              isTruncated
+            >
               {item.user.name}
             </Text>
-            <Text
-              color="gray.400"
-              fontSize="14px"
-              noOfLines={1}
-              minW="46px" // magic number to fit 3 character handle
-            >
+          </PopoverTrigger>
+          <Portal>
+            <PopoverContent bg={popoverBg}>
+              <PopoverBody>
+                <UserPopover user={item.user} />
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </Popover>
+
+        <Popover
+          isLazy
+          trigger="hover"
+          placement="bottom-start"
+          openDelay={500}
+          isOpen={noPopover ? false : undefined}
+        >
+          <PopoverTrigger>
+            <Text fontSize="14px" color="gray.400" isTruncated>
               @{item.user.handle}
             </Text>
-          </HStack>
-        ) : (
-          <Popover isLazy trigger="hover" placement="bottom-start" openDelay={500}>
-            <PopoverTrigger>
-              <HStack spacing={1}>
-                <Text
-                  fontWeight="bold"
-                  _hover={{ textDecoration: "underline" }}
-                  fontSize="15px"
-                  noOfLines={1}
-                >
-                  {item.user.name}
-                </Text>
-                <Text
-                  color="gray.400"
-                  fontSize="14px"
-                  noOfLines={1}
-                  minW="46px" // magic number to fit 3 character handle
-                >
-                  @{item.user.handle}
-                </Text>
-              </HStack>
-            </PopoverTrigger>
-            <Portal>
-              <PopoverContent bg={popoverBg}>
-                <PopoverBody>
-                  <UserPopover user={item.user} />
-                </PopoverBody>
-              </PopoverContent>
-            </Portal>
-          </Popover>
-        )}
-        <HStack spacing={1}>
-          <Box color="gray.400">&#183;</Box>
-          <Tooltip label={dayjs(item.createdAt).format("h:mm A MMM DD YYYY")}>
-            {type === "post" ? (
-              <NextLink href={`/posts/${item.id}`}>
-                <Text
-                  color="gray.400"
-                  _hover={{ textDecoration: !noPopover ? "underline" : undefined }}
-                  fontSize="14px"
-                  whiteSpace="nowrap"
-                >
-                  {postTimeFromNow(item.createdAt)}
-                </Text>
-              </NextLink>
-            ) : (
-              <Text
-                color="gray.400"
-                _hover={{ textDecoration: !noPopover ? "underline" : undefined }}
-                fontSize="14px"
-                whiteSpace="nowrap"
-              >
-                {postTimeFromNow(item.createdAt)}
-              </Text>
-            )}
-          </Tooltip>
-        </HStack>
+          </PopoverTrigger>
+          <Portal>
+            <PopoverContent bg={popoverBg}>
+              <PopoverBody>
+                <UserPopover user={item.user} />
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </Popover>
+
+        <Tooltip label={dayjs(item.createdAt).format("h:mm A MMM DD YYYY")}>
+          <Text fontSize="14px" color="gray.400" flexShrink={0}>
+            <Text as="span" mr={1}>
+              &#183;
+            </Text>
+            {postTimeFromNow(item.createdAt)}
+          </Text>
+        </Tooltip>
       </HStack>
     </NextLink>
   )

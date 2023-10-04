@@ -17,6 +17,6 @@ export const postTimeFromNow = (createdAt: string) => {
   } else if (today.diff(postDate, "hours") <= 24) {
     return `${today.diff(postDate, "hours")}h`
   } else {
-    return postDate.format("MMM DD")
+    return postDate.format("MMM D")
   }
 }
