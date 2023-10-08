@@ -1,7 +1,7 @@
 import { Arg, Args, Mutation, Query, Resolver } from "type-graphql"
 import { Service } from "typedi"
 
-import { FindFirstReplyArgs, FindManyReplyArgs } from "@twatter/database/dist/generated"
+import { FindFirstReplyArgs, FindManyReplyArgs, ReplyUpdateInput } from "@twatter/database/dist/generated"
 
 import { prisma } from "../../lib/prisma"
 import { CurrentUser } from "../shared/currentUser"
@@ -37,5 +37,17 @@ export default class ReplyResolver {
   @Mutation(() => Reply)
   async createReply(@CurrentUser() currentUser: User, @Arg("data") data: CreateReplyInput): Promise<Reply> {
     return await prisma.reply.create({ data: { userId: currentUser.id, ...data } })
+  }
+
+  // UPDATE REPLY
+  @UseAuth()
+  @Mutation(() => Reply)
+  async updateReply(@Arg("replyId") replyId: string, @Arg("data") data: ReplyUpdateInput): Promise<Reply> {
+    // TODO permissions: only update your own replies
+    const reply = await prisma.reply.findUnique({ where: { id: replyId } })
+    if (!reply || reply.archivedAt) throw new Error("Reply not found")
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return await prisma.reply.update({ where: { id: replyId }, data })
   }
 }

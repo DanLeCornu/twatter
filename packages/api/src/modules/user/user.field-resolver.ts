@@ -3,6 +3,7 @@ import { Service } from "typedi"
 
 import { S3_URL } from "../../lib/config"
 import { prisma } from "../../lib/prisma"
+import { Bookmark } from "../bookmark/bookmark.model"
 import { Like } from "../like/like.model"
 import { Post } from "../post/post.model"
 import { Report } from "../report/report.model"
@@ -58,9 +59,11 @@ export default class UserFieldResolver {
 
   @FieldResolver(() => [Post])
   posts(@Root() user: User) {
-    return prisma.user
-      .findUnique({ where: { id: user.id } })
-      .posts({ orderBy: { createdAt: "desc" }, select: { id: true, text: true, createdAt: true } })
+    return prisma.user.findUnique({ where: { id: user.id } }).posts({
+      orderBy: { createdAt: "desc" },
+      where: { archivedAt: null },
+      select: { id: true, text: true, createdAt: true },
+    })
   }
 
   @FieldResolver(() => Number)
@@ -79,9 +82,24 @@ export default class UserFieldResolver {
     return prisma.user.findUnique({ where: { id: user.id } }).likes({ select: { postId: true } })
   }
 
-  @FieldResolver(() => [Like])
+  @FieldResolver(() => [Bookmark])
   bookmarks(@Root() user: User) {
-    return prisma.user.findUnique({ where: { id: user.id } }).bookmarks({ select: { postId: true } })
+    return prisma.user.findUnique({ where: { id: user.id } }).bookmarks({
+      // select: {
+      //   id: true,
+      //   postId: true,
+      //   post: {
+      //     select: {
+      //       text: true,
+      //       image: true,
+      //       createdAt: true,
+      //       user: { select: { avatar: true, name: true, handle: true } },
+      //     },
+      //   },
+      // },
+      orderBy: { createdAt: "desc" },
+      where: { post: { archivedAt: null } },
+    })
   }
 
   @FieldResolver(() => [User])

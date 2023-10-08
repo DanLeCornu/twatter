@@ -217,8 +217,8 @@ function EditProfile() {
             <Input name="website" label="Website" maxLength={100} />
 
             {isEditingDob ? (
-              <Stack pb={16}>
-                <Stack>
+              <Stack pb={16} spacing={6}>
+                <Stack spacing={0}>
                   <Text fontWeight="medium">
                     Birth date &#183;{" "}
                     <Link color="blue.500" fontSize="sm" onClick={() => setIsEditingDob(false)}>
@@ -231,9 +231,11 @@ function EditProfile() {
                   </Text>
                 </Stack>
                 <DateInput name="dob" label="Birth date" />
-                <Stack>
+                <Stack spacing={0}>
                   <Text fontWeight="medium">Who sees this?</Text>
-                  <Text>You can control who sees your birthday on Twatter</Text>
+                  <Text color="gray.400" fontSize="sm">
+                    You can control who sees your birthday on Twatter
+                  </Text>
                 </Stack>
                 <Select name="dobDayMonthPrivacy" label="Month and day" options={DOB_PRIVACY_OPTIONS} />
                 <Select name="dobYearPrivacy" label="Year" options={DOB_PRIVACY_OPTIONS} />

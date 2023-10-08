@@ -3,8 +3,14 @@ import { gql } from "@apollo/client"
 import type { BoxProps } from "@chakra-ui/react"
 import { Box } from "@chakra-ui/react"
 
-import { GetPostDocument, MeDocument, useBookmarkPostMutation, useUnbookmarkPostMutation } from "lib/graphql"
-import { useMe } from "lib/hooks/useMe"
+import {
+  GetMyBookmarksDocument,
+  GetPostDocument,
+  MeDocument,
+  useBookmarkPostMutation,
+  useGetMyBookmarkIdsQuery,
+  useUnbookmarkPostMutation,
+} from "lib/graphql"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
 
 export const _ = gql`
@@ -14,6 +20,14 @@ export const _ = gql`
   mutation UnbookmarkPost($postId: String!) {
     destroyBookmark(postId: $postId)
   }
+  query GetMyBookmarkIds {
+    me {
+      id
+      bookmarks {
+        postId
+      }
+    }
+  }
 `
 
 interface Props extends Omit<BoxProps, "children"> {
@@ -22,21 +36,24 @@ interface Props extends Omit<BoxProps, "children"> {
 }
 
 export function BookmarkPost({ postId, children }: Props) {
-  const { me } = useMe()
   const handler = useMutationHandler()
 
-  const hasBookmarked = me?.bookmarks?.map((bookmark) => bookmark.postId).includes(postId) || false
+  const { data } = useGetMyBookmarkIdsQuery()
+
+  const hasBookmarked = data?.me?.bookmarks?.map((bookmark) => bookmark.postId).includes(postId) || false
 
   const [bookmarkPost] = useBookmarkPostMutation({
     refetchQueries: [
       { query: GetPostDocument, variables: { where: { id: { equals: postId } } } },
       { query: MeDocument },
+      { query: GetMyBookmarksDocument },
     ],
   })
   const [unbookmarkPost] = useUnbookmarkPostMutation({
     refetchQueries: [
       { query: GetPostDocument, variables: { where: { id: { equals: postId } } } },
       { query: MeDocument },
+      { query: GetMyBookmarksDocument },
     ],
   })
 

@@ -4,6 +4,7 @@ import {
   Box,
   Flex,
   HStack,
+  Image,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -58,11 +59,24 @@ export function ReplyItem({ reply }: Props) {
         <Stack pl={2} spacing={0} w="calc(100% - 40px)">
           <HStack justify="space-between" spacing={0} h="24px">
             <Box w="calc(100% - 35px)">
-              <ItemHeading item={reply} type="reply" />
+              <ItemHeading item={reply} />
             </Box>
             <ItemMenu item={reply} />
           </HStack>
-          <Text fontSize="sm">{reply.text}</Text>
+          <Text fontSize="sm" pb={3}>
+            {reply.text}
+          </Text>
+          {reply.image && (
+            <Box pr={2} pb={3}>
+              <Image
+                alt="reply image"
+                src={reply.image}
+                rounded="2xl"
+                border="1px solid"
+                borderColor="gray.700"
+              />
+            </Box>
+          )}
         </Stack>
       </Flex>
     </Box>

@@ -1,9 +1,11 @@
 import * as React from "react"
+import { AiOutlineTwitter } from "react-icons/ai"
+import { CgClose } from "react-icons/cg"
 import { gql } from "@apollo/client"
-import { Box, Button, Center, Flex, Heading, Spinner, Stack, VStack } from "@chakra-ui/react"
+import { Box, Button, Center, Heading, Icon, IconButton, Link, Spinner, Stack, Text } from "@chakra-ui/react"
 import * as Sentry from "@sentry/nextjs"
 import Head from "next/head"
-import Link from "next/link"
+import NextLink from "next/link"
 import { useRouter } from "next/router"
 
 import { ACCESS_TOKEN, REFRESH_TOKEN_KEY } from "lib/config"
@@ -50,8 +52,7 @@ export default function Login() {
             method: "post",
             body: JSON.stringify({ [REFRESH_TOKEN_KEY]: data.login.refreshToken }),
           })
-          // router.replace(data.login.user.isAdmin ? "/admin" : "/")
-          router.replace("/")
+          router.replace("/home")
         } catch {
           localStorage.removeItem(ACCESS_TOKEN)
           await fetch("/api/logout", { method: "post" })
@@ -77,50 +78,61 @@ export default function Login() {
 
   React.useEffect(() => {
     if (loading || !me) return
-    // router.replace(me.isAdmin ? "/admin" : "/")
-    router.replace("/")
+    router.replace("/home")
   }, [loading, me, router])
 
   if (loading || me)
     return (
-      <Center minH="80vh">
+      <Center minH="100vh">
         <Spinner />
       </Center>
     )
 
   return (
-    <Center flexDir="column" pt={10} px={6}>
+    <Center flexDir="column" pt={3} px={6}>
       <Head>
-        <title>Login</title>
+        <title>Log in to Twatter</title>
       </Head>
-      <Box w={["100%", 400]}>
-        <VStack spacing={1} mb={8}>
-          <Heading as="h1" textAlign="center" fontSize={{ base: "xl", md: "3xl" }}>
-            Twatter
-          </Heading>
-          <Heading as="h2" textAlign="center" fontSize={{ base: "sm", md: "lg" }} fontWeight="normal">
-            Twitter, without the twat
-          </Heading>
-        </VStack>
-
+      <NextLink href="/">
+        <IconButton
+          icon={<Box as={CgClose} boxSize="20px" />}
+          aria-label="close"
+          colorScheme="monochrome"
+          variant="outline"
+          border="none"
+          position="fixed"
+          top={2}
+          left={2}
+        />
+      </NextLink>
+      <Icon as={AiOutlineTwitter} boxSize="30px" />
+      <Box w={["100%", 400]} px={6} pt={24}>
         <Form onSubmit={onSubmit} {...form}>
-          <Stack spacing={2}>
-            <Heading as="h3" fontSize="xl">
-              Login
+          <Stack spacing={8}>
+            <Heading as="h1" fontSize="2xl">
+              Sign in to Twatter
             </Heading>
-
-            <Input name="email" label="Email" placeholder="jim@gmail.com" />
-            <Input name="password" label="Password" type="password" placeholder="********" />
-            <Button colorScheme="blue" type="submit" w="100%" isLoading={loginLoading}>
-              Login
+            <Stack>
+              <Input name="email" label="Email" />
+              <Input name="password" label="Password" type="password" />
+            </Stack>
+            <Button colorScheme="monochrome" type="submit" w="100%" isLoading={loginLoading}>
+              Log in
             </Button>
             <FormError />
-            <Flex justify="space-between">
-              <Link href="/register">Register</Link>
-              <Link href="/forgot-password">Forgot password?</Link>
-            </Flex>
           </Stack>
         </Form>
+        <NextLink href="/forgot-password">
+          <Button variant="outline" colorScheme="monochrome" w="100%" mt={6}>
+            Forgot password?
+          </Button>
+        </NextLink>
+        <Text pt={16} color="gray.400" fontSize="sm">
+          Don't have an account?{" "}
+          <Link color="blue.500" href="/signup">
+            Sign up
+          </Link>
+        </Text>
       </Box>
     </Center>
   )

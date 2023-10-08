@@ -76,8 +76,8 @@ export const Input = ({ name, label, subLabel, maxLength, ...props }: Props) => 
           id={name}
           {...register(name)}
           {...props}
-          variant="unstyled"
           onChange={handleOnChange}
+          variant="unstyled"
           maxLength={maxLength}
         />
       </Box>

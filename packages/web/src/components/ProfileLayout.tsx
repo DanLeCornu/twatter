@@ -168,6 +168,12 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
   const bgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
   const { onCopy } = useClipboard(`${WEB_URL}/${user?.handle}`)
 
+  const websiteUrl = user?.website
+    ? user.website.startsWith("https://") || user.website.startsWith("http://")
+      ? user.website
+      : `https://${user.website}`
+    : ""
+
   if (loading && !user)
     return (
       <Center minH="80vh">
@@ -191,7 +197,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
         bgColor={bgColor}
         zIndex={1}
       >
-        <NextLink href="/">
+        <NextLink href="/home">
           <IconButton
             aria-label="back"
             icon={<Box as={BiArrowBack} boxSize="20px" />}
@@ -338,7 +344,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                   {user.website && (
                     <HStack spacing={1} align="center" mr={2}>
                       <Icon as={AiOutlineLink} color="gray.400" boxSize="18px" />
-                      <Link isExternal href={user.website} color="blue.500">
+                      <Link isExternal href={websiteUrl} color="blue.500">
                         <Text fontSize="sm">{user.website}</Text>
                       </Link>
                     </HStack>

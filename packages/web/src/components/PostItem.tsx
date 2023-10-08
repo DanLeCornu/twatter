@@ -12,6 +12,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  Image,
   Menu,
   MenuButton,
   MenuItem,
@@ -92,15 +93,26 @@ export function PostItem({ post, isPinned = false }: Props) {
             <HStack pl={2} justify="space-between" spacing={0} h="24px">
               <Box w="calc(100% - 35px)">
                 {/* NAME & HANDLE */}
-                <ItemHeading item={post} type="post" />
+                <ItemHeading item={post} />
               </Box>
               {/* MENU */}
               <ItemMenu item={post} />
             </HStack>
             {/* CONTENT */}
-            <Text pl={2} fontSize="sm">
+            <Text pl={2} pb={3} pr={2} fontSize="sm">
               {post.text}
             </Text>
+            {post.image && (
+              <Box pl={2} pr={2} pb={2}>
+                <Image
+                  alt="post image"
+                  src={post.image}
+                  rounded="2xl"
+                  border="1px solid"
+                  borderColor="gray.700"
+                />
+              </Box>
+            )}
             <HStack spacing={0}>
               {/* REPLIES */}
               <NextLink href={`/replies/new?postId=${post.id}`}>

@@ -1,0 +1,57 @@
+import * as React from "react"
+import { gql } from "@apollo/client"
+import { Button, Heading, Stack, Text } from "@chakra-ui/react"
+import { useRouter } from "next/router"
+
+import { useUpdatePasswordMutation } from "lib/graphql"
+import { useForm } from "lib/hooks/useForm"
+import yup from "lib/yup"
+
+import { Form } from "./Form"
+import { Input } from "./Input"
+
+const _ = gql`
+  mutation UpdatePassword($data: UpdateUserInput!) {
+    updateMe(data: $data) {
+      id
+    }
+  }
+`
+const SetPasswordSchema = yup.object().shape({
+  password: yup.string().min(8, "Must be at least 8 characters"),
+})
+
+export function OnboardingStep2() {
+  const router = useRouter()
+  const form = useForm({ schema: SetPasswordSchema })
+
+  const [update, { loading }] = useUpdatePasswordMutation()
+
+  const onSubmit = (data: yup.InferType<typeof SetPasswordSchema>) => {
+    return form.handler(() => update({ variables: { data: { password: data.password } } }), {
+      onSuccess: async () => {
+        router.replace("/home")
+      },
+    })
+  }
+  return (
+    <Form onSubmit={onSubmit} {...form}>
+      <Stack spacing={6}>
+        <Stack spacing={1}>
+          <Heading as="h1" fontSize="2xl" pt={8}>
+            You'll need a password
+          </Heading>
+          <Text color="gray.400" fontSize="sm">
+            Make sure it's 8 characters or more.
+          </Text>
+        </Stack>
+        <Input name="password" label="Password" autoFocus />
+      </Stack>
+      <Stack py={6} px={8} position="fixed" bottom={0} left={0} w="100%">
+        <Button type="submit" size="lg" w="100%" isDisabled={!form.formState.isValid} isLoading={loading}>
+          Let's go!
+        </Button>
+      </Stack>
+    </Form>
+  )
+}

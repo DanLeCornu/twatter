@@ -17,4 +17,7 @@ export class Reply extends BaseModel implements Prisma.Reply {
 
   @Field()
   postId: string
+
+  @Field(() => Date, { nullable: true })
+  archivedAt: Date | null
 }

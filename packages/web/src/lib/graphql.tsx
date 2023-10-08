@@ -28,6 +28,7 @@ export type Bookmark = {
   __typename?: 'Bookmark';
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
+  post: Post;
   postId: Scalars['String'];
   updatedAt: Scalars['DateTime'];
   userId: Scalars['String'];
@@ -711,6 +712,7 @@ export type Mutation = {
   createReply: Reply;
   createReport: Scalars['Boolean'];
   createUser: User;
+  createView: Scalars['Boolean'];
   destroyAccount: Scalars['Boolean'];
   destroyBookmark: Scalars['Boolean'];
   destroyLike: Scalars['Boolean'];
@@ -728,6 +730,8 @@ export type Mutation = {
   unmuteUser: Scalars['Boolean'];
   updateMe: User;
   updatePost: Post;
+  updateReply: Reply;
+  verify: Scalars['Boolean'];
 };
 
 
@@ -763,6 +767,11 @@ export type MutationCreateReportArgs = {
 
 export type MutationCreateUserArgs = {
   data: UserCreateInput;
+};
+
+
+export type MutationCreateViewArgs = {
+  postId: Scalars['String'];
 };
 
 
@@ -839,6 +848,17 @@ export type MutationUpdateMeArgs = {
 export type MutationUpdatePostArgs = {
   data: PostUpdateInput;
   postId: Scalars['String'];
+};
+
+
+export type MutationUpdateReplyArgs = {
+  data: ReplyUpdateInput;
+  replyId: Scalars['String'];
+};
+
+
+export type MutationVerifyArgs = {
+  data: VerifyInput;
 };
 
 export type NestedDateTimeFilter = {
@@ -1702,12 +1722,8 @@ export type RefreshTokenResponse = {
 };
 
 export type RegisterInput = {
-  bio?: InputMaybe<Scalars['String']>;
   email: Scalars['String'];
-  handle: Scalars['String'];
-  location?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  password: Scalars['String'];
+  verificationCode: Scalars['String'];
 };
 
 export type RepliesResponse = {
@@ -1718,6 +1734,7 @@ export type RepliesResponse = {
 
 export type Reply = {
   __typename?: 'Reply';
+  archivedAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   image?: Maybe<Scalars['String']>;
@@ -1730,6 +1747,7 @@ export type Reply = {
 };
 
 export type ReplyCreateManyPostInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
@@ -1744,6 +1762,7 @@ export type ReplyCreateManyPostInputEnvelope = {
 };
 
 export type ReplyCreateManyUserInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
@@ -1793,6 +1812,7 @@ export type ReplyCreateOrConnectWithoutUserInput = {
 };
 
 export type ReplyCreateWithoutPostInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
@@ -1803,6 +1823,7 @@ export type ReplyCreateWithoutPostInput = {
 };
 
 export type ReplyCreateWithoutReportsInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
@@ -1813,6 +1834,7 @@ export type ReplyCreateWithoutReportsInput = {
 };
 
 export type ReplyCreateWithoutUserInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
@@ -1833,6 +1855,7 @@ export type ReplyOrderByRelationAggregateInput = {
 };
 
 export type ReplyOrderByWithRelationInput = {
+  archivedAt?: InputMaybe<SortOrderInput>;
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   image?: InputMaybe<SortOrderInput>;
@@ -1851,6 +1874,7 @@ export type ReplyRelationFilter = {
 };
 
 export enum ReplyScalarFieldEnum {
+  ArchivedAt = 'archivedAt',
   CreatedAt = 'createdAt',
   Id = 'id',
   Image = 'image',
@@ -1864,6 +1888,7 @@ export type ReplyScalarWhereInput = {
   AND?: InputMaybe<Array<ReplyScalarWhereInput>>;
   NOT?: InputMaybe<Array<ReplyScalarWhereInput>>;
   OR?: InputMaybe<Array<ReplyScalarWhereInput>>;
+  archivedAt?: InputMaybe<DateTimeNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
   image?: InputMaybe<StringNullableFilter>;
@@ -1873,7 +1898,20 @@ export type ReplyScalarWhereInput = {
   userId?: InputMaybe<UuidFilter>;
 };
 
+export type ReplyUpdateInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
+  post?: InputMaybe<PostUpdateOneRequiredWithoutRepliesNestedInput>;
+  reports?: InputMaybe<ReportUpdateManyWithoutReplyNestedInput>;
+  text?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutRepliesNestedInput>;
+};
+
 export type ReplyUpdateManyMutationInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
@@ -1940,6 +1978,7 @@ export type ReplyUpdateWithWhereUniqueWithoutUserInput = {
 };
 
 export type ReplyUpdateWithoutPostInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
@@ -1950,6 +1989,7 @@ export type ReplyUpdateWithoutPostInput = {
 };
 
 export type ReplyUpdateWithoutReportsInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
@@ -1960,6 +2000,7 @@ export type ReplyUpdateWithoutReportsInput = {
 };
 
 export type ReplyUpdateWithoutUserInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
@@ -1990,6 +2031,7 @@ export type ReplyWhereInput = {
   AND?: InputMaybe<Array<ReplyWhereInput>>;
   NOT?: InputMaybe<Array<ReplyWhereInput>>;
   OR?: InputMaybe<Array<ReplyWhereInput>>;
+  archivedAt?: InputMaybe<DateTimeNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
   image?: InputMaybe<StringNullableFilter>;
@@ -2479,7 +2521,7 @@ export type User = {
   avatar?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
   blockedAccounts: Array<User>;
-  bookmarks: Array<Like>;
+  bookmarks: Array<Bookmark>;
   cover?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   createdReports: Array<Report>;
@@ -2491,7 +2533,7 @@ export type User = {
   followers: Array<User>;
   following: Array<User>;
   followingCount: Scalars['Float'];
-  handle: Scalars['String'];
+  handle?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   likes: Array<Like>;
   location?: Maybe<Scalars['String']>;
@@ -2521,7 +2563,7 @@ export type UserCreateInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -2531,7 +2573,7 @@ export type UserCreateInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -2732,7 +2774,7 @@ export type UserCreateWithoutBlockedAccountsInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -2742,7 +2784,7 @@ export type UserCreateWithoutBlockedAccountsInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -2767,7 +2809,7 @@ export type UserCreateWithoutBlockedByInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -2777,7 +2819,7 @@ export type UserCreateWithoutBlockedByInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -2802,7 +2844,7 @@ export type UserCreateWithoutBookmarksInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -2812,7 +2854,7 @@ export type UserCreateWithoutBookmarksInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -2837,7 +2879,7 @@ export type UserCreateWithoutCreatedReportsInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -2847,7 +2889,7 @@ export type UserCreateWithoutCreatedReportsInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -2872,7 +2914,7 @@ export type UserCreateWithoutFollowersInput = {
   dobYearPrivacy?: InputMaybe<DobPrivacy>;
   email: Scalars['String'];
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -2882,7 +2924,7 @@ export type UserCreateWithoutFollowersInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -2907,7 +2949,7 @@ export type UserCreateWithoutFollowingInput = {
   dobYearPrivacy?: InputMaybe<DobPrivacy>;
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -2917,7 +2959,7 @@ export type UserCreateWithoutFollowingInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -2943,7 +2985,7 @@ export type UserCreateWithoutLikesInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   location?: InputMaybe<Scalars['String']>;
   messagesReceived?: InputMaybe<MessageCreateNestedManyWithoutReceiverInput>;
@@ -2952,7 +2994,7 @@ export type UserCreateWithoutLikesInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -2978,7 +3020,7 @@ export type UserCreateWithoutMessagesReceivedInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -2987,7 +3029,7 @@ export type UserCreateWithoutMessagesReceivedInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -3013,7 +3055,7 @@ export type UserCreateWithoutMessagesSentInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -3022,7 +3064,7 @@ export type UserCreateWithoutMessagesSentInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -3048,7 +3090,7 @@ export type UserCreateWithoutMutedAccountsInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -3057,7 +3099,7 @@ export type UserCreateWithoutMutedAccountsInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -3083,7 +3125,7 @@ export type UserCreateWithoutMutedByInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -3092,7 +3134,7 @@ export type UserCreateWithoutMutedByInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -3118,7 +3160,7 @@ export type UserCreateWithoutPinnedPostInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -3128,7 +3170,7 @@ export type UserCreateWithoutPinnedPostInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
@@ -3153,7 +3195,7 @@ export type UserCreateWithoutPostsInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -3163,7 +3205,7 @@ export type UserCreateWithoutPostsInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
@@ -3188,7 +3230,7 @@ export type UserCreateWithoutRepliesInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -3198,7 +3240,7 @@ export type UserCreateWithoutRepliesInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
@@ -3223,7 +3265,7 @@ export type UserCreateWithoutReportsInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -3233,7 +3275,7 @@ export type UserCreateWithoutReportsInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -3258,7 +3300,7 @@ export type UserCreateWithoutViewsInput = {
   email: Scalars['String'];
   followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
   following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
-  handle: Scalars['String'];
+  handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
   location?: InputMaybe<Scalars['String']>;
@@ -3268,7 +3310,7 @@ export type UserCreateWithoutViewsInput = {
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
-  password: Scalars['String'];
+  password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
@@ -3303,7 +3345,7 @@ export type UserOrderByWithRelationInput = {
   email?: InputMaybe<SortOrder>;
   followers?: InputMaybe<UserOrderByRelationAggregateInput>;
   following?: InputMaybe<UserOrderByRelationAggregateInput>;
-  handle?: InputMaybe<SortOrder>;
+  handle?: InputMaybe<SortOrderInput>;
   id?: InputMaybe<SortOrder>;
   likes?: InputMaybe<LikeOrderByRelationAggregateInput>;
   location?: InputMaybe<SortOrderInput>;
@@ -3313,7 +3355,7 @@ export type UserOrderByWithRelationInput = {
   mutedBy?: InputMaybe<UserOrderByRelationAggregateInput>;
   name?: InputMaybe<SortOrder>;
   notifications?: InputMaybe<NotificationOrderByRelationAggregateInput>;
-  password?: InputMaybe<SortOrder>;
+  password?: InputMaybe<SortOrderInput>;
   pinnedPost?: InputMaybe<PostOrderByWithRelationInput>;
   pinnedPostId?: InputMaybe<SortOrderInput>;
   posts?: InputMaybe<PostOrderByRelationAggregateInput>;
@@ -3362,11 +3404,11 @@ export type UserScalarWhereInput = {
   dobDayMonthPrivacy?: InputMaybe<EnumDobPrivacyFilter>;
   dobYearPrivacy?: InputMaybe<EnumDobPrivacyFilter>;
   email?: InputMaybe<StringFilter>;
-  handle?: InputMaybe<StringFilter>;
+  handle?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<UuidFilter>;
   location?: InputMaybe<StringNullableFilter>;
   name?: InputMaybe<StringFilter>;
-  password?: InputMaybe<StringFilter>;
+  password?: InputMaybe<StringNullableFilter>;
   pinnedPostId?: InputMaybe<UuidNullableFilter>;
   role?: InputMaybe<EnumRoleFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -3556,6 +3598,14 @@ export type UserUpdateOneRequiredWithoutRepliesNestedInput = {
   upsert?: InputMaybe<UserUpsertWithoutRepliesInput>;
 };
 
+export type UserUpdateOneRequiredWithoutViewsNestedInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutViewsInput>;
+  create?: InputMaybe<UserCreateWithoutViewsInput>;
+  update?: InputMaybe<UserUpdateWithoutViewsInput>;
+  upsert?: InputMaybe<UserUpsertWithoutViewsInput>;
+};
+
 export type UserUpdateOneWithoutPinnedPostNestedInput = {
   connect?: InputMaybe<UserWhereUniqueInput>;
   connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutPinnedPostInput>;
@@ -3574,16 +3624,6 @@ export type UserUpdateOneWithoutReportsNestedInput = {
   disconnect?: InputMaybe<Scalars['Boolean']>;
   update?: InputMaybe<UserUpdateWithoutReportsInput>;
   upsert?: InputMaybe<UserUpsertWithoutReportsInput>;
-};
-
-export type UserUpdateOneWithoutViewsNestedInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutViewsInput>;
-  create?: InputMaybe<UserCreateWithoutViewsInput>;
-  delete?: InputMaybe<Scalars['Boolean']>;
-  disconnect?: InputMaybe<Scalars['Boolean']>;
-  update?: InputMaybe<UserUpdateWithoutViewsInput>;
-  upsert?: InputMaybe<UserUpsertWithoutViewsInput>;
 };
 
 export type UserUpdateWithWhereUniqueWithoutBlockedAccountsInput = {
@@ -4280,7 +4320,7 @@ export type UserWhereInput = {
   email?: InputMaybe<StringFilter>;
   followers?: InputMaybe<UserListRelationFilter>;
   following?: InputMaybe<UserListRelationFilter>;
-  handle?: InputMaybe<StringFilter>;
+  handle?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<UuidFilter>;
   likes?: InputMaybe<LikeListRelationFilter>;
   location?: InputMaybe<StringNullableFilter>;
@@ -4290,7 +4330,7 @@ export type UserWhereInput = {
   mutedBy?: InputMaybe<UserListRelationFilter>;
   name?: InputMaybe<StringFilter>;
   notifications?: InputMaybe<NotificationListRelationFilter>;
-  password?: InputMaybe<StringFilter>;
+  password?: InputMaybe<StringNullableFilter>;
   pinnedPost?: InputMaybe<PostRelationFilter>;
   pinnedPostId?: InputMaybe<UuidNullableFilter>;
   posts?: InputMaybe<PostListRelationFilter>;
@@ -4306,7 +4346,6 @@ export type UserWhereUniqueInput = {
   email?: InputMaybe<Scalars['String']>;
   handle?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
   pinnedPostId?: InputMaybe<Scalars['String']>;
 };
 
@@ -4340,11 +4379,17 @@ export type UuidNullableFilter = {
   notIn?: InputMaybe<Array<Scalars['String']>>;
 };
 
+export type VerifyInput = {
+  dob: Scalars['String'];
+  email: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type ViewCreateManyPostInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
-  userId?: InputMaybe<Scalars['String']>;
+  userId: Scalars['String'];
 };
 
 export type ViewCreateManyPostInputEnvelope = {
@@ -4392,7 +4437,7 @@ export type ViewCreateWithoutPostInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
-  user?: InputMaybe<UserCreateNestedOneWithoutViewsInput>;
+  user: UserCreateNestedOneWithoutViewsInput;
 };
 
 export type ViewCreateWithoutUserInput = {
@@ -4420,7 +4465,7 @@ export type ViewScalarWhereInput = {
   id?: InputMaybe<UuidFilter>;
   postId?: InputMaybe<UuidFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
-  userId?: InputMaybe<UuidNullableFilter>;
+  userId?: InputMaybe<UuidFilter>;
 };
 
 export type ViewUpdateManyMutationInput = {
@@ -4481,7 +4526,7 @@ export type ViewUpdateWithoutPostInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
-  user?: InputMaybe<UserUpdateOneWithoutViewsNestedInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutViewsNestedInput>;
 };
 
 export type ViewUpdateWithoutUserInput = {
@@ -4513,7 +4558,7 @@ export type ViewWhereInput = {
   postId?: InputMaybe<UuidFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   user?: InputMaybe<UserRelationFilter>;
-  userId?: InputMaybe<UuidNullableFilter>;
+  userId?: InputMaybe<UuidFilter>;
 };
 
 export type ViewWhereUniqueInput = {
@@ -4540,6 +4585,11 @@ export type UnbookmarkPostMutationVariables = Exact<{
 
 
 export type UnbookmarkPostMutation = { __typename?: 'Mutation', destroyBookmark: boolean };
+
+export type GetMyBookmarkIdsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyBookmarkIdsQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, bookmarks: Array<{ __typename?: 'Bookmark', postId: string }> } | null };
 
 export type FollowUserMutationVariables = Exact<{
   userId: Scalars['String'];
@@ -4575,7 +4625,7 @@ export type UpdatePostMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
+export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
 
 export type PinPostMutationVariables = Exact<{
   data: UpdateUserInput;
@@ -4598,9 +4648,9 @@ export type UnlikePostMutationVariables = Exact<{
 
 export type UnlikePostMutation = { __typename?: 'Mutation', destroyLike: boolean };
 
-export type UserDetailFragment = { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null };
+export type UserDetailFragment = { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null };
 
-export type PostItemFragment = { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
+export type PostItemFragment = { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
 
 export type GetPostsQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<PostOrderByWithRelationInput> | PostOrderByWithRelationInput>;
@@ -4609,27 +4659,27 @@ export type GetPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', count: number, items: Array<{ __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', count: number, items: Array<{ __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> } };
 
-export type UserFollowItemFragment = { __typename?: 'User', id: string, avatar?: string | null, name: string, handle: string, bio?: string | null };
+export type UserFollowItemFragment = { __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null, bio?: string | null };
 
-export type UserProfileFollowFragment = { __typename?: 'User', id: string, name: string, handle: string, followers: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle: string, bio?: string | null }>, following: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle: string, bio?: string | null }> };
+export type UserProfileFollowFragment = { __typename?: 'User', id: string, name: string, handle?: string | null, followers: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null, bio?: string | null }>, following: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null, bio?: string | null }> };
 
 export type GetProfileFollowQueryVariables = Exact<{
   where: UserWhereInput;
 }>;
 
 
-export type GetProfileFollowQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, handle: string, followers: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle: string, bio?: string | null }>, following: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle: string, bio?: string | null }> } | null };
+export type GetProfileFollowQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, handle?: string | null, followers: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null, bio?: string | null }>, following: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null, bio?: string | null }> } | null };
 
-export type UserProfileFragment = { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, cover?: string | null, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, createdAt: string, postCount: number, followerCount: number, followingCount: number, posts: Array<{ __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number }> };
+export type UserProfileFragment = { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, cover?: string | null, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, createdAt: string, postCount: number, followerCount: number, followingCount: number, posts: Array<{ __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number }> };
 
 export type GetProfileQueryVariables = Exact<{
   where: UserWhereInput;
 }>;
 
 
-export type GetProfileQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, cover?: string | null, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, createdAt: string, postCount: number, followerCount: number, followingCount: number, posts: Array<{ __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number }> } | null };
+export type GetProfileQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, cover?: string | null, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, createdAt: string, postCount: number, followerCount: number, followingCount: number, posts: Array<{ __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number }> } | null };
 
 export type UnmuteUserMutationVariables = Exact<{
   userId: Scalars['String'];
@@ -4652,17 +4702,38 @@ export type CreateReportMutationVariables = Exact<{
 
 export type CreateReportMutation = { __typename?: 'Mutation', createReport: boolean };
 
+export type UpdatePasswordMutationVariables = Exact<{
+  data: UpdateUserInput;
+}>;
+
+
+export type UpdatePasswordMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string } };
+
+export type VerifyMutationVariables = Exact<{
+  data: VerifyInput;
+}>;
+
+
+export type VerifyMutation = { __typename?: 'Mutation', verify: boolean };
+
+export type RegisterMutationVariables = Exact<{
+  data: RegisterInput;
+}>;
+
+
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
+
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
-export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle: string, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, bookmarks: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> };
+export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle: string, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, bookmarks: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } | null };
 
 export type GetSignedUrlForPutMutationVariables = Exact<{
   data: S3SignedUrlInput;
@@ -4677,6 +4748,13 @@ export type GetBulkSignedUrlForPutMutationVariables = Exact<{
 
 
 export type GetBulkSignedUrlForPutMutation = { __typename?: 'Mutation', getBulkSignedS3UrlForPut?: Array<{ __typename?: 'SignedResponse', url: string, uploadUrl: string, key: string }> | null };
+
+export type CreateViewMutationVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+
+export type CreateViewMutation = { __typename?: 'Mutation', createView: boolean };
 
 export type UserReportFragment = { __typename?: 'User', id: string };
 
@@ -4714,6 +4792,24 @@ export type RefreshTokenQueryVariables = Exact<{
 
 export type RefreshTokenQuery = { __typename?: 'Query', refreshToken?: { __typename?: 'RefreshTokenResponse', token: string, refreshToken: string } | null };
 
+export type BookmarkItemFragment = { __typename?: 'Bookmark', id: string, post: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
+
+export type GetMyBookmarksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyBookmarksQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, bookmarks: Array<{ __typename?: 'Bookmark', id: string, post: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } }> } | null };
+
+export type UserSearchItemFragment = { __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null };
+
+export type GetExploreUsersQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<UserOrderByWithRelationInput> | UserOrderByWithRelationInput>;
+  where?: InputMaybe<UserWhereInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetExploreUsersQuery = { __typename?: 'Query', users: { __typename?: 'UsersResponse', count: number, items: Array<{ __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null }> } };
+
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -4726,32 +4822,25 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle: string, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, bookmarks: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
 
-export type ReplyItemFragment = { __typename?: 'Reply', id: string, text: string, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
+export type ReplyItemFragment = { __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
 
-export type PostDetailFragment = { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, text: string, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> };
+export type PostDetailFragment = { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> };
 
 export type GetPostQueryVariables = Exact<{
   where: PostWhereInput;
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, text: string, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> } | null };
+export type GetPostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> } | null };
 
 export type CreatePostMutationVariables = Exact<{
   data: CreatePostInput;
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
-
-export type RegisterMutationVariables = Exact<{
-  data: RegisterInput;
-}>;
-
-
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle: string, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, bookmarks: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
 
 export type ReplyReportFragment = { __typename?: 'Reply', id: string };
 
@@ -4767,7 +4856,15 @@ export type CreateReplyMutationVariables = Exact<{
 }>;
 
 
-export type CreateReplyMutation = { __typename?: 'Mutation', createReply: { __typename?: 'Reply', id: string, text: string, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle: string, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
+export type CreateReplyMutation = { __typename?: 'Mutation', createReply: { __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
+
+export type UpdateReplyMutationVariables = Exact<{
+  replyId: Scalars['String'];
+  data: ReplyUpdateInput;
+}>;
+
+
+export type UpdateReplyMutation = { __typename?: 'Mutation', updateReply: { __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
 
 export type ResetPasswordMutationVariables = Exact<{
   data: ResetPasswordInput;
@@ -4855,6 +4952,7 @@ export const PostItemFragmentDoc = gql`
     fragment PostItem on Post {
   id
   text
+  image
   createdAt
   replyCount
   likeCount
@@ -4883,9 +4981,6 @@ export const MeFragmentDoc = gql`
     ...PostItem
   }
   likes {
-    postId
-  }
-  bookmarks {
     postId
   }
   following {
@@ -4925,10 +5020,28 @@ export const UserItemFragmentDoc = gql`
   createdAt
 }
     `;
+export const BookmarkItemFragmentDoc = gql`
+    fragment BookmarkItem on Bookmark {
+  id
+  post {
+    ...PostItem
+  }
+}
+    ${PostItemFragmentDoc}`;
+export const UserSearchItemFragmentDoc = gql`
+    fragment UserSearchItem on User {
+  id
+  name
+  avatar
+  handle
+}
+    `;
 export const ReplyItemFragmentDoc = gql`
     fragment ReplyItem on Reply {
   id
+  postId
   text
+  image
   createdAt
   user {
     ...UserDetail
@@ -5009,6 +5122,27 @@ export function useUnbookmarkPostMutation(baseOptions?: Apollo.MutationHookOptio
 export type UnbookmarkPostMutationHookResult = ReturnType<typeof useUnbookmarkPostMutation>;
 export type UnbookmarkPostMutationResult = Apollo.MutationResult<UnbookmarkPostMutation>;
 export type UnbookmarkPostMutationOptions = Apollo.BaseMutationOptions<UnbookmarkPostMutation, UnbookmarkPostMutationVariables>;
+export const GetMyBookmarkIdsDocument = gql`
+    query GetMyBookmarkIds {
+  me {
+    id
+    bookmarks {
+      postId
+    }
+  }
+}
+    `;
+export function useGetMyBookmarkIdsQuery(baseOptions?: Apollo.QueryHookOptions<GetMyBookmarkIdsQuery, GetMyBookmarkIdsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyBookmarkIdsQuery, GetMyBookmarkIdsQueryVariables>(GetMyBookmarkIdsDocument, options);
+      }
+export function useGetMyBookmarkIdsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyBookmarkIdsQuery, GetMyBookmarkIdsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyBookmarkIdsQuery, GetMyBookmarkIdsQueryVariables>(GetMyBookmarkIdsDocument, options);
+        }
+export type GetMyBookmarkIdsQueryHookResult = ReturnType<typeof useGetMyBookmarkIdsQuery>;
+export type GetMyBookmarkIdsLazyQueryHookResult = ReturnType<typeof useGetMyBookmarkIdsLazyQuery>;
+export type GetMyBookmarkIdsQueryResult = Apollo.QueryResult<GetMyBookmarkIdsQuery, GetMyBookmarkIdsQueryVariables>;
 export const FollowUserDocument = gql`
     mutation FollowUser($userId: String!) {
   followUser(userId: $userId)
@@ -5203,6 +5337,50 @@ export function useCreateReportMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateReportMutationHookResult = ReturnType<typeof useCreateReportMutation>;
 export type CreateReportMutationResult = Apollo.MutationResult<CreateReportMutation>;
 export type CreateReportMutationOptions = Apollo.BaseMutationOptions<CreateReportMutation, CreateReportMutationVariables>;
+export const UpdatePasswordDocument = gql`
+    mutation UpdatePassword($data: UpdateUserInput!) {
+  updateMe(data: $data) {
+    id
+  }
+}
+    `;
+export function useUpdatePasswordMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument, options);
+      }
+export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>;
+export type UpdatePasswordMutationResult = Apollo.MutationResult<UpdatePasswordMutation>;
+export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
+export const VerifyDocument = gql`
+    mutation Verify($data: VerifyInput!) {
+  verify(data: $data)
+}
+    `;
+export function useVerifyMutation(baseOptions?: Apollo.MutationHookOptions<VerifyMutation, VerifyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VerifyMutation, VerifyMutationVariables>(VerifyDocument, options);
+      }
+export type VerifyMutationHookResult = ReturnType<typeof useVerifyMutation>;
+export type VerifyMutationResult = Apollo.MutationResult<VerifyMutation>;
+export type VerifyMutationOptions = Apollo.BaseMutationOptions<VerifyMutation, VerifyMutationVariables>;
+export const RegisterDocument = gql`
+    mutation Register($data: RegisterInput!) {
+  register(data: $data) {
+    user {
+      ...Me
+    }
+    token
+    refreshToken
+  }
+}
+    ${MeFragmentDoc}`;
+export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
+      }
+export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
+export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const LogoutDocument = gql`
     mutation Logout {
   logout
@@ -5264,6 +5442,18 @@ export function useGetBulkSignedUrlForPutMutation(baseOptions?: Apollo.MutationH
 export type GetBulkSignedUrlForPutMutationHookResult = ReturnType<typeof useGetBulkSignedUrlForPutMutation>;
 export type GetBulkSignedUrlForPutMutationResult = Apollo.MutationResult<GetBulkSignedUrlForPutMutation>;
 export type GetBulkSignedUrlForPutMutationOptions = Apollo.BaseMutationOptions<GetBulkSignedUrlForPutMutation, GetBulkSignedUrlForPutMutationVariables>;
+export const CreateViewDocument = gql`
+    mutation CreateView($postId: String!) {
+  createView(postId: $postId)
+}
+    `;
+export function useCreateViewMutation(baseOptions?: Apollo.MutationHookOptions<CreateViewMutation, CreateViewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateViewMutation, CreateViewMutationVariables>(CreateViewDocument, options);
+      }
+export type CreateViewMutationHookResult = ReturnType<typeof useCreateViewMutation>;
+export type CreateViewMutationResult = Apollo.MutationResult<CreateViewMutation>;
+export type CreateViewMutationOptions = Apollo.BaseMutationOptions<CreateViewMutation, CreateViewMutationVariables>;
 export const GetUserDocument = gql`
     query GetUser($where: UserWhereInput!) {
   user(where: $where) {
@@ -5340,6 +5530,48 @@ export function useRefreshTokenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type RefreshTokenQueryHookResult = ReturnType<typeof useRefreshTokenQuery>;
 export type RefreshTokenLazyQueryHookResult = ReturnType<typeof useRefreshTokenLazyQuery>;
 export type RefreshTokenQueryResult = Apollo.QueryResult<RefreshTokenQuery, RefreshTokenQueryVariables>;
+export const GetMyBookmarksDocument = gql`
+    query GetMyBookmarks {
+  me {
+    id
+    bookmarks {
+      ...BookmarkItem
+    }
+  }
+}
+    ${BookmarkItemFragmentDoc}`;
+export function useGetMyBookmarksQuery(baseOptions?: Apollo.QueryHookOptions<GetMyBookmarksQuery, GetMyBookmarksQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyBookmarksQuery, GetMyBookmarksQueryVariables>(GetMyBookmarksDocument, options);
+      }
+export function useGetMyBookmarksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyBookmarksQuery, GetMyBookmarksQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyBookmarksQuery, GetMyBookmarksQueryVariables>(GetMyBookmarksDocument, options);
+        }
+export type GetMyBookmarksQueryHookResult = ReturnType<typeof useGetMyBookmarksQuery>;
+export type GetMyBookmarksLazyQueryHookResult = ReturnType<typeof useGetMyBookmarksLazyQuery>;
+export type GetMyBookmarksQueryResult = Apollo.QueryResult<GetMyBookmarksQuery, GetMyBookmarksQueryVariables>;
+export const GetExploreUsersDocument = gql`
+    query GetExploreUsers($orderBy: [UserOrderByWithRelationInput!], $where: UserWhereInput, $skip: Int) {
+  users(take: 10, orderBy: $orderBy, where: $where, skip: $skip) {
+    items {
+      ...UserSearchItem
+    }
+    count
+  }
+}
+    ${UserSearchItemFragmentDoc}`;
+export function useGetExploreUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetExploreUsersQuery, GetExploreUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetExploreUsersQuery, GetExploreUsersQueryVariables>(GetExploreUsersDocument, options);
+      }
+export function useGetExploreUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetExploreUsersQuery, GetExploreUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetExploreUsersQuery, GetExploreUsersQueryVariables>(GetExploreUsersDocument, options);
+        }
+export type GetExploreUsersQueryHookResult = ReturnType<typeof useGetExploreUsersQuery>;
+export type GetExploreUsersLazyQueryHookResult = ReturnType<typeof useGetExploreUsersLazyQuery>;
+export type GetExploreUsersQueryResult = Apollo.QueryResult<GetExploreUsersQuery, GetExploreUsersQueryVariables>;
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
   forgotPassword(email: $email)
@@ -5402,24 +5634,6 @@ export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
-export const RegisterDocument = gql`
-    mutation Register($data: RegisterInput!) {
-  register(data: $data) {
-    user {
-      ...Me
-    }
-    token
-    refreshToken
-  }
-}
-    ${MeFragmentDoc}`;
-export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
-      }
-export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
-export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
-export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const GetReplyDocument = gql`
     query GetReply($where: ReplyWhereInput!) {
   reply(where: $where) {
@@ -5452,6 +5666,20 @@ export function useCreateReplyMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateReplyMutationHookResult = ReturnType<typeof useCreateReplyMutation>;
 export type CreateReplyMutationResult = Apollo.MutationResult<CreateReplyMutation>;
 export type CreateReplyMutationOptions = Apollo.BaseMutationOptions<CreateReplyMutation, CreateReplyMutationVariables>;
+export const UpdateReplyDocument = gql`
+    mutation UpdateReply($replyId: String!, $data: ReplyUpdateInput!) {
+  updateReply(replyId: $replyId, data: $data) {
+    ...ReplyItem
+  }
+}
+    ${ReplyItemFragmentDoc}`;
+export function useUpdateReplyMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReplyMutation, UpdateReplyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateReplyMutation, UpdateReplyMutationVariables>(UpdateReplyDocument, options);
+      }
+export type UpdateReplyMutationHookResult = ReturnType<typeof useUpdateReplyMutation>;
+export type UpdateReplyMutationResult = Apollo.MutationResult<UpdateReplyMutation>;
+export type UpdateReplyMutationOptions = Apollo.BaseMutationOptions<UpdateReplyMutation, UpdateReplyMutationVariables>;
 export const ResetPasswordDocument = gql`
     mutation ResetPassword($data: ResetPasswordInput!) {
   resetPassword(data: $data)

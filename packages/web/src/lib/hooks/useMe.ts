@@ -25,9 +25,6 @@ export const _ = gql`
     likes {
       postId
     }
-    bookmarks {
-      postId
-    }
     following {
       id
     }

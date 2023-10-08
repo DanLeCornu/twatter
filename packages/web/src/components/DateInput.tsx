@@ -19,15 +19,18 @@ interface DateInputProps extends InputProps {
   maxDate?: Date
 }
 
-export const DateInput = ({ minDate, maxDate, ...props }: DateInputProps) => {
-  const { register, setValue } = useFormContext()
-  const value = useWatch({ name: props.name })
+export const DateInput = ({ name, minDate, maxDate, ...props }: DateInputProps) => {
+  const { register, setValue, trigger } = useFormContext()
+  const value = useWatch({ name })
 
-  const handleChange = (date: string) => setValue(props.name, date, { shouldDirty: true })
+  const handleChange = (date: string) => {
+    setValue(name, date, { shouldDirty: true })
+    trigger(name)
+  }
 
   React.useEffect(() => {
-    register(props.name)
-  }, [register, props.name])
+    register(name)
+  }, [register, name])
 
   return (
     <Box>
@@ -43,7 +46,7 @@ export const DateInput = ({ minDate, maxDate, ...props }: DateInputProps) => {
         onChange={(date) => {
           handleChange(date ? dayjs(date as Date).format("YYYY-MM-DD") : "")
         }}
-        customInput={<CustomInput {...props} />}
+        customInput={<CustomInput name={name} {...props} />}
       />
     </Box>
   )

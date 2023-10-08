@@ -6,6 +6,7 @@ import { HiOutlineDotsCircleHorizontal } from "react-icons/hi"
 import {
   Avatar,
   Box,
+  Button,
   Flex,
   IconButton,
   Menu,
@@ -14,8 +15,10 @@ import {
   MenuList,
   Portal,
   Stack,
+  Text,
   useColorMode,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -23,19 +26,22 @@ import { useRouter } from "next/router"
 import { useLogout } from "lib/hooks/useLogout"
 import { useMe } from "lib/hooks/useMe"
 
+import { Modal } from "./Modal"
+
 export const NAV_WIDTH = 68
 
 export function Nav() {
-  const { me } = useMe()
+  const { me, loading } = useMe()
   const logout = useLogout()
   const { asPath } = useRouter()
+  const modalProps = useDisclosure()
   const { colorMode, toggleColorMode } = useColorMode()
 
   const isDark = colorMode === "dark"
   const borderColor = useColorModeValue("gray.100", "gray.700")
   const bgColor = useColorModeValue("white", "gray.800")
 
-  if (!me) return null
+  if (!me || loading) return null
 
   return (
     <Flex
@@ -52,7 +58,7 @@ export function Nav() {
     >
       <Flex justify="space-between" direction="column">
         <Flex direction="column">
-          <NextLink href="/">
+          <NextLink href="/home">
             <IconButton
               aria-label="twatter logo"
               icon={<Box as={AiOutlineTwitter} boxSize="30px" />}
@@ -62,11 +68,15 @@ export function Nav() {
             />
           </NextLink>
           <Stack spacing={0} mb={2}>
-            <NextLink href="/">
+            <NextLink href="/home">
               <IconButton
                 aria-label="home"
                 icon={
-                  <Box as={BiHomeCircle} boxSize="25px" color={asPath === "/" ? "primary.500" : undefined} />
+                  <Box
+                    as={BiHomeCircle}
+                    boxSize="28px"
+                    color={asPath === "/home" ? "primary.500" : undefined}
+                  />
                 }
                 variant="ghost"
                 boxSize="50px"
@@ -137,9 +147,11 @@ export function Nav() {
               />
               <Portal>
                 <MenuList>
-                  <MenuItem closeOnSelect={false} icon={<Box as={FiBookmark} boxSize="25px" />} fontSize="xl">
-                    Bookmarks
-                  </MenuItem>
+                  <NextLink href="/bookmarks">
+                    <MenuItem icon={<Box as={FiBookmark} boxSize="25px" />} fontSize="xl">
+                      Bookmarks
+                    </MenuItem>
+                  </NextLink>
                   <MenuItem
                     closeOnSelect={false}
                     icon={<Box as={isDark ? BiSun : BiMoon} boxSize="25px" />}
@@ -176,13 +188,27 @@ export function Nav() {
                 closeOnSelect={false}
                 icon={<Box as={FiLogOut} boxSize="18px" />}
                 fontWeight="medium"
-                onClick={logout}
+                onClick={modalProps.onOpen}
               >
                 Log out @{me?.handle}
               </MenuItem>
             </MenuList>
           </Portal>
         </Menu>
+        <Modal {...modalProps} title="Log out of Twatter?" icon={AiOutlineTwitter}>
+          <Text mb={6}>
+            You can always log back in at any time. If you just want to switch accounts, you can do that by
+            adding an existing account.
+          </Text>
+          <Stack>
+            <Button colorScheme="monochrome" onClick={logout}>
+              Log out
+            </Button>
+            <Button colorScheme="monochrome" variant="outline" onClick={modalProps.onClose}>
+              Cancel
+            </Button>
+          </Stack>
+        </Modal>
       </Flex>
     </Flex>
   )

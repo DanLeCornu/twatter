@@ -57,7 +57,7 @@ export function ReportFlow({ type, setType, handleSubmit }: Props) {
         borderBottom="1px solid"
         borderColor={borderColor}
       >
-        <NextLink href="/">
+        <NextLink href="/home">
           <IconButton
             aria-label="back"
             icon={<Box as={AiOutlineClose} boxSize="20px" />}

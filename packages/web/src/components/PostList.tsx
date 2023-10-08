@@ -19,6 +19,7 @@ export const _ = gql`
   fragment PostItem on Post {
     id
     text
+    image
     createdAt
     replyCount
     likeCount

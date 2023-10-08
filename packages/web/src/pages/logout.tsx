@@ -8,7 +8,7 @@ export default function Logout() {
   const { me } = useMe()
   const router = useRouter()
   React.useEffect(() => {
-    if (!me) router.replace("/login")
+    if (!me) router.replace("/")
   }, [me, router])
   return (
     <Center h="100vh">

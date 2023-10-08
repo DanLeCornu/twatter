@@ -19,12 +19,11 @@ import { postTimeFromNow } from "lib/helpers/utils"
 import { UserPopover } from "./UserPopover"
 
 interface Props {
-  type: "post" | "reply"
   item: PostItemFragment | ReplyItemFragment
   noPopover?: boolean
 }
 
-export function ItemHeading({ type, item, noPopover = false }: Props) {
+export function ItemHeading({ item, noPopover = false }: Props) {
   const popoverBg = useColorModeValue("white", "#1A202C")
 
   return (

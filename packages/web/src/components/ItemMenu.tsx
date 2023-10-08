@@ -21,7 +21,8 @@ import {
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
-import type { PostItemFragment, ReplyItemFragment } from "lib/graphql"
+import type { PostItemFragment, ReplyItemFragment} from "lib/graphql";
+import { GetPostDocument, useUpdateReplyMutation } from "lib/graphql"
 import { useUnblockUserMutation } from "lib/graphql"
 import {
   GetPostsDocument,
@@ -104,7 +105,7 @@ export function ItemMenu({ item }: Props) {
       { query: GetPostsDocument, variables: { orderBy: { createdAt: SortOrder.Desc } } },
     ],
   })
-  const [update, { loading: updateLoading }] = useUpdatePostMutation({
+  const [updatePost, { loading: updatePostLoading }] = useUpdatePostMutation({
     refetchQueries: [
       { query: MeDocument },
       {
@@ -113,6 +114,14 @@ export function ItemMenu({ item }: Props) {
           orderBy: { createdAt: SortOrder.Desc },
           where: { user: { is: { handle: { equals: item.user.handle } } } },
         },
+      },
+    ],
+  })
+  const [updateReply, { loading: updateReplyLoading }] = useUpdateReplyMutation({
+    refetchQueries: [
+      {
+        query: GetPostDocument,
+        variables: { where: { id: { equals: (item as ReplyItemFragment).postId } } },
       },
     ],
   })
@@ -141,7 +150,7 @@ export function ItemMenu({ item }: Props) {
     if (muteLoading) return
     return handler(() => mute({ variables: { userId: item.user.id } }), {
       onSuccess: () => {
-        router.replace("/")
+        router.replace("/home")
       },
     })
   }
@@ -165,16 +174,28 @@ export function ItemMenu({ item }: Props) {
       },
     })
   }
-  const handleDeletePost = () => {
-    if (updateLoading) return
-    return handler(
-      () => update({ variables: { postId: item.id, data: { archivedAt: new Date().toString() } } }),
-      {
-        onSuccess: () => {
-          modalProps.onClose()
+  const handleDeleteItem = () => {
+    if (isPost) {
+      if (updatePostLoading) return
+      return handler(
+        () => updatePost({ variables: { postId: item.id, data: { archivedAt: new Date().toString() } } }),
+        {
+          onSuccess: () => {
+            modalProps.onClose()
+          },
         },
-      },
-    )
+      )
+    } else {
+      if (updateReplyLoading) return
+      return handler(
+        () => updateReply({ variables: { replyId: item.id, data: { archivedAt: new Date().toString() } } }),
+        {
+          onSuccess: () => {
+            modalProps.onClose()
+          },
+        },
+      )
+    }
   }
   const handlePinPost = () => {
     if (pinPostLoading) return
@@ -198,6 +219,7 @@ export function ItemMenu({ item }: Props) {
             e.preventDefault() // Stops Next link
             menuProps.onToggle()
           }}
+          // _hover={{ color: "blue.500" }}
         />
         <Portal>
           <MenuList onClick={(e) => e.stopPropagation()}>
@@ -300,7 +322,7 @@ export function ItemMenu({ item }: Props) {
           follow you, and from search results.
         </Text>
         <Stack>
-          <Button bg="red" onClick={handleDeletePost} _hover={{ bg: "red" }}>
+          <Button bg="red" onClick={handleDeleteItem} _hover={{ bg: "red" }}>
             Delete
           </Button>
           <Button colorScheme="monochrome" variant="outline" onClick={modalProps.onClose}>

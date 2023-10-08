@@ -17,6 +17,17 @@ const variantSolid: SystemStyleFunction = (props) => {
     }
   }
 
+  if (colorScheme === "translucent") {
+    return {
+      color: "white",
+      bg: "rgba(26, 32, 44, 0.80)",
+      backdropFilter: "blur(3px)",
+      _hover: {
+        bg: "rgba(26, 32, 44, 0.70)",
+      },
+    }
+  }
+
   return {
     color: "white",
     bg: "primary.500",

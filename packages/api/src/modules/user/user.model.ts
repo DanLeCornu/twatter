@@ -12,13 +12,13 @@ export class User extends BaseModel implements Prisma.User {
   @Field()
   email: string
 
-  password: string
+  password: string | null
 
   @Field()
   name: string
 
-  @Field()
-  handle: string
+  @Field(() => String, { nullable: true })
+  handle: string | null
 
   @Field(() => String, { nullable: true })
   dob: string | null

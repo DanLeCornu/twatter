@@ -47,7 +47,7 @@ function ReportUser() {
     if (!user || !type || submitLoading) return
     return handler(() => submit({ variables: { data: { type, userId: user.id } } }), {
       onSuccess: () => {
-        router.replace("/")
+        router.replace("/home")
       },
     })
   }
@@ -68,7 +68,7 @@ function ReportUser() {
           <Box fontSize="sm" textAlign="center" px={7}>
             <Stack>
               <Text>This account may be deleted or suspended</Text>
-              <NextLink href="/">
+              <NextLink href="/home">
                 <Text textDecor="underline">Back to Twatter</Text>
               </NextLink>
             </Stack>
@@ -84,7 +84,7 @@ function ReportUser() {
           <Box fontSize="sm" textAlign="center" px={7}>
             <Stack>
               <Text>You've already reported this account</Text>
-              <NextLink href="/">
+              <NextLink href="/home">
                 <Text textDecor="underline">Back to Twatter</Text>
               </NextLink>
             </Stack>

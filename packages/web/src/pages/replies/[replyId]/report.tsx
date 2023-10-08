@@ -48,7 +48,7 @@ function ReportReply() {
     if (!type || submitLoading) return
     return handler(() => submit({ variables: { data: { type, replyId: replyId } } }), {
       onSuccess: () => {
-        router.replace("/")
+        router.replace("/home")
       },
     })
   }
@@ -72,7 +72,7 @@ function ReportReply() {
                 This post may be deleted, or from a blocked or muted account - you can update this in your
                 settings
               </Text>
-              <NextLink href="/">
+              <NextLink href="/home">
                 <Text textDecor="underline">Back to Twatter</Text>
               </NextLink>
             </Stack>
@@ -88,7 +88,7 @@ function ReportReply() {
           <Box fontSize="sm" textAlign="center" px={7}>
             <Stack>
               <Text>You've already reported this post</Text>
-              <NextLink href="/">
+              <NextLink href="/home">
                 <Text textDecor="underline">Back to Twatter</Text>
               </NextLink>
             </Stack>

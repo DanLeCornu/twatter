@@ -35,7 +35,7 @@ function ReportPost() {
     if (!type || submitLoading) return
     return handler(() => submit({ variables: { data: { type, postId } } }), {
       onSuccess: () => {
-        router.replace("/")
+        router.replace("/home")
       },
     })
   }
@@ -59,7 +59,7 @@ function ReportPost() {
                 This post may be deleted, or from a blocked or muted account - you can update this in your
                 settings
               </Text>
-              <NextLink href="/">
+              <NextLink href="/home">
                 <Text textDecor="underline">Back to Twatter</Text>
               </NextLink>
             </Stack>
@@ -75,7 +75,7 @@ function ReportPost() {
           <Box fontSize="sm" textAlign="center" px={7}>
             <Stack>
               <Text>You've already reported this post</Text>
-              <NextLink href="/">
+              <NextLink href="/home">
                 <Text textDecor="underline">Back to Twatter</Text>
               </NextLink>
             </Stack>

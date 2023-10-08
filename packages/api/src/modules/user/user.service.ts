@@ -7,7 +7,6 @@ import { AppError } from "../../lib/appError"
 import { createAuthToken, createRefreshToken } from "../../lib/jwt"
 import { prisma } from "../../lib/prisma"
 import { LoginInput } from "./inputs/login.input"
-import { RegisterInput } from "./inputs/register.input"
 import { RefreshTokenResponse } from "./responses/refreshToken.response"
 import { User } from "./user.model"
 
@@ -15,29 +14,35 @@ import { User } from "./user.model"
 export class UserService {
   async login(data: LoginInput): Promise<User> {
     const user = await prisma.user.findUnique({ where: { email: data.email } })
-    if (!user) throw new AppError("Incorrect email or password")
+    if (!user || !user.password) throw new AppError("Incorrect email or password")
     const isValidPassword = await bcrypt.compare(data.password, user.password)
     if (!isValidPassword) throw new AppError("Incorrect email or password")
     return user
   }
 
-  async register(data: RegisterInput) {
+  async register(data: { email: string; name: string; dob: string }) {
     const email = data.email.toLowerCase().trim()
-    await this.checkUserExists({ email: { equals: email } })
+    await checkUserExists({ email: { equals: email } })
     const user = await prisma.user.create({ data })
     return user
-  }
-
-  async checkUserExists(where: UserWhereInput) {
-    const user = await prisma.user.findFirst({ where })
-    if (user) {
-      throw new AppError("User with these details already exists")
-    }
   }
 
   createAuthTokens(user: User): RefreshTokenResponse {
     const token = createAuthToken({ id: user.id })
     const refreshToken = createRefreshToken({ id: user.id })
     return { token, refreshToken }
+  }
+}
+
+export async function checkUserExists(where: UserWhereInput) {
+  const user = await prisma.user.findFirst({ where })
+  if (user) {
+    throw new AppError(
+      where.email
+        ? "Email has already been taken"
+        : where.handle
+        ? "Username has already been taken"
+        : "An account with these details already exists",
+    )
   }
 }

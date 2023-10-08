@@ -2,6 +2,7 @@ import * as React from "react"
 import { AiOutlineLink } from "react-icons/ai"
 import { BiArrowBack, BiImage } from "react-icons/bi"
 import { BsPinFill } from "react-icons/bs"
+import { CgClose } from "react-icons/cg"
 import { FaRegComment } from "react-icons/fa"
 import { FiBookmark, FiMail, FiShare } from "react-icons/fi"
 import { gql } from "@apollo/client"
@@ -16,6 +17,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  Image,
   Menu,
   MenuButton,
   MenuItem,
@@ -39,13 +41,19 @@ import { useRouter } from "next/router"
 import { ReplySchema } from "pages/replies/new"
 
 import { WEB_URL } from "lib/config"
-import type { PostDetailFragment } from "lib/graphql"
+import type { PostDetailFragment} from "lib/graphql";
+import { useUpdateReplyMutation } from "lib/graphql"
 import { MeDocument, useUnblockUserMutation } from "lib/graphql"
 import { GetPostDocument, useCreateReplyMutation, useGetPostQuery } from "lib/graphql"
 import { useForm } from "lib/hooks/useForm"
 import { useMe } from "lib/hooks/useMe"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
+import { useS3Upload } from "lib/hooks/useS3"
+import { useViewPost } from "lib/hooks/useViewPost"
+import { UPLOAD_PATHS } from "lib/uploadPaths"
 import type yup from "lib/yup"
+import type { AttachedImage} from "components/AttachImage";
+import { AttachImage } from "components/AttachImage"
 import { BookmarkPost } from "components/BookmarkPost"
 import { FollowButton } from "components/FollowButton"
 import { Form } from "components/Form"
@@ -62,7 +70,9 @@ import { UserPopover } from "components/UserPopover"
 export const _ = gql`
   fragment ReplyItem on Reply {
     id
+    postId
     text
+    image
     createdAt
     user {
       ...UserDetail
@@ -99,6 +109,8 @@ function Post() {
   const borderColor = useColorModeValue("gray.100", "gray.700")
   const viewCountColor = useColorModeValue("gray.400", "white")
   const postId = router.query.postId as string
+
+  useViewPost(postId)
 
   const { data, loading } = useGetPostQuery({
     fetchPolicy: "cache-and-network",
@@ -145,7 +157,7 @@ function Post() {
                 This post may be deleted, or from a blocked or muted account - you can update this in your
                 settings
               </Text>
-              <NextLink href="/">
+              <NextLink href="/home">
                 <Text textDecor="underline">Back to Twatter</Text>
               </NextLink>
             </Stack>
@@ -166,7 +178,7 @@ function Post() {
           zIndex={1}
           align="center"
         >
-          <NextLink href="/">
+          <NextLink href="/home">
             <IconButton
               aria-label="back"
               icon={<Box as={BiArrowBack} boxSize="20px" />}
@@ -369,21 +381,32 @@ function ReplyForm({ post }: ReplyFormProps) {
   const { me } = useMe()
   const [isActive, setIsActive] = React.useState(false)
   const [submitDisabled, setSubmitDisabled] = React.useState(true)
+  const [image, setImage] = React.useState<AttachedImage | null>(null)
 
   const [create, { loading }] = useCreateReplyMutation({
     refetchQueries: [{ query: GetPostDocument, variables: { where: { id: { equals: post.id } } } }],
   })
+  const [upload] = useS3Upload()
+  const [update] = useUpdateReplyMutation()
 
   const form = useForm({ schema: ReplySchema, shouldResetAfterSubmit: true })
 
   const handleSubmit = (data: yup.InferType<typeof ReplySchema>) => {
     return form.handler(() => create({ variables: { data: { postId: post.id, ...data } } }), {
-      onSuccess: () => {
+      onSuccess: async (data) => {
         setIsActive(false)
         setSubmitDisabled(true)
+        if (image) {
+          setImage(null)
+          const replyId = data.createReply.id
+          const imageKey = (await upload(image.file, { path: UPLOAD_PATHS.replyImage(replyId) })).fileKey
+          return form.handler(() => update({ variables: { replyId, data: { image: imageKey } } }))
+        }
       },
     })
   }
+  const containerHeight = isActive && !image ? "200px" : isActive ? "auto" : "45px"
+
   return (
     <Stack px={4}>
       {isActive && (
@@ -397,7 +420,7 @@ function ReplyForm({ post }: ReplyFormProps) {
         </NextLink>
       )}
       <Form {...form} onSubmit={handleSubmit}>
-        <Flex mb={3} h={isActive ? "200px" : "45px"} transition="200ms height">
+        <Flex mb={3} h={containerHeight} transition="200ms height">
           <Box h="100%" pt={1}>
             <Avatar src={me?.avatar || undefined} boxSize="40px" />
           </Box>
@@ -416,14 +439,38 @@ function ReplyForm({ post }: ReplyFormProps) {
               }}
               onClick={() => setIsActive(true)}
             />
+            {image && (
+              <Box pl={3} pb={1} position="relative">
+                <IconButton
+                  aria-label="remove image"
+                  icon={<Box as={CgClose} boxSize="20px" />}
+                  position="absolute"
+                  top={1}
+                  right={1}
+                  size="sm"
+                  colorScheme="translucent"
+                  onClick={() => setImage(null)}
+                />
+                <Image
+                  alt="reply image"
+                  src={image.preview}
+                  rounded="2xl"
+                  objectFit="cover"
+                  maxH="400px"
+                  w="100%"
+                />
+              </Box>
+            )}
             {isActive && (
               <HStack>
-                <IconButton
-                  aria-label="media"
-                  icon={<Box as={BiImage} boxSize="22px" />}
-                  variant="ghost"
-                  color="primary.500"
-                />
+                <AttachImage image={image} setImage={setImage}>
+                  <IconButton
+                    aria-label="media"
+                    icon={<Box as={BiImage} boxSize="22px" />}
+                    variant="ghost"
+                    color="primary.500"
+                  />
+                </AttachImage>
               </HStack>
             )}
             <Button

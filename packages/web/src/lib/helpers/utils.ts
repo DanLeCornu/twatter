@@ -20,3 +20,9 @@ export const postTimeFromNow = (createdAt: string) => {
     return postDate.format("MMM D")
   }
 }
+
+export const randomNumber = (length: number) => {
+  const first = Math.pow(10, length - 1)
+  const second = first * 9
+  return Math.floor(first + Math.random() * second)
+}

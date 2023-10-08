@@ -44,10 +44,10 @@ model User {
   id                 String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email              String     @unique
   /// @TypeGraphQL.omit(output: true)
-  password           String
+  password           String?
   role               Role       @default(USER)
-  name               String     @unique @db.VarChar(50)
-  handle             String     @unique @db.VarChar(15)
+  name               String     @db.VarChar(50)
+  handle             String?    @unique @db.VarChar(15)
   avatar             String?
   cover              String?
   bio                String?    @db.VarChar(160)
@@ -98,11 +98,12 @@ model Post {
 }
 
 model Reply {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  text      String
-  image     String?
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  text       String
+  image      String?
+  createdAt  DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  archivedAt DateTime? @db.Timestamptz(6)
 
   reports Report[]
   post    Post     @relation(fields: [postId], references: [id])
@@ -116,10 +117,10 @@ model View {
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 
-  post   Post    @relation(fields: [postId], references: [id])
-  postId String  @db.Uuid
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @db.Uuid
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
 }
 
 model Like {
@@ -178,4 +179,15 @@ model Report {
   replyId   String? @db.Uuid
   user      User?   @relation(name: "UserReports", fields: [userId], references: [id])
   userId    String? @db.Uuid
+}
+
+model Verification {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String
+  email            String
+  dob              String
+  verificationCode String    @unique
+  verifiedAt       DateTime? @db.Timestamptz(6)
+  createdAt        DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
 }

@@ -1,5 +1,5 @@
 import { Arg, Args, Mutation, Query, Resolver } from "type-graphql"
-import { Inject, Service } from "typedi"
+import { Service } from "typedi"
 
 import { FindFirstPostArgs, FindManyPostArgs, PostUpdateInput } from "@twatter/database/dist/generated"
 
@@ -8,16 +8,12 @@ import { CurrentUser } from "../shared/currentUser"
 import { UseAuth } from "../shared/middleware/UseAuth"
 import { User } from "../user/user.model"
 import { CreatePostInput } from "./inputs/createPost.input"
-import { PostMailer } from "./post.mailer"
 import { Post } from "./post.model"
 import { PostsResponse } from "./responses/posts.response"
 
 @Service()
 @Resolver(() => Post)
 export default class PostResolver {
-  @Inject(() => PostMailer)
-  postMailer: PostMailer
-
   // GET POST
   @Query(() => Post, { nullable: true })
   async post(@CurrentUser() currentUser: User, @Args() args: FindFirstPostArgs): Promise<Post | null> {

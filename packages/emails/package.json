@@ -1,0 +1,26 @@
+{
+  "name": "@twatter/emails",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src",
+  "scripts": {
+    "lint:fix": "eslint --config .eslintrc.commit.js --fix --cache --ext .ts,.tsx src",
+    "lint": "eslint --config .eslintrc.js --ext .ts,.tsx src",
+    "prettier": "prettier --check src",
+    "prettier:fix": "prettier --write src",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.7",
+    "@twatter/database": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.25",
+    "@types/react-dom": "^18.2.11",
+    "eslint": "8.50.0",
+    "prettier": "^3.0.3",
+    "typescript": "5.2.2"
+  }
+}

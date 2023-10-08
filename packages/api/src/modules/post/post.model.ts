@@ -9,7 +9,6 @@ export class Post extends BaseModel implements Prisma.Post {
   @Field()
   text: string
 
-  @Field(() => String, { nullable: true })
   image: string | null
 
   @Field()

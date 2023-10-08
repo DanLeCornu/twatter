@@ -9,12 +9,14 @@ import {
 } from "@twatter/database/dist/generated"
 
 import { AppError } from "../../lib/appError"
+import { IS_DEV } from "../../lib/config"
 import { createToken, decodeRefreshToken, decodeToken } from "../../lib/jwt"
 import { prisma } from "../../lib/prisma"
 import { ContextUser } from "../shared/contextUser"
 import { CurrentUser } from "../shared/currentUser"
 import { UseAuth } from "../shared/middleware/UseAuth"
 import { ResolverContext } from "../shared/resolverContext"
+import { VerifyInput } from "../verification/inputs/verify.input"
 import { LoginInput } from "./inputs/login.input"
 import { RegisterInput } from "./inputs/register.input"
 import { ResetPasswordInput } from "./inputs/resetPassword.input"
@@ -22,15 +24,13 @@ import { UpdateUserInput } from "./inputs/updateUser.input"
 import { AuthResponse } from "./responses/auth.response"
 import { RefreshTokenResponse } from "./responses/refreshToken.response"
 import { UsersResponse } from "./responses/users.response"
-import { UserMailer } from "./user.mailer"
+import { sendResetPasswordLink } from "./user.mailer"
 import { User } from "./user.model"
-import { UserService } from "./user.service"
+import { checkUserExists, UserService } from "./user.service"
 
 @Service()
 @Resolver(() => User)
 export default class UserResolver {
-  @Inject(() => UserMailer)
-  userMailer: UserMailer
   @Inject(() => UserService)
   userService: UserService
 
@@ -40,7 +40,7 @@ export default class UserResolver {
     return await prisma.user.findFirst(args as any)
   }
 
-  @UseAuth([Role.ADMIN])
+  // @UseAuth([Role.ADMIN])
   @Query(() => UsersResponse)
   async users(@Args() args: FindManyUserArgs): Promise<UsersResponse> {
     const items = await prisma.user.findMany(args as any)
@@ -65,6 +65,8 @@ export default class UserResolver {
   @UseAuth()
   @Mutation(() => User)
   async updateMe(@CurrentUser() currentUser: User, @Arg("data") data: UpdateUserInput): Promise<User> {
+    if (data.email) await checkUserExists({ email: { equals: data.email } })
+    if (data.handle) await checkUserExists({ handle: { equals: data.handle } })
     return await prisma.user.update({ where: { id: currentUser.id }, data })
   }
 
@@ -101,10 +103,29 @@ export default class UserResolver {
     return tokens
   }
 
+  // VERIFY
+  @Mutation(() => Boolean)
+  async verify(@Arg("data") data: VerifyInput): Promise<Boolean> {
+    const email = data.email.toLowerCase().trim()
+    await checkUserExists({ email: { equals: email } })
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
+    if (IS_DEV) console.log("CODE:", verificationCode)
+    await prisma.verification.create({ data: { ...data, verificationCode } })
+    return true
+  }
+
   // REGISTER
   @Mutation(() => AuthResponse)
   async register(@Arg("data") data: RegisterInput, @Ctx() context: ResolverContext): Promise<AuthResponse> {
-    const user = await this.userService.register(data)
+    const { email, verificationCode } = data
+    const verification = await prisma.verification.findFirst({
+      where: { email, verifiedAt: null },
+      orderBy: { createdAt: "desc" },
+    })
+    if (verification?.verificationCode !== verificationCode) throw new AppError("Incorrect verification code")
+
+    const user = await this.userService.register({ email, name: verification.name, dob: verification.dob })
+    await prisma.verification.update({ where: { id: verification.id }, data: { verifiedAt: new Date() } })
     const tokens = this.userService.createAuthTokens(user)
     context.req.auth = user
     context.req.currentUser = user
@@ -116,8 +137,9 @@ export default class UserResolver {
   async forgotPassword(@Arg("email") email: string): Promise<boolean> {
     const user = await prisma.user.findUnique({ where: { email } })
     if (user) {
+      console.log(user.email)
       const token = createToken({ id: user.id })
-      void this.userMailer.sendResetPasswordLink(user, token)
+      void sendResetPasswordLink(user, token)
     }
     return true
   }
@@ -135,7 +157,9 @@ export default class UserResolver {
     try {
       const payload = decodeToken<{ id: string }>(data.token)
       const user = await prisma.user.update({ where: { id: payload.id }, data: { password: data.password } })
-      void this.userMailer.sendPasswordChanged(user)
+      console.log(user.email)
+      // TODO: mailer
+      // sendPasswordChanged(user)
       return true
     } catch (error) {
       return false

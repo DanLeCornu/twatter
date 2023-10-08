@@ -19,12 +19,12 @@ export function withAuth(Page: NextPageWithLayout, isAuthorized?: (user: MeFragm
       if (loading) return
       if (!me) {
         // If not logged in
-        router.replace("/login")
+        router.replace("/")
         return
       }
       if (isAuthorized && !isAuthorized(me)) {
         // If not authorized
-        router.replace("/")
+        router.replace("/home")
         return
       }
     }, [loading, me, router])

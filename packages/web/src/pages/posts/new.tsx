@@ -1,15 +1,20 @@
 import * as React from "react"
 import { BiArrowBack } from "react-icons/bi"
 import { BiImage } from "react-icons/bi"
+import { CgClose } from "react-icons/cg"
 import { gql } from "@apollo/client"
-import { Avatar, Box, Button, Flex, HStack, IconButton, useColorModeValue } from "@chakra-ui/react"
+import { Avatar, Box, Button, Divider,Flex, HStack, IconButton, Image, Stack } from "@chakra-ui/react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
-import { GetPostsDocument, SortOrder, useCreatePostMutation } from "lib/graphql"
+import { GetPostsDocument, SortOrder, useCreatePostMutation, useUpdatePostMutation } from "lib/graphql"
 import { useForm } from "lib/hooks/useForm"
 import { useMe } from "lib/hooks/useMe"
+import { useS3Upload } from "lib/hooks/useS3"
+import { UPLOAD_PATHS } from "lib/uploadPaths"
 import yup from "lib/yup"
+import type { AttachedImage} from "components/AttachImage";
+import { AttachImage } from "components/AttachImage"
 import { Form } from "components/Form"
 import { withAuth } from "components/hoc/withAuth"
 import { Textarea } from "components/Textarea"
@@ -29,7 +34,9 @@ export const PostSchema = yup.object().shape({
 function NewPost() {
   const { me } = useMe()
   const router = useRouter()
-  const [postSubmitDisabled, setPostSubmitDisabled] = React.useState(true)
+  const [submitDisabled, setSubmitDisabled] = React.useState(true)
+  const [image, setImage] = React.useState<AttachedImage | null>(null)
+
   const [create, { loading }] = useCreatePostMutation({
     refetchQueries: [
       {
@@ -44,16 +51,26 @@ function NewPost() {
 
   const form = useForm({ schema: PostSchema })
 
+  const [upload] = useS3Upload()
+  const [update] = useUpdatePostMutation()
+
   const handleSubmit = (data: yup.InferType<typeof PostSchema>) => {
     return form.handler(() => create({ variables: { data } }), {
-      onSuccess: () => router.push("/"),
+      onSuccess: async (data) => {
+        router.push("/home")
+        if (image) {
+          const postId = data.createPost.id
+          const imageKey = (await upload(image.file, { path: UPLOAD_PATHS.postImage(postId) })).fileKey
+          return form.handler(() => update({ variables: { postId, data: { image: imageKey } } }))
+        }
+      },
     })
   }
 
   return (
     <Form {...form} onSubmit={handleSubmit}>
       <Flex justify="space-between" maxW="100vw">
-        <NextLink href="/">
+        <NextLink href="/home">
           <IconButton
             aria-label="back"
             icon={<Box as={BiArrowBack} boxSize="20px" />}
@@ -61,36 +78,66 @@ function NewPost() {
             m={2}
           />
         </NextLink>
-        <Button isDisabled={postSubmitDisabled} isLoading={loading} type="submit" mt={2} mr={4}>
+        <Button isDisabled={submitDisabled} isLoading={loading} type="submit" mt={2} mr={4}>
           Post
         </Button>
       </Flex>
-      <Flex mx={4} h="180px" borderBottom="1px solid" borderColor={useColorModeValue("gray.100", "gray.700")}>
+      <Flex mx={4}>
         <Box h="100%" pt={4}>
           <Avatar src={me?.avatar || undefined} boxSize="40px" />
         </Box>
-        <Box pt={6} h="100%">
+        <Stack pt={3} justify="space-between">
           <Textarea
             name="text"
-            pl={4}
+            h={image ? "40px" : "150px"}
+            pl={1}
             variant="unstyled"
             placeholder="What is happening?!"
             size="lg"
             autoFocus
             resize="none"
+            validations={false}
+            bordered={false}
             onChange={(e) => {
-              e.target.value ? setPostSubmitDisabled(false) : setPostSubmitDisabled(true)
+              e.target.value ? setSubmitDisabled(false) : setSubmitDisabled(true)
             }}
           />
-        </Box>
+          {image && (
+            <Box pl={3} pb={4} position="relative">
+              <IconButton
+                aria-label="remove image"
+                icon={<Box as={CgClose} boxSize="20px" />}
+                position="absolute"
+                top={1}
+                right={1}
+                size="sm"
+                colorScheme="translucent"
+                onClick={() => setImage(null)}
+              />
+              <Image
+                alt="post image"
+                src={image.preview}
+                rounded="2xl"
+                objectFit="cover"
+                maxH="400px"
+                w="100%"
+              />
+            </Box>
+          )}
+        </Stack>
       </Flex>
+      <Box px={4}>
+        <Divider />
+      </Box>
       <HStack mx={4} mt={2}>
-        <IconButton
-          aria-label="media"
-          icon={<Box as={BiImage} boxSize="22px" />}
-          variant="ghost"
-          color="primary.500"
-        />
+        <AttachImage image={image} setImage={setImage}>
+          <IconButton
+            aria-label="media"
+            icon={<Box as={BiImage} boxSize="22px" />}
+            variant="ghost"
+            color="primary.500"
+          />
+        </AttachImage>
       </HStack>
     </Form>
   )
