@@ -3,7 +3,9 @@ import { BiArrowBack } from "react-icons/bi"
 import { BiImage } from "react-icons/bi"
 import { CgClose } from "react-icons/cg"
 import { gql } from "@apollo/client"
-import { Avatar, Box, Button, Divider,Flex, HStack, IconButton, Image, Stack } from "@chakra-ui/react"
+import { matchSorter } from "match-sorter"
+
+import { Avatar, Box, Button, Divider, Flex, HStack, IconButton, Image, Stack, Text } from "@chakra-ui/react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
@@ -13,11 +15,13 @@ import { useMe } from "lib/hooks/useMe"
 import { useS3Upload } from "lib/hooks/useS3"
 import { UPLOAD_PATHS } from "lib/uploadPaths"
 import yup from "lib/yup"
-import type { AttachedImage} from "components/AttachImage";
+import type { AttachedImage } from "components/AttachImage"
 import { AttachImage } from "components/AttachImage"
 import { Form } from "components/Form"
 import { withAuth } from "components/hoc/withAuth"
 import { Textarea } from "components/Textarea"
+import { checkForTags } from "lib/helpers/checkForTags"
+import { uniq } from "lib/helpers/utils"
 
 const _ = gql`
   mutation CreatePost($data: CreatePostInput!) {
@@ -36,6 +40,8 @@ function NewPost() {
   const router = useRouter()
   const [submitDisabled, setSubmitDisabled] = React.useState(true)
   const [image, setImage] = React.useState<AttachedImage | null>(null)
+  const [tags, setTags] = React.useState<string[]>([])
+  const [tagSearch, setTagSearch] = React.useState("")
 
   const [create, { loading }] = useCreatePostMutation({
     refetchQueries: [
@@ -65,6 +71,20 @@ function NewPost() {
         }
       },
     })
+  }
+
+  const allTagOptions = ["space", "tech", "politics"]
+
+  const matchedTags = () => {
+    return matchSorter(allTagOptions, tagSearch)
+  }
+
+  const handleAddTag = (tag: string) => {
+    setTags(uniq([...tags, tag]))
+    setTagSearch("")
+    const value = form.getValues("text")
+    form.setValue("text", value + " ")
+    // TODO replace the word in the input with the completed tag
   }
 
   return (
@@ -99,9 +119,21 @@ function NewPost() {
             validations={false}
             bordered={false}
             onChange={(e) => {
+              checkForTags(e.target.value, setTags, setTagSearch)
               e.target.value ? setSubmitDisabled(false) : setSubmitDisabled(true)
             }}
           />
+          {!!tagSearch && (
+            <Box>
+              <Stack>
+                {matchedTags().map((matchedTag) => (
+                  <Text key={matchedTag} onClick={() => handleAddTag(matchedTag)}>
+                    {matchedTag}
+                  </Text>
+                ))}
+              </Stack>
+            </Box>
+          )}
           {image && (
             <Box pl={3} pb={4} position="relative">
               <IconButton
@@ -139,6 +171,9 @@ function NewPost() {
           />
         </AttachImage>
       </HStack>
+      <Text>Tags: {tags.join(", ")}</Text>
+      <Text>Tag Search: {tagSearch}</Text>
+      <Text>Matches: {matchedTags().join(", ")}</Text>
     </Form>
   )
 }

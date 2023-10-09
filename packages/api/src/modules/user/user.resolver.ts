@@ -65,8 +65,8 @@ export default class UserResolver {
   @UseAuth()
   @Mutation(() => User)
   async updateMe(@CurrentUser() currentUser: User, @Arg("data") data: UpdateUserInput): Promise<User> {
-    if (data.email) await checkUserExists({ email: { equals: data.email } })
-    if (data.handle) await checkUserExists({ handle: { equals: data.handle } })
+    if (data.email) await checkUserExists({ email: { equals: data.email } }, currentUser)
+    if (data.handle) await checkUserExists({ handle: { equals: data.handle } }, currentUser)
     return await prisma.user.update({ where: { id: currentUser.id }, data })
   }
 

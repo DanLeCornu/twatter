@@ -26,3 +26,7 @@ export const randomNumber = (length: number) => {
   const second = first * 9
   return Math.floor(first + Math.random() * second)
 }
+
+export function uniq(a: any[]) {
+  return Array.from(new Set(a))
+}

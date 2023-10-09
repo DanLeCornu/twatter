@@ -46,7 +46,7 @@ export default function Signup() {
         />
       </NextLink>
       <Text fontWeight="bold" fontSize="xl" pl={12}>
-        Step {step} of 4
+        Step {step} of 5
       </Text>
       {step === 1 ? <SignupStep1 setStep={setStep} setEmail={setEmail} /> : <SignupStep2 email={email} />}
     </Stack>

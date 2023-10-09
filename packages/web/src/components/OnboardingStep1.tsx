@@ -23,12 +23,13 @@ const Onboarding1Schema = yup.object().shape({
 
 interface Props {
   name: string
+  handle?: string | null
   setStep: React.Dispatch<React.SetStateAction<number>>
 }
 
-export function OnboardingStep1({ name, setStep }: Props) {
+export function OnboardingStep1({ name, handle, setStep }: Props) {
   const defaultValues = {
-    handle: suggestHandle(name),
+    handle: handle || suggestHandle(name),
   }
   const form = useForm({ schema: Onboarding1Schema, defaultValues })
 

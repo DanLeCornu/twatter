@@ -1,7 +1,6 @@
 import * as React from "react"
 import { gql } from "@apollo/client"
 import { Button, Heading, Stack, Text } from "@chakra-ui/react"
-import { useRouter } from "next/router"
 
 import { useUpdatePasswordMutation } from "lib/graphql"
 import { useForm } from "lib/hooks/useForm"
@@ -17,20 +16,23 @@ const _ = gql`
     }
   }
 `
-const SetPasswordSchema = yup.object().shape({
+const Onboarding2Schema = yup.object().shape({
   password: yup.string().min(8, "Must be at least 8 characters"),
 })
 
-export function OnboardingStep2() {
-  const router = useRouter()
-  const form = useForm({ schema: SetPasswordSchema })
+interface Props {
+  setStep: React.Dispatch<React.SetStateAction<number>>
+}
+
+export function OnboardingStep2({ setStep }: Props) {
+  const form = useForm({ schema: Onboarding2Schema })
 
   const [update, { loading }] = useUpdatePasswordMutation()
 
-  const onSubmit = (data: yup.InferType<typeof SetPasswordSchema>) => {
+  const onSubmit = (data: yup.InferType<typeof Onboarding2Schema>) => {
     return form.handler(() => update({ variables: { data: { password: data.password } } }), {
       onSuccess: async () => {
-        router.replace("/home")
+        setStep(5)
       },
     })
   }
@@ -48,8 +50,15 @@ export function OnboardingStep2() {
         <Input name="password" label="Password" autoFocus />
       </Stack>
       <Stack py={6} px={8} position="fixed" bottom={0} left={0} w="100%">
-        <Button type="submit" size="lg" w="100%" isDisabled={!form.formState.isValid} isLoading={loading}>
-          Let's go!
+        <Button
+          type="submit"
+          size="lg"
+          w="100%"
+          colorScheme="monochrome"
+          isDisabled={!form.formState.isValid}
+          isLoading={loading}
+        >
+          Next
         </Button>
       </Stack>
     </Form>

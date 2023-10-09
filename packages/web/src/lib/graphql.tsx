@@ -4648,6 +4648,27 @@ export type UnlikePostMutationVariables = Exact<{
 
 export type UnlikePostMutation = { __typename?: 'Mutation', destroyLike: boolean };
 
+export type UpdateHandleMutationVariables = Exact<{
+  data: UpdateUserInput;
+}>;
+
+
+export type UpdateHandleMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string } };
+
+export type UpdatePasswordMutationVariables = Exact<{
+  data: UpdateUserInput;
+}>;
+
+
+export type UpdatePasswordMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string } };
+
+export type UpdateAvatarMutationVariables = Exact<{
+  data: UpdateUserInput;
+}>;
+
+
+export type UpdateAvatarMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string } };
+
 export type UserDetailFragment = { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null };
 
 export type PostItemFragment = { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
@@ -4701,13 +4722,6 @@ export type CreateReportMutationVariables = Exact<{
 
 
 export type CreateReportMutation = { __typename?: 'Mutation', createReport: boolean };
-
-export type UpdatePasswordMutationVariables = Exact<{
-  data: UpdateUserInput;
-}>;
-
-
-export type UpdatePasswordMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string } };
 
 export type VerifyMutationVariables = Exact<{
   data: VerifyInput;
@@ -5244,6 +5258,48 @@ export function useUnlikePostMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UnlikePostMutationHookResult = ReturnType<typeof useUnlikePostMutation>;
 export type UnlikePostMutationResult = Apollo.MutationResult<UnlikePostMutation>;
 export type UnlikePostMutationOptions = Apollo.BaseMutationOptions<UnlikePostMutation, UnlikePostMutationVariables>;
+export const UpdateHandleDocument = gql`
+    mutation UpdateHandle($data: UpdateUserInput!) {
+  updateMe(data: $data) {
+    id
+  }
+}
+    `;
+export function useUpdateHandleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateHandleMutation, UpdateHandleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateHandleMutation, UpdateHandleMutationVariables>(UpdateHandleDocument, options);
+      }
+export type UpdateHandleMutationHookResult = ReturnType<typeof useUpdateHandleMutation>;
+export type UpdateHandleMutationResult = Apollo.MutationResult<UpdateHandleMutation>;
+export type UpdateHandleMutationOptions = Apollo.BaseMutationOptions<UpdateHandleMutation, UpdateHandleMutationVariables>;
+export const UpdatePasswordDocument = gql`
+    mutation UpdatePassword($data: UpdateUserInput!) {
+  updateMe(data: $data) {
+    id
+  }
+}
+    `;
+export function useUpdatePasswordMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument, options);
+      }
+export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>;
+export type UpdatePasswordMutationResult = Apollo.MutationResult<UpdatePasswordMutation>;
+export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
+export const UpdateAvatarDocument = gql`
+    mutation UpdateAvatar($data: UpdateUserInput!) {
+  updateMe(data: $data) {
+    id
+  }
+}
+    `;
+export function useUpdateAvatarMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAvatarMutation, UpdateAvatarMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAvatarMutation, UpdateAvatarMutationVariables>(UpdateAvatarDocument, options);
+      }
+export type UpdateAvatarMutationHookResult = ReturnType<typeof useUpdateAvatarMutation>;
+export type UpdateAvatarMutationResult = Apollo.MutationResult<UpdateAvatarMutation>;
+export type UpdateAvatarMutationOptions = Apollo.BaseMutationOptions<UpdateAvatarMutation, UpdateAvatarMutationVariables>;
 export const GetPostsDocument = gql`
     query GetPosts($orderBy: [PostOrderByWithRelationInput!], $where: PostWhereInput, $skip: Int) {
   posts(take: 30, orderBy: $orderBy, where: $where, skip: $skip) {
@@ -5337,20 +5393,6 @@ export function useCreateReportMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateReportMutationHookResult = ReturnType<typeof useCreateReportMutation>;
 export type CreateReportMutationResult = Apollo.MutationResult<CreateReportMutation>;
 export type CreateReportMutationOptions = Apollo.BaseMutationOptions<CreateReportMutation, CreateReportMutationVariables>;
-export const UpdatePasswordDocument = gql`
-    mutation UpdatePassword($data: UpdateUserInput!) {
-  updateMe(data: $data) {
-    id
-  }
-}
-    `;
-export function useUpdatePasswordMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument, options);
-      }
-export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>;
-export type UpdatePasswordMutationResult = Apollo.MutationResult<UpdatePasswordMutation>;
-export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
 export const VerifyDocument = gql`
     mutation Verify($data: VerifyInput!) {
   verify(data: $data)

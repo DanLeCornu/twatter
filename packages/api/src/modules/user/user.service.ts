@@ -34,8 +34,9 @@ export class UserService {
   }
 }
 
-export async function checkUserExists(where: UserWhereInput) {
+export async function checkUserExists(where: UserWhereInput, currentUser?: User) {
   const user = await prisma.user.findFirst({ where })
+  if (currentUser?.id === user?.id) return // Ensures you can "udpate" a unique field to be the same value, if it's your own account
   if (user) {
     throw new AppError(
       where.email
