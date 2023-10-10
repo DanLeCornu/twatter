@@ -97,7 +97,7 @@ function NewPost() {
             m={2}
           />
         </NextLink>
-        <Button isDisabled={submitDisabled} isLoading={loading} type="submit" mt={2} mr={4}>
+        <Button isDisabled={submitDisabled} isLoading={loading} type="submit" mt={2} mr={3} px={4} size="sm">
           Post
         </Button>
       </Flex>

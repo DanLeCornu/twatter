@@ -1,6 +1,6 @@
 import * as React from "react"
 import { AiOutlineTwitter } from "react-icons/ai"
-import { Box, Button, Center, Flex, Heading, Icon, Spinner, Stack, Text } from "@chakra-ui/react"
+import { Button, Center, Flex, Heading, Icon, Link, Spinner, Stack, Text } from "@chakra-ui/react"
 import Head from "next/head"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -24,61 +24,62 @@ export default function Landing() {
     )
 
   return (
-    <Stack px={6}>
-      <Stack px={6} py={6} spacing={14}>
-        <Icon as={AiOutlineTwitter} boxSize="60px" />
-        <Stack spacing={1}>
-          <Heading as="h1" fontSize="4xl">
-            Twatter
-          </Heading>
-          <Heading as="h2" fontSize="lg" fontWeight="medium">
-            Twitter without The Twat
-          </Heading>
-        </Stack>
+    <Stack p={8} spacing={10}>
+      <Icon as={AiOutlineTwitter} boxSize="60px" />
+      <Stack spacing={1}>
+        <Heading as="h1" fontSize="4xl">
+          Twatter
+        </Heading>
+        <Heading as="h2" fontSize="lg" fontWeight="medium">
+          Twitter without The Twat
+        </Heading>
+      </Stack>
 
-        <Stack>
-          <Text fontSize="2xl" fontWeight="bold">
-            Join today.
-          </Text>
+      <Stack>
+        <Text fontSize="2xl" fontWeight="bold">
+          Join today.
+        </Text>
+        <Stack spacing={1}>
           <NextLink href="/signup">
             <Button w="100%">Create Account</Button>
           </NextLink>
           <Text fontSize="x-small" color="gray.400">
-            By signing up, you agree to the Terms of Service and Privacy Policy, including Cookie Use.
+            By signing up, you agree to the <Link>Terms of Service</Link> and <Link>Privacy Policy</Link>,
+            including <Link>Cookie Use</Link>.
           </Text>
-        </Stack>
-
-        <Stack>
-          <Text fontWeight="bold">Already have an account?</Text>
-          <NextLink href="/login">
-            <Button variant="outline" colorScheme="monochrome" color="blue.500" w="100%">
-              Sign in
-            </Button>
-          </NextLink>
         </Stack>
       </Stack>
-      <Box position="fixed" bottom={0} left={0} w="100%" py={4}>
+
+      <Stack>
+        <Text fontWeight="medium">Already have an account?</Text>
+        <NextLink href="/login">
+          <Button variant="outline" w="100%">
+            Sign in
+          </Button>
+        </NextLink>
+      </Stack>
+      <Stack>
         <Flex flexWrap="wrap" justify="center" pb={2}>
-          <Text color="gray.400" fontSize="xs" noOfLines={1} mr={4} mt={2}>
+          <Text color="gray.400" fontSize="xs" noOfLines={1} mr={4} mt={1}>
             About
           </Text>
-          <Text color="gray.400" fontSize="xs" noOfLines={1} mr={4} mt={2}>
+          <Text color="gray.400" fontSize="xs" noOfLines={1} mr={4} mt={1}>
             Terms of Service
           </Text>
-          <Text color="gray.400" fontSize="xs" noOfLines={1} mr={4} mt={2}>
+          <Text color="gray.400" fontSize="xs" noOfLines={1} mr={4} mt={1}>
             Privacy Policy
           </Text>
-          <Text color="gray.400" fontSize="xs" noOfLines={1} mr={4} mt={2}>
+          <Text color="gray.400" fontSize="xs" noOfLines={1} mr={4} mt={1}>
             Cookie Policy
           </Text>
-          <Text color="gray.400" fontSize="xs" noOfLines={1} mt={2}>
+          <Text color="gray.400" fontSize="xs" noOfLines={1} mt={1}>
             Cookie Policy
           </Text>
         </Flex>
         <Text color="gray.400" fontSize="xs" textAlign="center">
           © 2023 Twatter.
         </Text>
-      </Box>
+      </Stack>
     </Stack>
   )
 }

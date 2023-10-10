@@ -344,7 +344,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                   {user.website && (
                     <HStack spacing={1} align="center" mr={2}>
                       <Icon as={AiOutlineLink} color="gray.400" boxSize="18px" />
-                      <Link isExternal href={websiteUrl} color="blue.500">
+                      <Link isExternal href={websiteUrl}>
                         <Text fontSize="sm">{user.website}</Text>
                       </Link>
                     </HStack>

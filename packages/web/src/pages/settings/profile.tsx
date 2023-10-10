@@ -225,7 +225,7 @@ function EditProfile() {
                 <Stack spacing={0}>
                   <Text fontWeight="medium">
                     Birth date &#183;{" "}
-                    <Link color="blue.500" fontSize="sm" onClick={() => setIsEditingDob(false)}>
+                    <Link fontSize="sm" onClick={() => setIsEditingDob(false)}>
                       Cancel
                     </Link>
                   </Text>
@@ -250,10 +250,7 @@ function EditProfile() {
             ) : (
               <Stack spacing={0}>
                 <Text color="gray.400">
-                  Birth date &#183;{" "}
-                  <Link color="blue.500" onClick={editModalProps.onOpen}>
-                    Edit
-                  </Link>
+                  Birth date &#183; <Link onClick={editModalProps.onOpen}>Edit</Link>
                 </Text>
                 <Text fontSize="xl">
                   {me?.dob ? dayjs(me.dob).format("MMMM DD, YYYY") : "Add your date of birth"}

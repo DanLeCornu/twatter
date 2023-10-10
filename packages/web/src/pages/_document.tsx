@@ -12,7 +12,7 @@ export default class AppDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <meta name="theme-color" key="theme-color" content="#000000" />
+          {/* <meta name="theme-color" key="theme-color" content="#000000" /> */}
           <meta name="description" content="Twatter" key="description" />
           <meta property="og:title" content="Twatter" key="title" />
           <meta property="og:description" content="Twatter" key="og:description" />

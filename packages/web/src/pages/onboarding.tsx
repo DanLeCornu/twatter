@@ -1,6 +1,6 @@
 import * as React from "react"
 import { CgClose } from "react-icons/cg"
-import { Box, Center, IconButton, Spinner, Stack, Text } from "@chakra-ui/react"
+import { Box, Center, HStack, IconButton, Spinner, Text, useColorModeValue } from "@chakra-ui/react"
 import Head from "next/head"
 import NextLink from "next/link"
 
@@ -17,6 +17,8 @@ function Onboarding() {
   const logout = useLogout()
   const [step, setStep] = React.useState(3)
 
+  const bgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
+
   if (loading)
     return (
       <Center minH="100vh">
@@ -30,47 +32,47 @@ function Onboarding() {
       </Center>
     )
   return (
-    <Stack pt={1} px={6}>
+    <Box minH="100vh">
       <Head>
         <title>Onboarding</title>
       </Head>
-      {step === 3 ? (
-        <IconButton
-          icon={<Box as={CgClose} boxSize="20px" />}
-          aria-label="close"
-          colorScheme="monochrome"
-          variant="outline"
-          border="none"
-          position="fixed"
-          top={2}
-          left={2}
-          onClick={logout}
-        />
-      ) : (
-        <NextLink href="/home">
+      <HStack
+        position="fixed"
+        top={0}
+        left={0}
+        spacing={6}
+        bg={bgColor}
+        w="100%"
+        py={2}
+        backdropFilter="blur(10px)"
+        zIndex={1}
+      >
+        {step === 3 ? (
           <IconButton
             icon={<Box as={CgClose} boxSize="20px" />}
             aria-label="close"
-            colorScheme="monochrome"
-            variant="outline"
-            border="none"
-            position="fixed"
-            top={2}
-            left={2}
+            variant="ghost"
+            onClick={logout}
           />
-        </NextLink>
-      )}
-      <Text fontWeight="bold" fontSize="xl" pl={12}>
-        Step {step} of 5
-      </Text>
-      {step === 3 ? (
-        <OnboardingStep1 name={me.name} handle={me.handle} setStep={setStep} />
-      ) : step === 4 ? (
-        <OnboardingStep2 setStep={setStep} />
-      ) : (
-        <OnboardingStep3 />
-      )}
-    </Stack>
+        ) : (
+          <NextLink href="/home">
+            <IconButton icon={<Box as={CgClose} boxSize="20px" />} aria-label="close" variant="ghost" />
+          </NextLink>
+        )}
+        <Text fontWeight="bold" fontSize="xl">
+          Step {step} of 5
+        </Text>
+      </HStack>
+      <Box px={6} pt={12}>
+        {step === 3 ? (
+          <OnboardingStep1 name={me.name} handle={me.handle} setStep={setStep} />
+        ) : step === 4 ? (
+          <OnboardingStep2 setStep={setStep} />
+        ) : (
+          <OnboardingStep3 />
+        )}
+      </Box>
+    </Box>
   )
 }
 

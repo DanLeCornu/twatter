@@ -55,7 +55,7 @@ export function OnboardingStep1({ name, handle, setStep }: Props) {
         </Stack>
         <Input name="handle" label="Username" autoFocus />
       </Stack>
-      <Stack py={6} px={8} position="fixed" bottom={0} left={0} w="100%">
+      <Stack pb={3} px={8} position="fixed" bottom={0} left={0} w="100%">
         <Button
           type="submit"
           size="lg"

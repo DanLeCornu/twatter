@@ -1,6 +1,6 @@
 import * as React from "react"
 import { gql } from "@apollo/client"
-import { Button, Heading, Stack, Text } from "@chakra-ui/react"
+import { Button, Heading, Link, Stack, Text } from "@chakra-ui/react"
 
 import { useVerifyMutation } from "lib/graphql"
 import { useForm } from "lib/hooks/useForm"
@@ -42,6 +42,7 @@ export function SignupStep1({ setStep, setEmail }: Props) {
       },
     })
   }
+
   return (
     <Form onSubmit={onSubmit} {...form}>
       <Stack w={["100%", 400]} px={2} pt={6} spacing={6}>
@@ -65,23 +66,22 @@ export function SignupStep1({ setStep, setEmail }: Props) {
           </Stack>
           <DateInput name="dob" label="Date of birth" maxDate={new Date()} />
         </Stack>
-      </Stack>
-      <Stack py={6} px={8} position="fixed" bottom={0} left={0} w="100%">
-        <Text color="gray.400" fontSize="xs">
-          By signing up, you agree to our Terms, Privacy Policy and Cookie Use. Twitter may use your contact
-          information, including your email address and phone number for purposes outlined in our Privacy
-          Policy. Learn more
-        </Text>
-        <Button
-          type="submit"
-          size="lg"
-          w="100%"
-          colorScheme="monochrome"
-          isDisabled={!form.formState.isValid}
-          isLoading={verifyLoading}
-        >
-          Next
-        </Button>
+        <Stack pt={4}>
+          <Text color="gray.400" fontSize="x-small">
+            By signing up, you agree to the <Link>Terms of Service</Link> and <Link>Privacy Policy</Link>,
+            including <Link>Cookie Use</Link>.
+          </Text>
+          <Button
+            type="submit"
+            size="lg"
+            w="100%"
+            colorScheme="monochrome"
+            isDisabled={!form.formState.isValid}
+            isLoading={verifyLoading}
+          >
+            Next
+          </Button>
+        </Stack>
       </Stack>
     </Form>
   )

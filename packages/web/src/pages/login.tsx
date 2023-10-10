@@ -128,10 +128,7 @@ export default function Login() {
           </Button>
         </NextLink>
         <Text pt={16} color="gray.400" fontSize="sm">
-          Don't have an account?{" "}
-          <Link color="blue.500" href="/signup">
-            Sign up
-          </Link>
+          Don't have an account? <Link href="/signup">Sign up</Link>
         </Text>
       </Box>
     </Center>

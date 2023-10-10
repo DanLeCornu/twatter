@@ -1,6 +1,6 @@
 import * as React from "react"
 import { CgClose } from "react-icons/cg"
-import { Box, Center, IconButton, Spinner, Stack, Text } from "@chakra-ui/react"
+import { Box, Center, HStack, IconButton, Spinner, Text, useColorModeValue } from "@chakra-ui/react"
 import Head from "next/head"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -8,6 +8,7 @@ import { useRouter } from "next/router"
 import { useMe } from "lib/hooks/useMe"
 import { SignupStep1 } from "components/SignupStep1"
 import { SignupStep2 } from "components/SignupStep2"
+import { BiArrowBack } from "react-icons/bi"
 
 export default function Signup() {
   const router = useRouter()
@@ -21,6 +22,8 @@ export default function Signup() {
     router.replace("/home")
   }, [loading, me, router])
 
+  const bgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
+
   if (loading || me) {
     return (
       <Center minH="100vh">
@@ -29,27 +32,41 @@ export default function Signup() {
     )
   }
   return (
-    <Stack pt={1} px={6}>
+    <Box minH="100vh">
       <Head>
         <title>Sign up for Twatter</title>
       </Head>
-      <NextLink href="/">
-        <IconButton
-          icon={<Box as={CgClose} boxSize="20px" />}
-          aria-label="close"
-          colorScheme="monochrome"
-          variant="outline"
-          border="none"
-          position="fixed"
-          top={2}
-          left={2}
-        />
-      </NextLink>
-      <Text fontWeight="bold" fontSize="xl" pl={12}>
-        Step {step} of 5
-      </Text>
-      {step === 1 ? <SignupStep1 setStep={setStep} setEmail={setEmail} /> : <SignupStep2 email={email} />}
-    </Stack>
+      <HStack
+        position="fixed"
+        top={0}
+        left={0}
+        spacing={6}
+        bg={bgColor}
+        w="100%"
+        py={2}
+        backdropFilter="blur(10px)"
+        zIndex={1}
+      >
+        {step === 1 ? (
+          <NextLink href="/">
+            <IconButton icon={<Box as={CgClose} boxSize="20px" />} aria-label="close" variant="ghost" />
+          </NextLink>
+        ) : (
+          <IconButton
+            icon={<Box as={BiArrowBack} boxSize="20px" />}
+            aria-label="close"
+            variant="ghost"
+            onClick={() => setStep(1)}
+          />
+        )}
+        <Text fontWeight="bold" fontSize="xl">
+          Step {step} of 5
+        </Text>
+      </HStack>
+      <Box px={6} pt={12}>
+        {step === 1 ? <SignupStep1 setStep={setStep} setEmail={setEmail} /> : <SignupStep2 email={email} />}
+      </Box>
+    </Box>
   )
 }
 

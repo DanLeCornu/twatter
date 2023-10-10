@@ -77,7 +77,7 @@ export function ReportFlow({ type, setType, handleSubmit }: Props) {
                 <Heading as="h2" fontSize="2xl">
                   What type of issue are you reporting?
                 </Heading>
-                <Link color="blue.500" fontSize="sm" onClick={modalProps.onOpen}>
+                <Link fontSize="sm" onClick={modalProps.onOpen}>
                   Why are we asking this?
                 </Link>
               </Stack>
