@@ -1,6 +1,6 @@
 import * as React from "react"
 import { FiAlertTriangle } from "react-icons/fi"
-import type { FlexProps} from "@chakra-ui/react";
+import type { FlexProps } from "@chakra-ui/react"
 import { useColorModeValue } from "@chakra-ui/react"
 import { Box, HStack, Text } from "@chakra-ui/react"
 

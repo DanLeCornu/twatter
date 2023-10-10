@@ -1,7 +1,7 @@
 import * as React from "react"
 import { BiSearch, BiX } from "react-icons/bi"
 import { gql } from "@apollo/client"
-import type { InputProps} from "@chakra-ui/react";
+import type { InputProps } from "@chakra-ui/react"
 import { Center, Flex, Spinner } from "@chakra-ui/react"
 import {
   Box,

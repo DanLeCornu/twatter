@@ -32,7 +32,7 @@ import { useMe } from "lib/hooks/useMe"
 import { useS3Upload } from "lib/hooks/useS3"
 import { UPLOAD_PATHS } from "lib/uploadPaths"
 import yup from "lib/yup"
-import type { AttachedImage} from "components/AttachImage";
+import type { AttachedImage } from "components/AttachImage"
 import { AttachImage } from "components/AttachImage"
 import { Form } from "components/Form"
 import { withAuth } from "components/hoc/withAuth"

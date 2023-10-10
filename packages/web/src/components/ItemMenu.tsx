@@ -21,7 +21,7 @@ import {
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
-import type { PostItemFragment, ReplyItemFragment} from "lib/graphql";
+import type { PostItemFragment, ReplyItemFragment } from "lib/graphql"
 import { GetPostDocument, useUpdateReplyMutation } from "lib/graphql"
 import { useUnblockUserMutation } from "lib/graphql"
 import {

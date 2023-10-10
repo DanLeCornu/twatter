@@ -1,7 +1,8 @@
 import * as React from "react"
 import type { DropzoneOptions, FileRejection } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
-import { AspectRatio, BoxProps } from "@chakra-ui/react"
+import type { BoxProps } from "@chakra-ui/react"
+import { AspectRatio } from "@chakra-ui/react"
 import { Box, Button, Image, useDisclosure } from "@chakra-ui/react"
 
 import { useS3Upload } from "lib/hooks/useS3"

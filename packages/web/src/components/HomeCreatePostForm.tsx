@@ -22,7 +22,7 @@ import { useS3Upload } from "lib/hooks/useS3"
 import { UPLOAD_PATHS } from "lib/uploadPaths"
 import type yup from "lib/yup"
 
-import type { AttachedImage} from "./AttachImage";
+import type { AttachedImage } from "./AttachImage"
 import { AttachImage } from "./AttachImage"
 import { Form } from "./Form"
 import { Textarea } from "./Textarea"

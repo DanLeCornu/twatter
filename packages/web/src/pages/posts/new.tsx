@@ -3,13 +3,14 @@ import { BiArrowBack } from "react-icons/bi"
 import { BiImage } from "react-icons/bi"
 import { CgClose } from "react-icons/cg"
 import { gql } from "@apollo/client"
-import { matchSorter } from "match-sorter"
-
 import { Avatar, Box, Button, Divider, Flex, HStack, IconButton, Image, Stack, Text } from "@chakra-ui/react"
+import { matchSorter } from "match-sorter"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
 import { GetPostsDocument, SortOrder, useCreatePostMutation, useUpdatePostMutation } from "lib/graphql"
+import { checkForTags } from "lib/helpers/checkForTags"
+import { uniq } from "lib/helpers/utils"
 import { useForm } from "lib/hooks/useForm"
 import { useMe } from "lib/hooks/useMe"
 import { useS3Upload } from "lib/hooks/useS3"
@@ -20,8 +21,6 @@ import { AttachImage } from "components/AttachImage"
 import { Form } from "components/Form"
 import { withAuth } from "components/hoc/withAuth"
 import { Textarea } from "components/Textarea"
-import { checkForTags } from "lib/helpers/checkForTags"
-import { uniq } from "lib/helpers/utils"
 
 const _ = gql`
   mutation CreatePost($data: CreatePostInput!) {

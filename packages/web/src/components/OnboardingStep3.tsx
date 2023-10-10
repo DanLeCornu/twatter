@@ -1,15 +1,16 @@
 import * as React from "react"
+import { TbCameraPlus } from "react-icons/tb"
 import { gql } from "@apollo/client"
 import { Avatar, Button, Center, Flex, Heading, Icon, Spinner, Stack, Text } from "@chakra-ui/react"
-import { useRouter } from "next/router"
 import NextLink from "next/link"
+import { useRouter } from "next/router"
 
 import { MeDocument, useUpdateAvatarMutation } from "lib/graphql"
-import { ImageUploader } from "./ImageUploader"
-import { UPLOAD_PATHS } from "lib/uploadPaths"
 import { useMe } from "lib/hooks/useMe"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
-import { TbCameraPlus } from "react-icons/tb"
+import { UPLOAD_PATHS } from "lib/uploadPaths"
+
+import { ImageUploader } from "./ImageUploader"
 import { NoData } from "./NoData"
 
 const _ = gql`

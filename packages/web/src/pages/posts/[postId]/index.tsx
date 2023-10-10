@@ -41,7 +41,7 @@ import { useRouter } from "next/router"
 import { ReplySchema } from "pages/replies/new"
 
 import { WEB_URL } from "lib/config"
-import type { PostDetailFragment} from "lib/graphql";
+import type { PostDetailFragment } from "lib/graphql"
 import { useUpdateReplyMutation } from "lib/graphql"
 import { MeDocument, useUnblockUserMutation } from "lib/graphql"
 import { GetPostDocument, useCreateReplyMutation, useGetPostQuery } from "lib/graphql"
@@ -52,7 +52,7 @@ import { useS3Upload } from "lib/hooks/useS3"
 import { useViewPost } from "lib/hooks/useViewPost"
 import { UPLOAD_PATHS } from "lib/uploadPaths"
 import type yup from "lib/yup"
-import type { AttachedImage} from "components/AttachImage";
+import type { AttachedImage } from "components/AttachImage"
 import { AttachImage } from "components/AttachImage"
 import { BookmarkPost } from "components/BookmarkPost"
 import { FollowButton } from "components/FollowButton"

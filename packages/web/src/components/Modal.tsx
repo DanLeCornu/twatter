@@ -1,6 +1,6 @@
 import * as React from "react"
 import type { IconType } from "react-icons"
-import type { ModalProps } from "@chakra-ui/react";
+import type { ModalProps } from "@chakra-ui/react"
 import { Icon } from "@chakra-ui/react"
 import {
   Modal as CModal,
