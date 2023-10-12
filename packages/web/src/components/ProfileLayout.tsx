@@ -224,7 +224,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
           bgPosition="center"
           bgRepeat="no-repeat"
           bgSize="cover"
-          bg={!user.cover ? "gray.900" : undefined}
+          bg={!user.cover ? "brand.bgDark" : undefined}
         />
         <Stack px={4} pt="85px" pb={6} spacing={5}>
           <HStack align="flex-end" justify="space-between">
@@ -380,9 +380,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
               <NextLink href={`/${user.handle}/following`}>
                 <Button variant="link" fontWeight="sm" size="sm">
                   <HStack spacing={1}>
-                    <Text fontWeight="bold" color="">
-                      {user.followingCount.toLocaleString()}
-                    </Text>
+                    <Text fontWeight="bold">{user.followingCount.toLocaleString()}</Text>
                     <Text color="gray.400">Following</Text>
                   </HStack>
                 </Button>
@@ -390,9 +388,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
               <NextLink href={`/${user.handle}/followers`}>
                 <Button variant="link" fontWeight="sm" size="sm">
                   <HStack spacing={1}>
-                    <Text fontWeight="bold" color="">
-                      {user.followerCount.toLocaleString()}
-                    </Text>
+                    <Text fontWeight="bold">{user.followerCount.toLocaleString()}</Text>
                     <Text color="gray.400">Followers</Text>
                   </HStack>
                 </Button>

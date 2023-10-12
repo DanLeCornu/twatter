@@ -1086,6 +1086,7 @@ export type PostCreateManyUserInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
+  tagsId?: InputMaybe<Scalars['String']>;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -1174,6 +1175,7 @@ export type PostCreateOrConnectWithoutViewsInput = {
 };
 
 export type PostCreateWithoutBookmarkInput = {
+  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
@@ -1189,6 +1191,7 @@ export type PostCreateWithoutBookmarkInput = {
 };
 
 export type PostCreateWithoutLikesInput = {
+  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1204,6 +1207,7 @@ export type PostCreateWithoutLikesInput = {
 };
 
 export type PostCreateWithoutPinnedUserInput = {
+  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1219,6 +1223,7 @@ export type PostCreateWithoutPinnedUserInput = {
 };
 
 export type PostCreateWithoutRepliesInput = {
+  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1234,6 +1239,7 @@ export type PostCreateWithoutRepliesInput = {
 };
 
 export type PostCreateWithoutReportsInput = {
+  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1249,6 +1255,7 @@ export type PostCreateWithoutReportsInput = {
 };
 
 export type PostCreateWithoutUserInput = {
+  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1264,6 +1271,7 @@ export type PostCreateWithoutUserInput = {
 };
 
 export type PostCreateWithoutViewsInput = {
+  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1289,6 +1297,7 @@ export type PostOrderByRelationAggregateInput = {
 };
 
 export type PostOrderByWithRelationInput = {
+  Tags?: InputMaybe<TagsOrderByWithRelationInput>;
   archivedAt?: InputMaybe<SortOrderInput>;
   bookmark?: InputMaybe<BookmarkOrderByRelationAggregateInput>;
   createdAt?: InputMaybe<SortOrder>;
@@ -1298,6 +1307,7 @@ export type PostOrderByWithRelationInput = {
   pinnedUser?: InputMaybe<UserOrderByWithRelationInput>;
   replies?: InputMaybe<ReplyOrderByRelationAggregateInput>;
   reports?: InputMaybe<ReportOrderByRelationAggregateInput>;
+  tagsId?: InputMaybe<SortOrderInput>;
   text?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
   user?: InputMaybe<UserOrderByWithRelationInput>;
@@ -1315,6 +1325,7 @@ export enum PostScalarFieldEnum {
   CreatedAt = 'createdAt',
   Id = 'id',
   Image = 'image',
+  TagsId = 'tagsId',
   Text = 'text',
   UpdatedAt = 'updatedAt',
   UserId = 'userId'
@@ -1328,12 +1339,14 @@ export type PostScalarWhereInput = {
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
   image?: InputMaybe<StringNullableFilter>;
+  tagsId?: InputMaybe<UuidNullableFilter>;
   text?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   userId?: InputMaybe<UuidFilter>;
 };
 
 export type PostUpdateInput = {
+  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1435,6 +1448,7 @@ export type PostUpdateWithWhereUniqueWithoutUserInput = {
 };
 
 export type PostUpdateWithoutBookmarkInput = {
+  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
@@ -1450,6 +1464,7 @@ export type PostUpdateWithoutBookmarkInput = {
 };
 
 export type PostUpdateWithoutLikesInput = {
+  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1465,6 +1480,7 @@ export type PostUpdateWithoutLikesInput = {
 };
 
 export type PostUpdateWithoutPinnedUserInput = {
+  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1480,6 +1496,7 @@ export type PostUpdateWithoutPinnedUserInput = {
 };
 
 export type PostUpdateWithoutRepliesInput = {
+  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1495,6 +1512,7 @@ export type PostUpdateWithoutRepliesInput = {
 };
 
 export type PostUpdateWithoutReportsInput = {
+  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1510,6 +1528,7 @@ export type PostUpdateWithoutReportsInput = {
 };
 
 export type PostUpdateWithoutUserInput = {
+  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1525,6 +1544,7 @@ export type PostUpdateWithoutUserInput = {
 };
 
 export type PostUpdateWithoutViewsInput = {
+  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1579,6 +1599,7 @@ export type PostWhereInput = {
   AND?: InputMaybe<Array<PostWhereInput>>;
   NOT?: InputMaybe<Array<PostWhereInput>>;
   OR?: InputMaybe<Array<PostWhereInput>>;
+  Tags?: InputMaybe<TagsRelationFilter>;
   archivedAt?: InputMaybe<DateTimeNullableFilter>;
   bookmark?: InputMaybe<BookmarkListRelationFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
@@ -1588,6 +1609,7 @@ export type PostWhereInput = {
   pinnedUser?: InputMaybe<UserRelationFilter>;
   replies?: InputMaybe<ReplyListRelationFilter>;
   reports?: InputMaybe<ReportListRelationFilter>;
+  tagsId?: InputMaybe<UuidNullableFilter>;
   text?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   user?: InputMaybe<UserRelationFilter>;
@@ -2498,6 +2520,67 @@ export type StringNullableFilter = {
   not?: InputMaybe<NestedStringNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['String']>>;
   startsWith?: InputMaybe<Scalars['String']>;
+};
+
+export type TagsCreateNestedOneWithoutPostsInput = {
+  connect?: InputMaybe<TagsWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<TagsCreateOrConnectWithoutPostsInput>;
+  create?: InputMaybe<TagsCreateWithoutPostsInput>;
+};
+
+export type TagsCreateOrConnectWithoutPostsInput = {
+  create: TagsCreateWithoutPostsInput;
+  where: TagsWhereUniqueInput;
+};
+
+export type TagsCreateWithoutPostsInput = {
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type TagsOrderByWithRelationInput = {
+  id?: InputMaybe<SortOrder>;
+  name?: InputMaybe<SortOrder>;
+  posts?: InputMaybe<PostOrderByRelationAggregateInput>;
+};
+
+export type TagsRelationFilter = {
+  is?: InputMaybe<TagsWhereInput>;
+  isNot?: InputMaybe<TagsWhereInput>;
+};
+
+export type TagsUpdateOneWithoutPostsNestedInput = {
+  connect?: InputMaybe<TagsWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<TagsCreateOrConnectWithoutPostsInput>;
+  create?: InputMaybe<TagsCreateWithoutPostsInput>;
+  delete?: InputMaybe<Scalars['Boolean']>;
+  disconnect?: InputMaybe<Scalars['Boolean']>;
+  update?: InputMaybe<TagsUpdateWithoutPostsInput>;
+  upsert?: InputMaybe<TagsUpsertWithoutPostsInput>;
+};
+
+export type TagsUpdateWithoutPostsInput = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type TagsUpsertWithoutPostsInput = {
+  create: TagsCreateWithoutPostsInput;
+  update: TagsUpdateWithoutPostsInput;
+};
+
+export type TagsWhereInput = {
+  AND?: InputMaybe<Array<TagsWhereInput>>;
+  NOT?: InputMaybe<Array<TagsWhereInput>>;
+  OR?: InputMaybe<Array<TagsWhereInput>>;
+  id?: InputMaybe<UuidFilter>;
+  name?: InputMaybe<StringFilter>;
+  posts?: InputMaybe<PostListRelationFilter>;
+};
+
+export type TagsWhereUniqueInput = {
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateUserInput = {
@@ -4667,7 +4750,7 @@ export type UpdateAvatarMutationVariables = Exact<{
 }>;
 
 
-export type UpdateAvatarMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string } };
+export type UpdateAvatarMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string, avatar?: string | null } };
 
 export type UserDetailFragment = { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null };
 
@@ -4735,19 +4818,19 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, followingCount: number, followerCount: number, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
-export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> };
+export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, followingCount: number, followerCount: number, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, followingCount: number, followerCount: number, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } | null };
 
 export type GetSignedUrlForPutMutationVariables = Exact<{
   data: S3SignedUrlInput;
@@ -4836,7 +4919,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, followingCount: number, followerCount: number, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
 
 export type ReplyItemFragment = { __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
 
@@ -4991,6 +5074,8 @@ export const MeFragmentDoc = gql`
   dob
   dobDayMonthPrivacy
   dobYearPrivacy
+  followingCount
+  followerCount
   pinnedPost {
     ...PostItem
   }
@@ -5290,6 +5375,7 @@ export const UpdateAvatarDocument = gql`
     mutation UpdateAvatar($data: UpdateUserInput!) {
   updateMe(data: $data) {
     id
+    avatar
   }
 }
     `;

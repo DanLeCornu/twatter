@@ -27,7 +27,7 @@ import { AttachImage } from "./AttachImage"
 import { Form } from "./Form"
 import { Textarea } from "./Textarea"
 
-export function HomeCreatePostForm() {
+export function DesktopHomeCreatePostForm() {
   const { me } = useMe()
   const [submitDisabled, setSubmitDisabled] = React.useState(true)
   const [isActive, setIsActive] = React.useState(false)

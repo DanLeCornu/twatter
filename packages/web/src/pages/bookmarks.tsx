@@ -24,7 +24,6 @@ import { useGetMyBookmarksQuery } from "lib/graphql"
 import { useMe } from "lib/hooks/useMe"
 import { withAuth } from "components/hoc/withAuth"
 import { HomeLayout } from "components/HomeLayout"
-import { NAV_WIDTH } from "components/Nav"
 import { PostList } from "components/PostList"
 
 const _ = gql`
@@ -59,10 +58,9 @@ function Bookmarks() {
         <title>Bookmarks / Twatter</title>
       </Head>
       <HStack
-        w={`calc(100% - ${NAV_WIDTH}px)`}
         position="fixed"
         top={0}
-        left={NAV_WIDTH}
+        left={0}
         zIndex={1}
         px={4}
         py={2}

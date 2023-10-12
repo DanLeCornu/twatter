@@ -19,7 +19,6 @@ import { QueryMode, useGetExploreUsersQuery } from "lib/graphql"
 import { ExploreUserList } from "components/ExploreUserList"
 import { withAuth } from "components/hoc/withAuth"
 import { HomeLayout } from "components/HomeLayout"
-import { NAV_WIDTH } from "components/Nav"
 
 const _ = gql`
   fragment UserSearchItem on User {
@@ -63,10 +62,9 @@ function Explore() {
         <title>Explore / Twatter</title>
       </Head>
       <HStack
-        w={`calc(100% - ${NAV_WIDTH}px)`}
         position="fixed"
         top={0}
-        left={NAV_WIDTH}
+        left={0}
         zIndex={1}
         px={4}
         py={2}

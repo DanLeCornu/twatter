@@ -43,10 +43,19 @@ const black = {
   500: "#0F141A",
 }
 
+const brand = {
+  blue: "#1C9BF0",
+  bgDark: "#15202B",
+}
+
+export const WHITE_RGB = "255,255,255"
+export const BG_DARK_RGB = "21,32,43"
+
 export const colors = {
   primary: blue,
   black,
   blue,
+  brand,
   // gray: {
   //   50: "#FAFAFA",
   //   100: "#F2F2F2",

@@ -30,9 +30,7 @@ export function UserPopover({ user }: PostItemUserProps) {
         <NextLink href={`/${user.handle}/following`}>
           <Button variant="link" fontWeight="sm" size="sm">
             <HStack spacing={1}>
-              <Text fontWeight="bold" color="">
-                {user.followingCount.toLocaleString()}
-              </Text>
+              <Text fontWeight="bold">{user.followingCount.toLocaleString()}</Text>
               <Text color={handleColor}>Following</Text>
             </HStack>
           </Button>
@@ -40,9 +38,7 @@ export function UserPopover({ user }: PostItemUserProps) {
         <NextLink href={`/${user.handle}/followers`}>
           <Button variant="link" fontWeight="sm" size="sm">
             <HStack spacing={1}>
-              <Text fontWeight="bold" color="">
-                {user.followerCount.toLocaleString()}
-              </Text>
+              <Text fontWeight="bold">{user.followerCount.toLocaleString()}</Text>
               <Text color={handleColor}>Followers</Text>
             </HStack>
           </Button>

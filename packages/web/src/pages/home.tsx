@@ -16,11 +16,15 @@ import Head from "next/head"
 import { SortOrder, useGetPostsQuery } from "lib/graphql"
 import { useMe } from "lib/hooks/useMe"
 import { withAuth } from "components/hoc/withAuth"
-import { HomeCreatePostForm } from "components/HomeCreatePostForm"
+import { DesktopHomeCreatePostForm } from "components/HomeCreatePostForm"
 import { HomeLayout } from "components/HomeLayout"
-import { NAV_WIDTH } from "components/Nav"
 import { NoData } from "components/NoData"
 import { PostList } from "components/PostList"
+import { BrowserView } from "react-device-detect"
+import { HEADING_CONTAINER_HEIGHT } from "components/MobileTopBar"
+
+const TAB_HEIGHT = 37
+export const TOTAL_HEADER_HEIGHT = HEADING_CONTAINER_HEIGHT + TAB_HEIGHT
 
 function Home() {
   const { me } = useMe()
@@ -43,49 +47,24 @@ function Home() {
   })
   const followingPosts = followingData?.posts.items || []
 
-  const bgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
   const borderColor = useColorModeValue("gray.100", "gray.700")
-  const HEADING_CONTAINER_HEIGHT = 65
-  const TAB_HEIGHT = 37
-  const CONTENT_TOP_PADDING = HEADING_CONTAINER_HEIGHT + TAB_HEIGHT
 
   return (
     <Box position="relative">
       <Head>
         <title>Home / Twatter</title>
       </Head>
-      {/* Underlay that provides blurred background */}
-      <Box
-        position="fixed"
-        left={NAV_WIDTH}
-        top={0}
-        h="102px"
-        w={`calc(100% - ${NAV_WIDTH}px)`}
-        backdropFilter="blur(10px)"
-        bgColor={bgColor}
-        zIndex={1}
-      />
-      <Box
-        w={`calc(100% - ${NAV_WIDTH}px)`}
-        position="fixed"
-        top={0}
-        left={NAV_WIDTH}
-        h={HEADING_CONTAINER_HEIGHT}
-        zIndex={1}
-      >
-        <Heading fontSize="xl" pt={4} pl={4}>
-          Home
-        </Heading>
-      </Box>
-      <Tabs pt={CONTENT_TOP_PADDING}>
-        <TabList
-          border="none"
-          position="fixed"
-          w={`calc(100% - ${NAV_WIDTH}px)`}
-          left={NAV_WIDTH}
-          top={HEADING_CONTAINER_HEIGHT}
-          zIndex={1}
-        >
+
+      <BrowserView>
+        <Box position="fixed" top={0} left={0} h={HEADING_CONTAINER_HEIGHT} zIndex={1}>
+          <Heading fontSize="xl" pt={4} pl={4}>
+            Home
+          </Heading>
+        </Box>
+      </BrowserView>
+
+      <Tabs pt={TOTAL_HEADER_HEIGHT}>
+        <TabList border="none" position="fixed" left={0} top={HEADING_CONTAINER_HEIGHT} zIndex={1} w="100%">
           <Tab w="50%" fontWeight="bold" fontSize="sm" borderBottom="2px solid" borderColor={borderColor}>
             For you
           </Tab>
@@ -93,7 +72,9 @@ function Home() {
             Following
           </Tab>
         </TabList>
-        <HomeCreatePostForm />
+        <BrowserView>
+          <DesktopHomeCreatePostForm />
+        </BrowserView>
         <TabPanels>
           <TabPanel p={0}>
             {loading ? (

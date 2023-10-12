@@ -186,7 +186,7 @@ function EditProfile() {
             bgPosition="center"
             bgRepeat="no-repeat"
             bgSize="cover"
-            bg={!me.cover ? "gray.900" : undefined}
+            bg={!me.cover ? "brand.bgDark" : undefined}
           >
             <ImageUploader
               dropzoneOptions={{ maxSize: 1000000 }}

@@ -19,6 +19,8 @@ export const _ = gql`
     dob
     dobDayMonthPrivacy
     dobYearPrivacy
+    followingCount
+    followerCount
     pinnedPost {
       ...PostItem
     }

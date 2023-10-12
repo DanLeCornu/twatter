@@ -42,8 +42,8 @@ export function AdminLayout(props: Props) {
   }, [loading, me, router])
 
   const homeLinkColor = useColorModeValue("black", "white")
-  const bg = useColorModeValue("white", "gray.900")
-  const borderColor = useColorModeValue("gray.100", "gray.900")
+  const bg = useColorModeValue("white", "brand.bgDark")
+  const borderColor = useColorModeValue("gray.100", "gray.700")
   if (loading || !me || me.role !== Role.Admin) {
     return (
       <Center minH="100vh">

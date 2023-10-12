@@ -4,8 +4,6 @@ import NextLink from "next/link"
 
 import type { UserSearchItemFragment } from "lib/graphql"
 
-import { NAV_WIDTH } from "./Nav"
-
 interface Props {
   users: UserSearchItemFragment[]
 }
@@ -18,7 +16,7 @@ export function ExploreUserList({ users }: Props) {
         <NextLink key={i} href={`/${user.handle}`}>
           <HStack _hover={{ bg: bgHover }} p={4}>
             <Avatar src={user.avatar || undefined} boxSize="40px" />
-            <Stack spacing={-1} w={`calc(100% - ${NAV_WIDTH}px)`}>
+            <Stack spacing={-1}>
               <Text fontWeight="bold" isTruncated w="100%">
                 {user.name}
               </Text>

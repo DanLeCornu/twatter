@@ -42,7 +42,7 @@ export function ReportFlow({ type, setType, handleSubmit }: Props) {
 
   const borderColor = useColorModeValue("gray.100", "gray.700")
   const headerBgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
-  const footerBgColor = useColorModeValue("white", "gray.800")
+  const footerBgColor = useColorModeValue("white", "brand.bgDark")
   return (
     <Box>
       <Flex

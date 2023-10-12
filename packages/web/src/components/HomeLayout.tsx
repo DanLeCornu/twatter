@@ -5,7 +5,9 @@ import { useRouter } from "next/router"
 import { useMe } from "lib/hooks/useMe"
 
 import { Limiter } from "./Limiter"
-import { Nav, NAV_WIDTH } from "./Nav"
+import { Nav } from "./Nav"
+import { MobileView } from "react-device-detect"
+import { MobileTopBar } from "./MobileTopBar"
 
 interface Props {
   children: React.ReactNode
@@ -32,8 +34,13 @@ export function HomeLayout(props: Props) {
     )
   return (
     <Box>
+      {["/home", "/explore", "/notifications", "/messages"].includes(router.asPath) && (
+        <MobileView>
+          <MobileTopBar />
+        </MobileView>
+      )}
+      <Limiter>{props.children}</Limiter>
       <Nav />
-      <Limiter pl={NAV_WIDTH + "px"}>{props.children}</Limiter>
     </Box>
   )
 }

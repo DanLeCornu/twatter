@@ -205,7 +205,7 @@ interface RowProps {
 
 function Row(props: RowProps) {
   const borderColor = useColorModeValue("gray.200", "gray.700")
-  const bg = useColorModeValue("gray.50", "gray.900")
+  const bg = useColorModeValue("gray.50", "brand.bgDark")
   return (
     <Flex
       w="100%"
