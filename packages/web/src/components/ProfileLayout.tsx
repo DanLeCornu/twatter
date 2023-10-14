@@ -54,6 +54,7 @@ import { FollowButton } from "./FollowButton"
 import { Modal } from "./Modal"
 import { NoData } from "./NoData"
 import { ProfileTab } from "./ProfileTab"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 const _ = gql`
   fragment UserProfile on User {
@@ -165,7 +166,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
     })
   }
 
-  const bgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
+  const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const { onCopy } = useClipboard(`${WEB_URL}/${user?.handle}`)
 
   const websiteUrl = user?.website
@@ -224,7 +225,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
           bgPosition="center"
           bgRepeat="no-repeat"
           bgSize="cover"
-          bg={!user.cover ? "brand.bgDark" : undefined}
+          bg={!user.cover ? "gray.600" : undefined}
         />
         <Stack px={4} pt="85px" pb={6} spacing={5}>
           <HStack align="flex-end" justify="space-between">

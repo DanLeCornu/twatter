@@ -1,61 +1,41 @@
 import {
   Avatar,
-  Box,
-  Text,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerOverlay,
   useColorModeValue,
   useDisclosure,
-  HStack,
-  Button,
-  Icon,
-  Stack,
-  Divider,
+  Text,
   Accordion,
   AccordionButton,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Button,
+  Divider,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerOverlay,
+  HStack,
+  Icon,
+  Stack,
   useColorMode,
 } from "@chakra-ui/react"
 import { useMe } from "lib/hooks/useMe"
-import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
-import { TOTAL_HEADER_HEIGHT } from "pages/home"
+import logout from "pages/logout"
 import * as React from "react"
+import { BiUser, BiSun, BiMoon } from "react-icons/bi"
+import { FiBookmark, FiSettings, FiLogOut } from "react-icons/fi"
 import NextLink from "next/link"
-import { BiMoon, BiSun, BiUser } from "react-icons/bi"
-import { FiBookmark, FiLogOut, FiSettings } from "react-icons/fi"
-import { useLogout } from "lib/hooks/useLogout"
 
-export const HEADING_CONTAINER_HEIGHT = 50
-
-export function MobileTopBar() {
+export function MobileTopBarAvatar() {
   const { me } = useMe()
-  const logout = useLogout()
   const drawerProps = useDisclosure()
-  const { colorMode, toggleColorMode } = useColorMode()
-  const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const drawerBg = useColorModeValue("white", "brand.bgDark")
-
+  const { colorMode, toggleColorMode } = useColorMode()
   const isDark = colorMode === "dark"
+
   return (
     <>
-      {/* Underlay that provides blurred background */}
-      <Box
-        position="fixed"
-        left={0}
-        top={0}
-        h={TOTAL_HEADER_HEIGHT}
-        w="100%"
-        backdropFilter="blur(10px)"
-        bg={bgColor}
-        zIndex={1}
-      />
-      <Box position="fixed" top={0} left={0} h={HEADING_CONTAINER_HEIGHT} zIndex={1}>
-        <Avatar mt={3} ml={4} src={me?.avatar || undefined} boxSize="30px" onClick={drawerProps.onOpen} />
-      </Box>
+      <Avatar src={me?.avatar || undefined} boxSize="30px" onClick={drawerProps.onOpen} zIndex={1} />
       <Drawer {...drawerProps} placement="left" trapFocus={false}>
         <DrawerOverlay />
         <DrawerContent bg={drawerBg}>

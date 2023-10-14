@@ -19,6 +19,9 @@ import { QueryMode, useGetExploreUsersQuery } from "lib/graphql"
 import { ExploreUserList } from "components/ExploreUserList"
 import { withAuth } from "components/hoc/withAuth"
 import { HomeLayout } from "components/HomeLayout"
+import { WHITE_RGB, BG_DARK_RGB } from "lib/theme/colors"
+import { MobileView } from "react-device-detect"
+import { MobileTopBarAvatar } from "components/MobileTopBarAvatar"
 
 const _ = gql`
   fragment UserSearchItem on User {
@@ -54,7 +57,8 @@ function Explore() {
   })
   const users = data?.users.items || []
 
-  const bgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
+  const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
+  const borderColor = useColorModeValue("gray.100", "gray.700")
 
   return (
     <Box position="relative">
@@ -70,7 +74,15 @@ function Explore() {
         py={2}
         backdropFilter="blur(10px)"
         bgColor={bgColor}
+        align="center"
+        h="50px"
+        spacing={5}
+        borderBottom="1px"
+        borderColor={borderColor}
       >
+        <MobileView>
+          <MobileTopBarAvatar />
+        </MobileView>
         <Search search={search} setSearch={setSearch} />
       </HStack>
       {loading ? (
@@ -97,43 +109,41 @@ interface Props extends InputProps {
 
 export function Search({ search, setSearch, ...props }: Props) {
   return (
-    <Box>
-      <InputGroup>
-        <InputLeftElement h="100%" pl={2}>
-          <Flex align="center">
-            <IconButton
-              rounded="full"
-              size="sm"
-              aria-label="search"
-              variant="ghost"
-              color="gray.500"
-              icon={<Box as={BiSearch} boxSize="20px" />}
-            />
-          </Flex>
-        </InputLeftElement>
-        <Input
-          rounded="full"
-          pl="50px !important"
-          px={10}
-          size="lg"
-          value={search}
-          {...props}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search"
-          fontSize="15p6"
-        />
-        <InputRightElement h="100%" pr={2}>
-          {!!search && (
-            <IconButton
-              rounded="full"
-              onClick={() => setSearch("")}
-              size="xs"
-              aria-label="clear search"
-              icon={<Box as={BiX} boxSize="20px" color="black.500" />}
-            />
-          )}
-        </InputRightElement>
-      </InputGroup>
-    </Box>
+    <InputGroup>
+      <InputLeftElement h="100%" pl={2}>
+        <Flex align="center">
+          <IconButton
+            rounded="full"
+            size="sm"
+            aria-label="search"
+            variant="ghost"
+            color="gray.500"
+            icon={<Box as={BiSearch} boxSize="20px" />}
+          />
+        </Flex>
+      </InputLeftElement>
+      <Input
+        rounded="full"
+        pl="50px !important"
+        px={10}
+        size="sm"
+        value={search}
+        {...props}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search"
+        fontSize="15px"
+      />
+      <InputRightElement h="100%" pr={2}>
+        {!!search && (
+          <IconButton
+            rounded="full"
+            onClick={() => setSearch("")}
+            size="xs"
+            aria-label="clear search"
+            icon={<Box as={BiX} boxSize="20px" color="black.500" />}
+          />
+        )}
+      </InputRightElement>
+    </InputGroup>
   )
 }

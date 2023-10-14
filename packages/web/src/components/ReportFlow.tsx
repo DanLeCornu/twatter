@@ -23,6 +23,7 @@ import { REPORT_ISSUE_TYPES } from "lib/static/reportIssueTypes"
 
 import type { ReportType } from "../../../database/src"
 import { Modal } from "./Modal"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 const _ = gql`
   mutation CreateReport($data: CreateReportInput!) {
@@ -41,7 +42,7 @@ export function ReportFlow({ type, setType, handleSubmit }: Props) {
   const [step, setStep] = React.useState(1)
 
   const borderColor = useColorModeValue("gray.100", "gray.700")
-  const headerBgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
+  const headerBgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const footerBgColor = useColorModeValue("white", "brand.bgDark")
   return (
     <Box>

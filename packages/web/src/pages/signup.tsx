@@ -9,6 +9,7 @@ import { useMe } from "lib/hooks/useMe"
 import { SignupStep1 } from "components/SignupStep1"
 import { SignupStep2 } from "components/SignupStep2"
 import { BiArrowBack } from "react-icons/bi"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 export default function Signup() {
   const router = useRouter()
@@ -22,7 +23,7 @@ export default function Signup() {
     router.replace("/home")
   }, [loading, me, router])
 
-  const bgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
+  const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
 
   if (loading || me) {
     return (

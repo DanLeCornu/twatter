@@ -110,14 +110,13 @@ function NewReply() {
   return (
     <Form {...form} onSubmit={handleSubmit}>
       <Flex justify="space-between" maxW="100vw">
-        <NextLink href={`/posts/${postId}`}>
-          <IconButton
-            aria-label="back"
-            icon={<Box as={BiArrowBack} boxSize="20px" />}
-            variant="ghost"
-            m={2}
-          />
-        </NextLink>
+        <IconButton
+          aria-label="back"
+          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          variant="ghost"
+          m={2}
+          onClick={() => router.back()}
+        />
         <Button isDisabled={submitDisabled} isLoading={submitLoading} type="submit" mt={3} mr={4} size="sm">
           Reply
         </Button>

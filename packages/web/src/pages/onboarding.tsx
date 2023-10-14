@@ -11,13 +11,14 @@ import { NoData } from "components/NoData"
 import { OnboardingStep1 } from "components/OnboardingStep1"
 import { OnboardingStep2 } from "components/OnboardingStep2"
 import { OnboardingStep3 } from "components/OnboardingStep3"
+import { WHITE_RGB, BG_DARK_RGB } from "lib/theme/colors"
 
 function Onboarding() {
   const { me, loading } = useMe()
   const logout = useLogout()
   const [step, setStep] = React.useState(3)
 
-  const bgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
+  const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
 
   if (loading)
     return (

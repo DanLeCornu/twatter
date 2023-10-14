@@ -66,6 +66,7 @@ import { NoData } from "components/NoData"
 import { ReplyItem } from "components/ReplyItem"
 import { Textarea } from "components/Textarea"
 import { UserPopover } from "components/UserPopover"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 export const _ = gql`
   fragment ReplyItem on Reply {
@@ -128,7 +129,7 @@ function Post() {
     post && me?.blockedAccounts.map((blockedAccount) => blockedAccount.id).includes(post.user.id)
 
   const popoverBg = useColorModeValue("white", "#1A202C")
-  const bgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
+  const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const { onCopy } = useClipboard(`${WEB_URL}/posts/${postId}`)
 
   const handleUnblock = () => {
@@ -178,14 +179,13 @@ function Post() {
           zIndex={1}
           align="center"
         >
-          <NextLink href="/home">
-            <IconButton
-              aria-label="back"
-              icon={<Box as={BiArrowBack} boxSize="20px" />}
-              variant="ghost"
-              m={2}
-            />
-          </NextLink>
+          <IconButton
+            aria-label="back"
+            icon={<Box as={BiArrowBack} boxSize="20px" />}
+            variant="ghost"
+            m={2}
+            onClick={() => router.back()}
+          />
           <Heading as="h1" size="md">
             Post
           </Heading>

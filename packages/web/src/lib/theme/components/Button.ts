@@ -44,7 +44,9 @@ const variantOutline: SystemStyleFunction = (props) => {
   const { colorScheme } = props
 
   if (colorScheme === "monochrome") {
-    return {} // Revert to default outline styles
+    return {
+      borderColor: mode("gray.100", "gray.600")(props),
+    }
   }
 
   return {

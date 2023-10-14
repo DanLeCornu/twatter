@@ -5,7 +5,6 @@ import { CgClose } from "react-icons/cg"
 import { gql } from "@apollo/client"
 import { Avatar, Box, Button, Divider, Flex, HStack, IconButton, Image, Stack, Text } from "@chakra-ui/react"
 import { matchSorter } from "match-sorter"
-import NextLink from "next/link"
 import { useRouter } from "next/router"
 
 import { GetPostsDocument, SortOrder, useCreatePostMutation, useUpdatePostMutation } from "lib/graphql"
@@ -89,14 +88,13 @@ function NewPost() {
   return (
     <Form {...form} onSubmit={handleSubmit}>
       <Flex justify="space-between" maxW="100vw">
-        <NextLink href="/home">
-          <IconButton
-            aria-label="back"
-            icon={<Box as={BiArrowBack} boxSize="20px" />}
-            variant="ghost"
-            m={2}
-          />
-        </NextLink>
+        <IconButton
+          aria-label="back"
+          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          variant="ghost"
+          m={2}
+          onClick={() => router.back()}
+        />
         <Button isDisabled={submitDisabled} isLoading={loading} type="submit" mt={2} mr={3} px={4} size="sm">
           Post
         </Button>

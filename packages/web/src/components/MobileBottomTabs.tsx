@@ -6,9 +6,9 @@ import { useRouter } from "next/router"
 import { FiMail } from "react-icons/fi"
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
-export const NAV_HEIGHT = 50
+export const MOBILE_BOTTOM_TAB_HEIGHT = 50
 
-export function MobileNav() {
+export function MobileBottomTabs() {
   const { asPath } = useRouter()
   const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const borderColor = useColorModeValue("gray.100", "gray.700")
@@ -18,7 +18,7 @@ export function MobileNav() {
       position="fixed"
       bottom={0}
       left={0}
-      h={NAV_HEIGHT + "px"}
+      h={MOBILE_BOTTOM_TAB_HEIGHT + "px"}
       w="100%"
       zIndex={1}
       px={6}

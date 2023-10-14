@@ -3,6 +3,7 @@ import {
   Box,
   Center,
   Heading,
+  Icon,
   Spinner,
   Tab,
   TabList,
@@ -17,14 +18,13 @@ import { SortOrder, useGetPostsQuery } from "lib/graphql"
 import { useMe } from "lib/hooks/useMe"
 import { withAuth } from "components/hoc/withAuth"
 import { DesktopHomeCreatePostForm } from "components/HomeCreatePostForm"
-import { HomeLayout } from "components/HomeLayout"
+import { HEADING_CONTAINER_HEIGHT, HomeLayout, TAB_HEIGHT, TOTAL_HEADER_HEIGHT } from "components/HomeLayout"
 import { NoData } from "components/NoData"
 import { PostList } from "components/PostList"
-import { BrowserView } from "react-device-detect"
-import { HEADING_CONTAINER_HEIGHT } from "components/MobileTopBar"
-
-const TAB_HEIGHT = 37
-export const TOTAL_HEADER_HEIGHT = HEADING_CONTAINER_HEIGHT + TAB_HEIGHT
+import { BrowserView, MobileView } from "react-device-detect"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
+import { MobileTopBarAvatar } from "components/MobileTopBarAvatar"
+import { AiOutlineTwitter } from "react-icons/ai"
 
 function Home() {
   const { me } = useMe()
@@ -47,7 +47,10 @@ function Home() {
   })
   const followingPosts = followingData?.posts.items || []
 
+  const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const borderColor = useColorModeValue("gray.100", "gray.700")
+  const tabActiveColor = useColorModeValue("black", "white")
+  const tabInactiveColor = useColorModeValue("gray.600", "gray.500")
 
   return (
     <Box position="relative">
@@ -55,23 +58,67 @@ function Home() {
         <title>Home / Twatter</title>
       </Head>
 
+      {/* Shared underlay that provides blurred background */}
+      <Box
+        position="fixed"
+        left={0}
+        top={0}
+        h={TOTAL_HEADER_HEIGHT}
+        w="100%"
+        backdropFilter="blur(10px)"
+        bg={bgColor}
+        zIndex={1}
+      />
+
       <BrowserView>
-        <Box position="fixed" top={0} left={0} h={HEADING_CONTAINER_HEIGHT} zIndex={1}>
-          <Heading fontSize="xl" pt={4} pl={4}>
-            Home
-          </Heading>
+        <Box position="fixed" top={0} left={0} h={HEADING_CONTAINER_HEIGHT} zIndex={1} pt={4} pl={4}>
+          <Heading fontSize="xl">Home</Heading>
         </Box>
       </BrowserView>
 
-      <Tabs pt={TOTAL_HEADER_HEIGHT}>
-        <TabList border="none" position="fixed" left={0} top={HEADING_CONTAINER_HEIGHT} zIndex={1} w="100%">
-          <Tab w="50%" fontWeight="bold" fontSize="sm" borderBottom="2px solid" borderColor={borderColor}>
-            For you
-          </Tab>
-          <Tab w="50%" fontWeight="bold" fontSize="sm" borderBottom="2px solid" borderColor={borderColor}>
-            Following
-          </Tab>
-        </TabList>
+      <MobileView>
+        <Box position="fixed" top={0} left={0} h={HEADING_CONTAINER_HEIGHT} zIndex={1} pt={2} px={4} w="100%">
+          <Box position="relative">
+            <MobileTopBarAvatar />
+
+            <Center w="100%" position="absolute" top={0}>
+              <Icon as={AiOutlineTwitter} boxSize="30px" />
+            </Center>
+          </Box>
+        </Box>
+      </MobileView>
+
+      <Tabs h={TAB_HEIGHT} pt={TOTAL_HEADER_HEIGHT}>
+        <Box borderBottom="1px" borderColor={borderColor} pb={1}>
+          <TabList
+            border="none"
+            position="fixed"
+            left={0}
+            top={HEADING_CONTAINER_HEIGHT}
+            zIndex={1}
+            w="100%"
+            justifyContent="space-evenly"
+          >
+            <Tab
+              fontWeight="medium"
+              fontSize="sm"
+              _selected={{ color: tabActiveColor, borderColor: "brand.blue", borderBottomWidth: "3px" }}
+              color={tabInactiveColor}
+              px={1}
+            >
+              For you
+            </Tab>
+            <Tab
+              fontWeight="medium"
+              fontSize="sm"
+              _selected={{ color: tabActiveColor, borderColor: "brand.blue", borderBottomWidth: "3px" }}
+              color={tabInactiveColor}
+              px={1}
+            >
+              Following
+            </Tab>
+          </TabList>
+        </Box>
         <BrowserView>
           <DesktopHomeCreatePostForm />
         </BrowserView>

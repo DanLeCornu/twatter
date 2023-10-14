@@ -13,8 +13,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import NextLink from "next/link"
 import { useRouter } from "next/router"
+import NextLink from "next/link"
 
 import { useGetProfileFollowQuery } from "lib/graphql"
 
@@ -74,7 +74,7 @@ export function ProfileFollowLayout({ children }: { children: React.ReactNode })
   return (
     <Box>
       <HStack>
-        <NextLink href={`/${handle}`}>
+        <NextLink href={`/${user.handle}`}>
           <IconButton
             aria-label="back"
             icon={<Box as={BiArrowBack} boxSize="20px" />}
@@ -83,10 +83,10 @@ export function ProfileFollowLayout({ children }: { children: React.ReactNode })
           />
         </NextLink>
         <Stack spacing={0} w="100%">
-          <Heading as="h1" size="md" noOfLines={1} maxW="90%">
+          <Heading as="h1" fontSize="md" noOfLines={1} maxW="90%">
             {user.name}
           </Heading>
-          <Text fontSize="sm" color="gray.400">
+          <Text fontSize="xs" color="gray.400">
             @{user.handle}
           </Text>
         </Stack>

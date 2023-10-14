@@ -1,4 +1,4 @@
-import type { LinkProps } from "@chakra-ui/react"
+import { Box, LinkProps } from "@chakra-ui/react"
 import { Link, useColorModeValue } from "@chakra-ui/react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -17,16 +17,22 @@ export function ProfileTab({ href, ...props }: Props) {
       as={NextLink}
       href={href}
       p={4}
-      pb={3}
+      pb={0}
       textAlign="center"
       textDecoration="none !important"
-      color={isActive ? activeColor : inactiveColor}
-      borderBottom="2px solid"
-      borderColor={isActive ? "primary.500" : "transparent"}
       fontWeight="medium"
+      fontSize="sm"
       _hover={{ color: useColorModeValue("black", "white") }}
     >
-      {props.children}
+      <Box
+        color={isActive ? activeColor : inactiveColor}
+        borderBottom="3px solid"
+        borderColor={isActive ? "brand.blue" : "transparent"}
+        pb={2}
+        px={1}
+      >
+        {props.children}
+      </Box>
     </Link>
   )
 }

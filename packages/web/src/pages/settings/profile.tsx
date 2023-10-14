@@ -37,6 +37,7 @@ import { Input } from "components/Input"
 import { Modal } from "components/Modal"
 import { Select } from "components/Select"
 import { Textarea } from "components/Textarea"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 const _ = gql`
   fragment UserProfileForm on User {
@@ -122,7 +123,7 @@ function EditProfile() {
     return form.handler(() => update({ variables: { data: { cover } } }))
   }
 
-  const bgColor = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(26, 32, 44, 0.80)")
+  const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
 
   if (loading)
     return (
@@ -144,26 +145,17 @@ function EditProfile() {
           bgColor={bgColor}
           zIndex={1}
         >
-          {form.formState.isDirty ? (
-            <IconButton
-              aria-label="back"
-              icon={<Box as={BiArrowBack} boxSize="20px" />}
-              variant="ghost"
-              m={2}
-              onClick={discardModalProps.onOpen}
-            />
-          ) : (
-            <NextLink href={`/${me?.handle}`}>
-              <IconButton
-                aria-label="back"
-                icon={<Box as={BiArrowBack} boxSize="20px" />}
-                variant="ghost"
-                m={2}
-              />
-            </NextLink>
-          )}
+          <IconButton
+            aria-label="back"
+            icon={<Box as={BiArrowBack} boxSize="20px" />}
+            variant="ghost"
+            m={2}
+            onClick={() => {
+              form.formState.isDirty ? discardModalProps.onOpen() : router.back()
+            }}
+          />
           <HStack px={4} spacing={0} w="100%" justify="space-between">
-            <Heading as="h1" size="md" noOfLines={1} maxW="80%">
+            <Heading as="h1" fontSize={{ base: "md", sm: "xl" }} noOfLines={1} maxW="80%">
               Edit profile
             </Heading>
             {form.getFieldState("dob").isDirty ? (
@@ -180,13 +172,13 @@ function EditProfile() {
         <Box position="relative" pt="56px">
           <Box
             w="100%"
-            h="140px"
+            h={{ base: "115px", sm: "140px" }}
             position="absolute"
             bgImage={me.cover || ""}
             bgPosition="center"
             bgRepeat="no-repeat"
             bgSize="cover"
-            bg={!me.cover ? "brand.bgDark" : undefined}
+            bg={!me.cover ? "gray.900" : undefined}
           >
             <ImageUploader
               dropzoneOptions={{ maxSize: 1000000 }}
@@ -202,13 +194,13 @@ function EditProfile() {
               </Center>
             </ImageUploader>
           </Box>
-          <Stack px={4} pt="100px" spacing={6}>
+          <Stack px={4} pt={{ base: "80px", sm: "100px" }} pb={8} spacing={5}>
             <ImageUploader
               dropzoneOptions={{ maxSize: 1000000 }}
               path={UPLOAD_PATHS.userAvatar(me.id)}
               onSubmit={updateAvatar}
             >
-              <Avatar src={me?.avatar || undefined} boxSize="95px" />
+              <Avatar src={me?.avatar || undefined} boxSize={{ base: "80px", sm: "95px" }} />
               <Center position="absolute" top={0} left={0} w="100%" h="100%">
                 <Flex rounded="full" bg="rgba(0, 0, 0, 0.5)" p={2}>
                   <Icon as={TbCameraPlus} boxSize="24px" />
@@ -225,11 +217,11 @@ function EditProfile() {
                 <Stack spacing={0}>
                   <Text fontWeight="medium">
                     Birth date &#183;{" "}
-                    <Link fontSize="sm" onClick={() => setIsEditingDob(false)}>
+                    <Link fontSize="15px" onClick={() => setIsEditingDob(false)}>
                       Cancel
                     </Link>
                   </Text>
-                  <Text color="gray.400" fontSize="sm">
+                  <Text color="gray.400" fontSize="xs">
                     This should be the date of birth of the person using the account. Even if you're making an
                     account for your business, event, or cat.
                   </Text>
@@ -237,7 +229,7 @@ function EditProfile() {
                 <DateInput name="dob" label="Birth date" />
                 <Stack spacing={0}>
                   <Text fontWeight="medium">Who sees this?</Text>
-                  <Text color="gray.400" fontSize="sm">
+                  <Text color="gray.400" fontSize="15px">
                     You can control who sees your birthday on Twatter
                   </Text>
                 </Stack>
@@ -249,7 +241,7 @@ function EditProfile() {
               </Stack>
             ) : (
               <Stack spacing={0}>
-                <Text color="gray.400">
+                <Text color="gray.400" fontSize="15px">
                   Birth date &#183; <Link onClick={editModalProps.onOpen}>Edit</Link>
                 </Text>
                 <Text fontSize="xl">
@@ -262,7 +254,7 @@ function EditProfile() {
       </Form>
       {/* EDIT DOB MODAL */}
       <Modal {...editModalProps} title="Edit date of birth?">
-        <Text mb={6} fontSize="sm" color="gray.400">
+        <Text mb={6} fontSize="15px" color="gray.400">
           This can only be changed a few times. Make sure you enter the age of the person using the account.
         </Text>
         <Stack>
@@ -282,7 +274,7 @@ function EditProfile() {
       </Modal>
       {/* CONFIRM DOB MODAL */}
       <Modal {...confirmModalProps} title="Confirm date of birth?">
-        <Text mb={6} fontSize="sm" color="gray.400">
+        <Text mb={6} fontSize="15px" color="gray.400">
           You are confirming that {dayjs(form.getValues("dob")).format("MMMM DD, YYYY")}, is accurate. If it's
           not, your account may be affected.
         </Text>
@@ -303,7 +295,7 @@ function EditProfile() {
       </Modal>
       {/* REMOVE DOB MODAL */}
       <Modal {...removeModalProps} title="Remove birth date?">
-        <Text mb={6} fontSize="sm" color="gray.400">
+        <Text mb={6} fontSize="15px" color="gray.400">
           This will remove it from your profile
         </Text>
         <Stack>
@@ -317,7 +309,7 @@ function EditProfile() {
       </Modal>
       {/* DISCARD CHANGES MODAL */}
       <Modal {...discardModalProps} title="Discard changes?">
-        <Text mb={6} fontSize="sm" color="gray.400">
+        <Text mb={6} fontSize="15px" color="gray.400">
           This can't be undone and you'll lose your changes
         </Text>
         <Stack>
