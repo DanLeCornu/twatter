@@ -1,4 +1,5 @@
-import { extendTheme, StyleFunctionProps } from "@chakra-ui/react"
+import type { StyleFunctionProps } from "@chakra-ui/react"
+import { extendTheme } from "@chakra-ui/react"
 import { mode } from "@chakra-ui/theme-tools"
 
 import { colors } from "./colors"

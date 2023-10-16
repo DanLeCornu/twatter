@@ -95,8 +95,7 @@ model Post {
   views      View[]
   likes      Like[]
   bookmark   Bookmark[]
-  Tags       Tags?      @relation(fields: [tagsId], references: [id])
-  tagsId     String?    @db.Uuid
+  Tags       Tags[]
 }
 
 model Reply {

@@ -33,11 +33,15 @@ import NextLink from "next/link"
 
 import { WEB_URL } from "lib/config"
 import type { PostItemFragment } from "lib/graphql"
+import { useMe } from "lib/hooks/useMe"
+import { useToast } from "lib/hooks/useToast"
 
 import { BookmarkPost } from "./BookmarkPost"
 import { ItemHeading } from "./ItemHeading"
 import { ItemMenu } from "./ItemMenu"
 import { LikePost } from "./LikePost"
+import { Modal } from "./Modal"
+import { PostAnalytics } from "./PostAnalytics"
 import { UserPopover } from "./UserPopover"
 
 interface Props {
@@ -46,7 +50,10 @@ interface Props {
 }
 
 export function PostItem({ post, isPinned = false }: Props) {
+  const { me } = useMe()
+  const toast = useToast()
   const menuProps = useDisclosure()
+  const modalProps = useDisclosure()
   const borderColor = useColorModeValue("gray.100", "gray.700")
   const bgHover = useColorModeValue("gray.50", "#182234")
   const popoverBg = useColorModeValue("white", "#1A202C")
@@ -113,24 +120,24 @@ export function PostItem({ post, isPinned = false }: Props) {
                 />
               </Box>
             )}
-            <HStack spacing={0}>
-              {/* REPLIES */}
-              <NextLink href={`/replies/new?postId=${post.id}`}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  color="gray"
-                  _hover={{ color: "primary.500" }}
-                  leftIcon={<FaRegComment />}
-                >
-                  {post.replyCount > 0 && post.replyCount.toLocaleString()}
-                </Button>
-              </NextLink>
-              <Box
-                onClick={(e) => {
-                  e.preventDefault()
-                }} // Stops Next link
-              >
+            <Box
+              onClick={(e) => {
+                e.preventDefault()
+              }} // Stops Next link
+            >
+              <HStack justify="space-between" pr={8}>
+                {/* REPLIES */}
+                <NextLink href={`/replies/new?postId=${post.id}`}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    color="gray"
+                    _hover={{ color: "primary.500" }}
+                    leftIcon={<Box as={FaRegComment} boxSize="16px" />}
+                  >
+                    {post.replyCount > 0 && post.replyCount.toLocaleString()}
+                  </Button>
+                </NextLink>
                 {/* LIKES */}
                 <LikePost size="small" postId={post.id} likeCount={post.likeCount} />
                 {/* VIEWS */}
@@ -139,7 +146,8 @@ export function PostItem({ post, isPinned = false }: Props) {
                   size="sm"
                   color="gray"
                   _hover={{ color: "primary.500" }}
-                  leftIcon={<IoIosStats />}
+                  leftIcon={<Box as={IoIosStats} boxSize="16px" />}
+                  onClick={modalProps.onOpen}
                 >
                   {post.viewCount.toLocaleString()}
                 </Button>
@@ -152,14 +160,17 @@ export function PostItem({ post, isPinned = false }: Props) {
                     color="gray"
                     size="sm"
                     _hover={{ color: "primary.500" }}
-                    icon={<Box as={FiShare} />}
+                    icon={<Box as={FiShare} boxSize="16px" />}
                   />
                   <Portal>
                     <MenuList onClick={(e) => e.stopPropagation()}>
                       <MenuItem
                         icon={<Box as={AiOutlineLink} boxSize="18px" />}
                         fontWeight="medium"
-                        onClick={onCopy}
+                        onClick={() => {
+                          onCopy()
+                          toast({ description: "Copied to clipboard" })
+                        }}
                       >
                         Copy link
                       </MenuItem>
@@ -182,8 +193,17 @@ export function PostItem({ post, isPinned = false }: Props) {
                     </MenuList>
                   </Portal>
                 </Menu>
-              </Box>
-            </HStack>
+
+                <Modal
+                  {...modalProps}
+                  title={post.user.id === me?.id ? "Post Analytics" : "Views"}
+                  size="full"
+                  closeButton
+                >
+                  <PostAnalytics item={post} />
+                </Modal>
+              </HStack>
+            </Box>
           </Stack>
         </Flex>
       </Box>

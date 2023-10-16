@@ -1,8 +1,10 @@
 import * as React from "react"
+import { BiArrowBack } from "react-icons/bi"
 import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import { gql } from "@apollo/client"
 import {
   Box,
+  Button,
   Center,
   Heading,
   HStack,
@@ -19,15 +21,16 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import Head from "next/head"
+import { useRouter } from "next/router"
 
-import { useGetMyBookmarksQuery } from "lib/graphql"
+import { useClearAllBookmarksMutation, useGetMyBookmarksQuery } from "lib/graphql"
 import { useMe } from "lib/hooks/useMe"
+import { useMutationHandler } from "lib/hooks/useMutationHandler"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { withAuth } from "components/hoc/withAuth"
 import { HEADING_CONTAINER_HEIGHT, HomeLayout } from "components/HomeLayout"
+import { Modal } from "components/Modal"
 import { PostList } from "components/PostList"
-import { useRouter } from "next/router"
-import { BiArrowBack } from "react-icons/bi"
-import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 const _ = gql`
   fragment BookmarkItem on Bookmark {
@@ -44,18 +47,34 @@ const _ = gql`
       }
     }
   }
+  mutation ClearAllBookmarks {
+    clearAllBookmarks
+  }
 `
 
 function Bookmarks() {
   const { me } = useMe()
+  const handler = useMutationHandler()
+  const modalProps = useDisclosure()
   const menuProps = useDisclosure()
   const router = useRouter()
 
-  const { data, loading } = useGetMyBookmarksQuery()
+  const { data, loading, refetch } = useGetMyBookmarksQuery()
   const posts = data?.me?.bookmarks.map((bookmark) => bookmark.post) || []
+
+  const [clearAll, { loading: clearAllLoading }] = useClearAllBookmarksMutation()
 
   const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const borderColor = useColorModeValue("gray.100", "gray.700")
+
+  const handleClearAllBookmarks = () => {
+    return handler(() => clearAll(), {
+      onSuccess: () => {
+        refetch()
+        modalProps.onClose()
+      },
+    })
+  }
 
   return (
     <Box position="relative">
@@ -92,23 +111,25 @@ function Bookmarks() {
           </Stack>
         </HStack>
 
-        <Menu {...menuProps}>
-          <MenuButton
-            as={IconButton}
-            variant="ghost"
-            boxSize="35px"
-            minW="35px" // needed otherwise Chakra default styling overrides and makes it wider
-            icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" />}
-            onClick={menuProps.onToggle}
-          />
-          <Portal>
-            <MenuList p={0}>
-              <MenuItem fontWeight="bold" color="red.500" py={2}>
-                Clear all bookmarks
-              </MenuItem>
-            </MenuList>
-          </Portal>
-        </Menu>
+        {posts.length > 0 && (
+          <Menu {...menuProps}>
+            <MenuButton
+              as={IconButton}
+              variant="ghost"
+              boxSize="35px"
+              minW="35px" // needed otherwise Chakra default styling overrides and makes it wider
+              icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" />}
+              onClick={menuProps.onToggle}
+            />
+            <Portal>
+              <MenuList p={0}>
+                <MenuItem fontWeight="bold" color="red.500" py={2} onClick={modalProps.onOpen}>
+                  Clear all bookmarks
+                </MenuItem>
+              </MenuList>
+            </Portal>
+          </Menu>
+        )}
       </HStack>
       {loading ? (
         <Center pt={`${HEADING_CONTAINER_HEIGHT}px`}>
@@ -128,6 +149,26 @@ function Bookmarks() {
           <PostList posts={posts} />
         </Box>
       )}
+
+      {/* CLEAR BOOKMARKS */}
+      <Modal {...modalProps} title="Clear all Bookmarks?">
+        <Text mb={6}>
+          This can't be undone and you'll remove all the posts you've added to your Bookmarks
+        </Text>
+        <Stack>
+          <Button
+            bg="red.500"
+            onClick={handleClearAllBookmarks}
+            _hover={{ bg: "red.500" }}
+            isLoading={clearAllLoading}
+          >
+            Clear
+          </Button>
+          <Button colorScheme="monochrome" variant="outline" onClick={modalProps.onClose}>
+            Cancel
+          </Button>
+        </Stack>
+      </Modal>
     </Box>
   )
 }

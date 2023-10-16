@@ -72,7 +72,12 @@ function NewReply() {
   const post = data?.post
 
   const [create, { loading: submitLoading }] = useCreateReplyMutation({
-    refetchQueries: [{ query: GetPostsDocument, variables: { orderBy: { createdAt: SortOrder.Desc } } }],
+    refetchQueries: [
+      {
+        query: GetPostsDocument,
+        variables: { orderBy: { createdAt: SortOrder.Desc }, where: { userId: { not: { equals: me?.id } } } },
+      },
+    ],
   })
   const [upload] = useS3Upload()
   const [update] = useUpdateReplyMutation()

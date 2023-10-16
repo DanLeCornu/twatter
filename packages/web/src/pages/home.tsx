@@ -1,4 +1,6 @@
 import * as React from "react"
+import { BrowserView, MobileView } from "react-device-detect"
+import { AiOutlineTwitter } from "react-icons/ai"
 import {
   Box,
   Center,
@@ -16,15 +18,13 @@ import Head from "next/head"
 
 import { SortOrder, useGetPostsQuery } from "lib/graphql"
 import { useMe } from "lib/hooks/useMe"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { withAuth } from "components/hoc/withAuth"
 import { DesktopHomeCreatePostForm } from "components/HomeCreatePostForm"
 import { HEADING_CONTAINER_HEIGHT, HomeLayout, TAB_HEIGHT, TOTAL_HEADER_HEIGHT } from "components/HomeLayout"
+import { MobileTopBarAvatar } from "components/MobileTopBarAvatar"
 import { NoData } from "components/NoData"
 import { PostList } from "components/PostList"
-import { BrowserView, MobileView } from "react-device-detect"
-import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
-import { MobileTopBarAvatar } from "components/MobileTopBarAvatar"
-import { AiOutlineTwitter } from "react-icons/ai"
 
 function Home() {
   const { me } = useMe()
@@ -102,7 +102,7 @@ function Home() {
             <Tab
               fontWeight="medium"
               fontSize="sm"
-              _selected={{ color: tabActiveColor, borderColor: "brand.blue", borderBottomWidth: "3px" }}
+              _selected={{ color: tabActiveColor, borderColor: "brand.blue", borderBottomWidth: "3.5px" }}
               color={tabInactiveColor}
               px={1}
             >
@@ -111,7 +111,7 @@ function Home() {
             <Tab
               fontWeight="medium"
               fontSize="sm"
-              _selected={{ color: tabActiveColor, borderColor: "brand.blue", borderBottomWidth: "3px" }}
+              _selected={{ color: tabActiveColor, borderColor: "brand.blue", borderBottomWidth: "3.5px" }}
               color={tabInactiveColor}
               px={1}
             >

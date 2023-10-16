@@ -42,4 +42,12 @@ export default class BookmarkResolver {
     await prisma.bookmark.delete({ where: { id: bookmark.id } })
     return true
   }
+
+  // CLEAR ALL BOOKMARKS
+  @UseAuth()
+  @Mutation(() => Boolean)
+  async clearAllBookmarks(@CurrentUser() currentUser: User): Promise<Boolean> {
+    await prisma.bookmark.deleteMany({ where: { userId: currentUser.id } })
+    return true
+  }
 }

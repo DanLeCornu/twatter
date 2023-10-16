@@ -1,9 +1,10 @@
-import { Box, HStack, IconButton, useColorModeValue } from "@chakra-ui/react"
 import * as React from "react"
-import NextLink from "next/link"
 import { BiBell, BiHomeCircle, BiSearch } from "react-icons/bi"
-import { useRouter } from "next/router"
 import { FiMail } from "react-icons/fi"
+import { Box, HStack, IconButton, useColorModeValue } from "@chakra-ui/react"
+import NextLink from "next/link"
+import { useRouter } from "next/router"
+
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 export const MOBILE_BOTTOM_TAB_HEIGHT = 50

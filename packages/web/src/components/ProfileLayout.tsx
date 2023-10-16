@@ -8,6 +8,7 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import { SlLocationPin } from "react-icons/sl"
 import { gql } from "@apollo/client"
 import {
+  AspectRatio,
   Avatar,
   Box,
   Button,
@@ -49,12 +50,13 @@ import {
 } from "lib/graphql"
 import { useMe } from "lib/hooks/useMe"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
+import { useToast } from "lib/hooks/useToast"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 import { FollowButton } from "./FollowButton"
 import { Modal } from "./Modal"
 import { NoData } from "./NoData"
 import { ProfileTab } from "./ProfileTab"
-import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 const _ = gql`
   fragment UserProfile on User {
@@ -97,8 +99,10 @@ const _ = gql`
 
 export function ProfileLayout({ children }: { children: React.ReactNode }) {
   const { me } = useMe()
+  const toast = useToast()
   const router = useRouter()
   const handler = useMutationHandler()
+  const avatarModalProps = useDisclosure()
   const blockModalProps = useDisclosure()
   const muteModalProps = useDisclosure()
   const handle = router.query.handle as string
@@ -118,7 +122,10 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
   const [mute, { loading: muteLoading }] = useMuteUserMutation({
     refetchQueries: [
       { query: MeDocument },
-      { query: GetPostsDocument, variables: { orderBy: { createdAt: SortOrder.Desc } } },
+      {
+        query: GetPostsDocument,
+        variables: { orderBy: { createdAt: SortOrder.Desc }, where: { userId: { not: { equals: me?.id } } } },
+      },
     ],
   })
   const [unmute, { loading: unmuteLoading }] = useUnmuteUserMutation({
@@ -127,7 +134,10 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
   const [block, { loading: blockLoading }] = useBlockUserMutation({
     refetchQueries: [
       { query: MeDocument },
-      { query: GetPostsDocument, variables: { orderBy: { createdAt: SortOrder.Desc } } },
+      {
+        query: GetPostsDocument,
+        variables: { orderBy: { createdAt: SortOrder.Desc }, where: { userId: { not: { equals: me?.id } } } },
+      },
     ],
   })
   const [unblock, { loading: unblockLoading }] = useUnblockUserMutation({
@@ -136,7 +146,15 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
   const handleMute = () => {
     if (!user || muteLoading) return
     return handler(() => mute({ variables: { userId: user.id } }), {
-      onSuccess: () => {
+      onSuccess: (_, toast) => {
+        toast({
+          description: `@${handle} has been muted`,
+          action: (
+            <Link fontWeight="medium" color="white" fontSize="sm" onClick={handleUnmute}>
+              Undo
+            </Link>
+          ),
+        })
         muteModalProps.onClose()
       },
     })
@@ -144,7 +162,8 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
   const handleUnmute = () => {
     if (!user || unmuteLoading) return
     return handler(() => unmute({ variables: { userId: user.id } }), {
-      onSuccess: () => {
+      onSuccess: (_, toast) => {
+        toast({ description: `@${handle} has been unmuted` })
         muteModalProps.onClose()
       },
     })
@@ -152,7 +171,15 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
   const handleBlock = () => {
     if (!user || blockLoading) return
     return handler(() => block({ variables: { userId: user.id } }), {
-      onSuccess: () => {
+      onSuccess: (_, toast) => {
+        toast({
+          description: "Successfully blocked",
+          action: (
+            <Link fontWeight="medium" color="white" fontSize="sm" onClick={handleUnblock}>
+              Unblock
+            </Link>
+          ),
+        })
         blockModalProps.onClose()
       },
     })
@@ -227,9 +254,16 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
           bgSize="cover"
           bg={!user.cover ? "gray.600" : undefined}
         />
-        <Stack px={4} pt="85px" pb={6} spacing={5}>
+        <Stack px={4} pt="78px" pb={6} spacing={5}>
           <HStack align="flex-end" justify="space-between">
-            <Avatar src={user.avatar || undefined} boxSize="70px" />
+            <Avatar
+              src={user.avatar || undefined}
+              boxSize="80px"
+              onClick={avatarModalProps.onOpen}
+              borderWidth="2px"
+              // borderColor="brand.bgDark"
+              borderColor="brand.bgDark"
+            />
             {user.id === me?.id ? (
               <Flex justify="flex-end">
                 <NextLink href="/settings/profile">
@@ -244,7 +278,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                   <MenuButton
                     as={IconButton}
                     aria-label="more"
-                    icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" />}
+                    icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" color="gray.200" />}
                     variant="outline"
                     minW="34px"
                     boxSize="34px"
@@ -257,7 +291,10 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                           <MenuItem
                             icon={<Box as={AiOutlineLink} boxSize="18px" />}
                             fontWeight="medium"
-                            onClick={onCopy}
+                            onClick={() => {
+                              onCopy()
+                              toast({ description: "Copied to clipboard" })
+                            }}
                           >
                             Copy link to profile
                           </MenuItem>
@@ -315,7 +352,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                       boxSize="34px"
                       minW="34px"
                     />
-                    <FollowButton userId={user.id} defaultShowFollowing />
+                    <FollowButton userId={user.id} handle={user.handle} defaultShowFollowing />
                   </>
                 )}
               </HStack>
@@ -479,6 +516,15 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
             Cancel
           </Button>
         </Stack>
+      </Modal>
+
+      {/* AVATAR MODAL */}
+      <Modal {...avatarModalProps} closeButton>
+        <Center h="75vh">
+          <AspectRatio ratio={1} w="100%">
+            <Avatar src={user.avatar || undefined} />
+          </AspectRatio>
+        </Center>
       </Modal>
     </Box>
   )

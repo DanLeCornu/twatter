@@ -6,12 +6,12 @@ import NextLink from "next/link"
 
 import { useLogout } from "lib/hooks/useLogout"
 import { useMe } from "lib/hooks/useMe"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { withAuth } from "components/hoc/withAuth"
 import { NoData } from "components/NoData"
 import { OnboardingStep1 } from "components/OnboardingStep1"
 import { OnboardingStep2 } from "components/OnboardingStep2"
 import { OnboardingStep3 } from "components/OnboardingStep3"
-import { WHITE_RGB, BG_DARK_RGB } from "lib/theme/colors"
 
 function Onboarding() {
   const { me, loading } = useMe()

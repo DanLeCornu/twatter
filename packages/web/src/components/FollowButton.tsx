@@ -17,10 +17,11 @@ export const _ = gql`
 
 interface Props {
   userId: string
+  handle?: string | null
   defaultShowFollowing?: boolean
 }
 
-export function FollowButton({ userId, defaultShowFollowing }: Props) {
+export function FollowButton({ userId, handle, defaultShowFollowing }: Props) {
   const { me } = useMe()
   const handler = useMutationHandler()
   const [canUnfollow, setCanUnfollow] = React.useState(defaultShowFollowing)
@@ -36,20 +37,23 @@ export function FollowButton({ userId, defaultShowFollowing }: Props) {
   const handleFollow = () => {
     if (followLoading) return
     return handler(() => follow({ variables: { userId } }), {
-      onSuccess: () => {
+      onSuccess: (_, toast) => {
         setCanUnfollow(true)
+        toast({ description: `You followed @${handle}` })
       },
     })
   }
   const handleUnfollow = () => {
     if (unfollowLoading) return
     return handler(() => unfollow({ variables: { userId } }), {
-      onSuccess: () => {
+      onSuccess: (_, toast) => {
         setCanUnfollow(false)
+        toast({ description: `You unfollowed @${handle}` })
       },
     })
   }
 
+  if (!handle) return null
   if (!hasFollowed)
     return (
       <Button colorScheme="monochrome" size="sm" onClick={handleFollow}>

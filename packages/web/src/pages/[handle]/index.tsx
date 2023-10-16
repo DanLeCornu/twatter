@@ -36,9 +36,9 @@ function Profile() {
         <NoData>Posts not found</NoData>
       </Center>
     )
-  return posts.length > 0 ? (
+  return posts.length > 0 || me?.pinnedPost ? (
     <>
-      {handle === me?.handle && me?.pinnedPost && <PostItem post={me.pinnedPost} isPinned />}
+      {handle === me?.handle && me.pinnedPost && <PostItem post={me.pinnedPost} isPinned />}
       <PostList posts={posts} />
     </>
   ) : (

@@ -1,8 +1,8 @@
 import type { FieldError } from "react-hook-form"
-import type { UseToastOptions } from "@chakra-ui/react"
 import * as Sentry from "@sentry/nextjs"
 import type { ExecutionResult } from "graphql"
 
+import type { CustomToastProps } from "./useToast"
 import { useToast } from "./useToast"
 
 export interface ValidationError {
@@ -19,17 +19,17 @@ export function formatValidations(errors: ValidationError[]): FieldError[] {
 }
 
 export interface MutationHandler<T> {
-  onSuccess?: (data: NonNullable<T>, toast: (props: UseToastOptions) => void) => Promise<any> | any
-  onValidationError?: (errors: FieldError[], toast: (props: UseToastOptions) => void) => Promise<any> | any
-  onAppError?: (message: string, toast: (props: UseToastOptions) => void) => Promise<any> | any
-  onServerError?: (message: string, toast: (props: UseToastOptions) => void) => Promise<any> | any
-  onFinish?: (toast: (props: UseToastOptions) => void) => Promise<any> | any
+  onSuccess?: (data: NonNullable<T>, toast: (props: CustomToastProps) => void) => Promise<any> | any
+  onValidationError?: (errors: FieldError[], toast: (props: CustomToastProps) => void) => Promise<any> | any
+  onAppError?: (message: string, toast: (props: CustomToastProps) => void) => Promise<any> | any
+  onServerError?: (message: string, toast: (props: CustomToastProps) => void) => Promise<any> | any
+  onFinish?: (toast: (props: CustomToastProps) => void) => Promise<any> | any
 }
 
 async function mutationHandler<T>(
   res: ExecutionResult<NonNullable<T>> | void,
   handler: MutationHandler<T>,
-  toast: (props: UseToastOptions) => void,
+  toast: (props: CustomToastProps) => void,
   formActions?: {
     setFieldErrors: (errors: FieldError[]) => void
     setAppError: (message: any) => void

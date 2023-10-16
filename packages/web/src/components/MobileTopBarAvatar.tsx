@@ -1,13 +1,13 @@
+import * as React from "react"
+import { BiMoon, BiSun, BiUser } from "react-icons/bi"
+import { FiBookmark, FiLogOut, FiSettings } from "react-icons/fi"
 import {
-  Avatar,
-  useColorModeValue,
-  useDisclosure,
-  Text,
   Accordion,
   AccordionButton,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Avatar,
   Button,
   Divider,
   Drawer,
@@ -17,14 +17,15 @@ import {
   HStack,
   Icon,
   Stack,
+  Text,
   useColorMode,
+  useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
-import { useMe } from "lib/hooks/useMe"
-import logout from "pages/logout"
-import * as React from "react"
-import { BiUser, BiSun, BiMoon } from "react-icons/bi"
-import { FiBookmark, FiSettings, FiLogOut } from "react-icons/fi"
 import NextLink from "next/link"
+import logout from "pages/logout"
+
+import { useMe } from "lib/hooks/useMe"
 
 export function MobileTopBarAvatar() {
   const { me } = useMe()

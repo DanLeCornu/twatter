@@ -34,7 +34,12 @@ export function DesktopHomeCreatePostForm() {
   const [image, setImage] = React.useState<AttachedImage | null>(null)
 
   const [create, { loading }] = useCreatePostMutation({
-    refetchQueries: [{ query: GetPostsDocument, variables: { orderBy: { createdAt: SortOrder.Desc } } }],
+    refetchQueries: [
+      {
+        query: GetPostsDocument,
+        variables: { orderBy: { createdAt: SortOrder.Desc }, where: { userId: { not: { equals: me?.id } } } },
+      },
+    ],
   })
 
   const [upload] = useS3Upload()

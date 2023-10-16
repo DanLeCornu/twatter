@@ -1,4 +1,5 @@
-import { Box, LinkProps } from "@chakra-ui/react"
+import type { LinkProps } from "@chakra-ui/react"
+import { Box } from "@chakra-ui/react"
 import { Link, useColorModeValue } from "@chakra-ui/react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -26,7 +27,7 @@ export function ProfileTab({ href, ...props }: Props) {
     >
       <Box
         color={isActive ? activeColor : inactiveColor}
-        borderBottom="3px solid"
+        borderBottom="3.5px solid"
         borderColor={isActive ? "brand.blue" : "transparent"}
         pb={2}
         px={1}

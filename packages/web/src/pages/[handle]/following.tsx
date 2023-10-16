@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Center, Spinner } from "@chakra-ui/react"
+import { Box, Button, Center, Heading, Spinner, Stack, Text } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 
 import { useGetProfileFollowQuery } from "lib/graphql"
@@ -34,13 +34,24 @@ function ProfileFollowing() {
     )
   return following.length > 0 ? (
     <FollowerList followers={following} />
+  ) : me?.handle === handle ? (
+    <Stack p={6} spacing={6}>
+      <Stack spacing={1}>
+        <Heading>Be in the know</Heading>
+        <Text fontSize="sm" color="gray.400">
+          Following accounts is an easy way to curate your timeline and know what's happening with the topics
+          and people you're interested in.
+        </Text>
+      </Stack>
+      <Box>
+        <Button px={7} size="lg" fontSize="md" onClick={() => router.replace("/explore")}>
+          Find people to follow
+        </Button>
+      </Box>
+    </Stack>
   ) : (
     <Center p={4}>
-      <NoData>
-        {me?.handle === handle
-          ? "You aren't following anyone yet"
-          : "This account isn't following anyone yet"}
-      </NoData>
+      <NoData>This account isn't following anyone yet</NoData>
     </Center>
   )
 }

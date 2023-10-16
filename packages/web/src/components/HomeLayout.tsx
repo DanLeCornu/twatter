@@ -1,14 +1,14 @@
 import * as React from "react"
+import { BrowserView, MobileView } from "react-device-detect"
 import { Box, Center, Spinner } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 
 import { useMe } from "lib/hooks/useMe"
 
-import { Limiter } from "./Limiter"
-import { BrowserView, MobileView } from "react-device-detect"
-import { MobileCreatePostButton } from "./MobileCreatePostButton"
-import { MobileBottomTabs, MOBILE_BOTTOM_TAB_HEIGHT } from "./MobileBottomTabs"
 import { DesktopNav } from "./DesktopNav"
+import { Limiter } from "./Limiter"
+import { MOBILE_BOTTOM_TAB_HEIGHT, MobileBottomTabs } from "./MobileBottomTabs"
+import { MobileCreatePostButton } from "./MobileCreatePostButton"
 
 export const HEADING_CONTAINER_HEIGHT = 50
 export const TAB_HEIGHT = 37

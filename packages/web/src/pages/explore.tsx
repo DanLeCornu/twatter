@@ -1,4 +1,5 @@
 import * as React from "react"
+import { MobileView } from "react-device-detect"
 import { BiSearch, BiX } from "react-icons/bi"
 import { gql } from "@apollo/client"
 import type { InputProps } from "@chakra-ui/react"
@@ -16,11 +17,10 @@ import {
 import Head from "next/head"
 
 import { QueryMode, useGetExploreUsersQuery } from "lib/graphql"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { ExploreUserList } from "components/ExploreUserList"
 import { withAuth } from "components/hoc/withAuth"
 import { HomeLayout } from "components/HomeLayout"
-import { WHITE_RGB, BG_DARK_RGB } from "lib/theme/colors"
-import { MobileView } from "react-device-detect"
 import { MobileTopBarAvatar } from "components/MobileTopBarAvatar"
 
 const _ = gql`

@@ -1,30 +1,32 @@
-import {
-  useDisclosure,
-  useColorMode,
-  useColorModeValue,
-  Flex,
-  IconButton,
-  Box,
-  Stack,
-  Menu,
-  MenuButton,
-  Portal,
-  MenuList,
-  MenuItem,
-  Avatar,
-  Button,
-  Text,
-} from "@chakra-ui/react"
-import { useLogout } from "lib/hooks/useLogout"
-import { useRouter } from "next/router"
 import * as React from "react"
 import { AiOutlineTwitter } from "react-icons/ai"
-import { BiHomeCircle, BiSearch, BiBell, BiUser, BiSun, BiMoon } from "react-icons/bi"
-import { FiMail, FiBookmark, FiFeather, FiLogOut } from "react-icons/fi"
+import { BiBell, BiHomeCircle, BiMoon, BiSearch, BiSun, BiUser } from "react-icons/bi"
+import { FiBookmark, FiFeather, FiLogOut, FiMail } from "react-icons/fi"
 import { HiOutlineDotsCircleHorizontal } from "react-icons/hi"
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Portal,
+  Stack,
+  Text,
+  useColorMode,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react"
 import NextLink from "next/link"
-import { Modal } from "./Modal"
+import { useRouter } from "next/router"
+
+import { useLogout } from "lib/hooks/useLogout"
 import { useMe } from "lib/hooks/useMe"
+
+import { Modal } from "./Modal"
 
 export const DESKTOP_NAV_WIDTH = 68
 

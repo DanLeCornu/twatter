@@ -706,6 +706,7 @@ export type MessageWhereUniqueInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   blockUser: Scalars['Boolean'];
+  clearAllBookmarks: Scalars['Boolean'];
   createBookmark: Scalars['Boolean'];
   createLike: Scalars['Boolean'];
   createPost: Post;
@@ -4896,6 +4897,11 @@ export type GetMyBookmarksQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetMyBookmarksQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, bookmarks: Array<{ __typename?: 'Bookmark', id: string, post: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } }> } | null };
 
+export type ClearAllBookmarksMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ClearAllBookmarksMutation = { __typename?: 'Mutation', clearAllBookmarks: boolean };
+
 export type UserSearchItemFragment = { __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null };
 
 export type GetExploreUsersQueryVariables = Exact<{
@@ -5679,6 +5685,18 @@ export function useGetMyBookmarksLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetMyBookmarksQueryHookResult = ReturnType<typeof useGetMyBookmarksQuery>;
 export type GetMyBookmarksLazyQueryHookResult = ReturnType<typeof useGetMyBookmarksLazyQuery>;
 export type GetMyBookmarksQueryResult = Apollo.QueryResult<GetMyBookmarksQuery, GetMyBookmarksQueryVariables>;
+export const ClearAllBookmarksDocument = gql`
+    mutation ClearAllBookmarks {
+  clearAllBookmarks
+}
+    `;
+export function useClearAllBookmarksMutation(baseOptions?: Apollo.MutationHookOptions<ClearAllBookmarksMutation, ClearAllBookmarksMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ClearAllBookmarksMutation, ClearAllBookmarksMutationVariables>(ClearAllBookmarksDocument, options);
+      }
+export type ClearAllBookmarksMutationHookResult = ReturnType<typeof useClearAllBookmarksMutation>;
+export type ClearAllBookmarksMutationResult = Apollo.MutationResult<ClearAllBookmarksMutation>;
+export type ClearAllBookmarksMutationOptions = Apollo.BaseMutationOptions<ClearAllBookmarksMutation, ClearAllBookmarksMutationVariables>;
 export const GetExploreUsersDocument = gql`
     query GetExploreUsers($orderBy: [UserOrderByWithRelationInput!], $where: UserWhereInput, $skip: Int) {
   users(take: 10, orderBy: $orderBy, where: $where, skip: $skip) {

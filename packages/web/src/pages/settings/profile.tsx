@@ -27,6 +27,7 @@ import { useUpdateProfileMutation } from "lib/graphql"
 import { useForm } from "lib/hooks/useForm"
 import { useMe } from "lib/hooks/useMe"
 import { DOB_PRIVACY_OPTIONS } from "lib/static/dobPrivacyOptions"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { UPLOAD_PATHS } from "lib/uploadPaths"
 import yup from "lib/yup"
 import { DateInput } from "components/DateInput"
@@ -37,7 +38,6 @@ import { Input } from "components/Input"
 import { Modal } from "components/Modal"
 import { Select } from "components/Select"
 import { Textarea } from "components/Textarea"
-import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 const _ = gql`
   fragment UserProfileForm on User {

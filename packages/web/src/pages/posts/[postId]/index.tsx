@@ -49,7 +49,9 @@ import { useForm } from "lib/hooks/useForm"
 import { useMe } from "lib/hooks/useMe"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
 import { useS3Upload } from "lib/hooks/useS3"
+import { useToast } from "lib/hooks/useToast"
 import { useViewPost } from "lib/hooks/useViewPost"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { UPLOAD_PATHS } from "lib/uploadPaths"
 import type yup from "lib/yup"
 import type { AttachedImage } from "components/AttachImage"
@@ -66,7 +68,6 @@ import { NoData } from "components/NoData"
 import { ReplyItem } from "components/ReplyItem"
 import { Textarea } from "components/Textarea"
 import { UserPopover } from "components/UserPopover"
-import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 export const _ = gql`
   fragment ReplyItem on Reply {
@@ -102,6 +103,7 @@ export const _ = gql`
 
 function Post() {
   const { me } = useMe()
+  const toast = useToast()
   const router = useRouter()
   const handler = useMutationHandler()
   const modalProps = useDisclosure()
@@ -276,7 +278,7 @@ function Post() {
                 post.user.id !== me?.id && (
                   <>
                     {/* FOLLOW */}
-                    <FollowButton userId={post.user.id} />
+                    <FollowButton userId={post.user.id} handle={post.user.handle} />
                   </>
                 )
               )}
@@ -341,7 +343,10 @@ function Post() {
                 <MenuItem
                   icon={<Box as={AiOutlineLink} boxSize="18px" />}
                   fontWeight="medium"
-                  onClick={onCopy}
+                  onClick={() => {
+                    onCopy()
+                    toast({ description: "Copied to clipboard" })
+                  }}
                 >
                   Copy link
                 </MenuItem>

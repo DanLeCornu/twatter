@@ -1,4 +1,5 @@
 import * as React from "react"
+import { BrowserView, MobileView } from "react-device-detect"
 import { BiBlock, BiFlag, BiTrash, BiVolumeFull, BiVolumeMute } from "react-icons/bi"
 import { BsPin } from "react-icons/bs"
 import { HiOutlineDotsHorizontal } from "react-icons/hi"
@@ -8,7 +9,14 @@ import { gql } from "@apollo/client"
 import {
   Box,
   Button,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerOverlay,
+  HStack,
+  Icon,
   IconButton,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -16,6 +24,7 @@ import {
   Portal,
   Stack,
   Text,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import NextLink from "next/link"
@@ -40,6 +49,7 @@ import { useMe } from "lib/hooks/useMe"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
 
 import { Modal } from "./Modal"
+import { PostAnalytics } from "./PostAnalytics"
 
 export const _ = gql`
   mutation MuteUser($userId: String!) {
@@ -70,8 +80,10 @@ export function ItemMenu({ item }: Props) {
   const router = useRouter()
   const menuProps = useDisclosure()
   const modalProps = useDisclosure()
+  const drawerProps = useDisclosure()
   const blockModalProps = useDisclosure()
   const handler = useMutationHandler()
+  const analyticsModalProps = useDisclosure()
 
   const isPost = item.__typename === "Post"
   const hasFollowed = me?.following.map((following) => following.id).includes(item.user.id)
@@ -87,7 +99,10 @@ export function ItemMenu({ item }: Props) {
   const [mute, { loading: muteLoading }] = useMuteUserMutation({
     refetchQueries: [
       { query: MeDocument },
-      { query: GetPostsDocument, variables: { orderBy: { createdAt: SortOrder.Desc } } },
+      {
+        query: GetPostsDocument,
+        variables: { orderBy: { createdAt: SortOrder.Desc }, where: { userId: { not: { equals: me?.id } } } },
+      },
     ],
   })
   const [unmute, { loading: unmuteLoading }] = useUnmuteUserMutation({
@@ -96,13 +111,19 @@ export function ItemMenu({ item }: Props) {
   const [block, { loading: blockLoading }] = useBlockUserMutation({
     refetchQueries: [
       { query: MeDocument },
-      { query: GetPostsDocument, variables: { orderBy: { createdAt: SortOrder.Desc } } },
+      {
+        query: GetPostsDocument,
+        variables: { orderBy: { createdAt: SortOrder.Desc }, where: { userId: { not: { equals: me?.id } } } },
+      },
     ],
   })
   const [unblock, { loading: unblockLoading }] = useUnblockUserMutation({
     refetchQueries: [
       { query: MeDocument },
-      { query: GetPostsDocument, variables: { orderBy: { createdAt: SortOrder.Desc } } },
+      {
+        query: GetPostsDocument,
+        variables: { orderBy: { createdAt: SortOrder.Desc }, where: { userId: { not: { equals: me?.id } } } },
+      },
     ],
   })
   const [updatePost, { loading: updatePostLoading }] = useUpdatePostMutation({
@@ -149,20 +170,41 @@ export function ItemMenu({ item }: Props) {
   const handleMute = () => {
     if (muteLoading) return
     return handler(() => mute({ variables: { userId: item.user.id } }), {
-      onSuccess: () => {
+      onSuccess: (_, toast) => {
+        toast({
+          description: `@${item.user.handle} has been muted`,
+          action: (
+            <Link fontWeight="medium" color="white" fontSize="sm" onClick={handleUnmute}>
+              Undo
+            </Link>
+          ),
+        })
         router.replace("/home")
       },
     })
   }
   const handleUnmute = () => {
     if (unmuteLoading) return
-    return handler(() => unmute({ variables: { userId: item.user.id } }))
+    return handler(() => unmute({ variables: { userId: item.user.id } }), {
+      onSuccess: (_, toast) => {
+        toast({ description: `@${item.user.handle} has been unmuted` })
+      },
+    })
   }
   const handleBlock = () => {
     if (blockLoading) return
     return handler(() => block({ variables: { userId: item.user.id } }), {
-      onSuccess: () => {
-        router.replace(`/${item.user.handle}`)
+      onSuccess: (_, toast) => {
+        toast({
+          description: "Successfully blocked",
+          action: (
+            <Link fontWeight="medium" color="white" fontSize="sm" onClick={handleUnblock}>
+              Unblock
+            </Link>
+          ),
+        })
+        blockModalProps.onClose()
+        // router.replace(`/${item.user.handle}`) // I don't think we want to redirect to the profile?
       },
     })
   }
@@ -206,91 +248,192 @@ export function ItemMenu({ item }: Props) {
     return handler(() => pinPost({ variables: { data: { pinnedPostId: null } } }))
   }
 
+  const drawerBg = useColorModeValue("white", "brand.bgDark")
+
   return (
     <>
-      <Menu placement="bottom" {...menuProps}>
-        <MenuButton
-          as={IconButton}
+      <MobileView>
+        <IconButton
+          aria-label="open drawer"
           variant="ghost"
           boxSize="35px"
           minW="35px" // needed otherwise Chakra default styling overrides and makes it wider
-          icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" />}
+          icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" color="gray.400" />}
           onClick={(e) => {
             e.preventDefault() // Stops Next link
-            menuProps.onToggle()
+            drawerProps.onToggle()
           }}
-          // _hover={{ color: "blue.500" }}
         />
-        <Portal>
-          <MenuList onClick={(e) => e.stopPropagation()}>
-            {me?.id === item.user.id ? (
-              <>
-                <MenuItem
-                  color="red"
-                  icon={<Box as={BiTrash} boxSize="18px" />}
-                  fontWeight="medium"
-                  onClick={modalProps.onOpen}
-                >
-                  Delete
-                </MenuItem>
-                {isPost && (
-                  // TODO ability to pin a reply
-                  <MenuItem
-                    icon={<Box as={BsPin} boxSize="18px" />}
-                    fontWeight="medium"
-                    onClick={me.pinnedPost?.id === item.id ? handleUnpinPost : handlePinPost}
-                  >
-                    {me.pinnedPost?.id === item.id ? "Unpin from profile" : "Pin to your profile"}
-                  </MenuItem>
+        <Drawer {...drawerProps} placement="bottom" trapFocus={false}>
+          <DrawerOverlay />
+          <DrawerContent bg={drawerBg}>
+            <DrawerBody p={4}>
+              <Stack spacing={5}>
+                {me?.id === item.user.id ? (
+                  <>
+                    {/* DELETE */}
+                    <HStack
+                      spacing={3}
+                      onClick={() => {
+                        drawerProps.onClose()
+                        modalProps.onOpen()
+                      }}
+                    >
+                      <Icon as={BiTrash} color="red.500" boxSize="18px" />
+                      <Text fontWeight="bold" color="red.500">
+                        Delete
+                      </Text>
+                    </HStack>
+                    {/* PIN */}
+                    {isPost && (
+                      <HStack
+                        spacing={3}
+                        onClick={me.pinnedPost?.id === item.id ? handleUnpinPost : handlePinPost}
+                      >
+                        <Icon as={BsPin} boxSize="18px" />
+                        <Text fontWeight="bold">
+                          {me.pinnedPost?.id === item.id ? "Unpin from profile" : "Pin to your profile"}
+                        </Text>
+                      </HStack>
+                    )}
+                    {/* POST ANALYTICS */}
+                    <HStack
+                      spacing={3}
+                      onClick={() => {
+                        drawerProps.onClose()
+                        analyticsModalProps.onOpen()
+                      }}
+                    >
+                      <Icon as={IoIosStats} boxSize="18px" />
+                      <Text fontWeight="bold">View post engagements</Text>
+                    </HStack>
+                  </>
+                ) : (
+                  <>
+                    {/* FOLLOW */}
+                    <HStack spacing={3} onClick={hasFollowed ? handleUnfollow : handleFollow}>
+                      <Icon as={hasFollowed ? RiUserUnfollowLine : RiUserFollowLine} boxSize="18px" />
+                      <Text fontWeight="bold">
+                        {`${hasFollowed ? "Unfollow" : "Follow"} @${item.user.handle}`}
+                      </Text>
+                    </HStack>
+                    {/* MUTE */}
+                    <HStack spacing={3} onClick={hasMuted ? handleUnmute : handleMute}>
+                      <Icon as={hasMuted ? BiVolumeFull : BiVolumeMute} boxSize="18px" />
+                      <Text fontWeight="bold">{`${hasMuted ? "Unmute" : "Mute"} @${item.user.handle}`}</Text>
+                    </HStack>
+                    {/* BLOCK */}
+                    <HStack
+                      spacing={3}
+                      onClick={() => {
+                        drawerProps.onClose()
+                        blockModalProps.onOpen()
+                      }}
+                    >
+                      <Icon as={BiBlock} boxSize="18px" />
+                      <Text fontWeight="bold">
+                        {hasBlocked ? "Unblock" : "Block"} @{item.user.handle}
+                      </Text>
+                    </HStack>
+                    {/* REPORT */}
+                    <NextLink href={`/${isPost ? "posts" : "replies"}/${item.id}/report`}>
+                      <HStack spacing={3}>
+                        <Icon as={BiFlag} boxSize="18px" />
+                        <Text fontWeight="bold">Report post</Text>
+                      </HStack>
+                    </NextLink>
+                  </>
                 )}
-                <MenuItem
-                  icon={<Box as={IoIosStats} boxSize="18px" />}
-                  fontWeight="medium"
-                  // onClick={(e) => {
-                  //   modalProps.onOpen()
-                  // }}
-                >
-                  View post engagements
-                </MenuItem>
-              </>
-            ) : (
-              <>
-                {/* FOLLOW */}
-                <MenuItem
-                  closeOnSelect
-                  icon={<Box as={hasFollowed ? RiUserUnfollowLine : RiUserFollowLine} boxSize="18px" />}
-                  fontWeight="medium"
-                  onClick={hasFollowed ? handleUnfollow : handleFollow}
-                >
-                  {`${hasFollowed ? "Unfollow" : "Follow"} @${item.user.handle}`}
-                </MenuItem>
-                {/* MUTE */}
-                <MenuItem
-                  icon={<Box as={hasMuted ? BiVolumeFull : BiVolumeMute} boxSize="18px" />}
-                  fontWeight="medium"
-                  onClick={hasMuted ? handleUnmute : handleMute}
-                >
-                  {`${hasMuted ? "Unmute" : "Mute"} @${item.user.handle}`}
-                </MenuItem>
-                {/* BLOCK */}
-                <MenuItem
-                  icon={<Box as={BiBlock} boxSize="18px" />}
-                  fontWeight="medium"
-                  onClick={blockModalProps.onOpen}
-                >
-                  {hasBlocked ? "Unblock" : "Block"} @{item.user.handle}
-                </MenuItem>
-                {/* REPORT */}
-                <NextLink href={`/${isPost ? "posts" : "replies"}/${item.id}/report`}>
-                  <MenuItem icon={<Box as={BiFlag} boxSize="18px" />} fontWeight="medium">
-                    Report post
+              </Stack>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </MobileView>
+      <BrowserView>
+        <Menu placement="bottom" {...menuProps}>
+          <MenuButton
+            as={IconButton}
+            variant="ghost"
+            boxSize="35px"
+            minW="35px" // needed otherwise Chakra default styling overrides and makes it wider
+            icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" color="gray.400" />}
+            onClick={(e) => {
+              e.preventDefault() // Stops Next link
+              menuProps.onToggle()
+            }}
+          />
+          <Portal>
+            <MenuList onClick={(e) => e.stopPropagation()}>
+              {me?.id === item.user.id ? (
+                <>
+                  {/* DELETE */}
+                  <MenuItem
+                    color="red"
+                    icon={<Box as={BiTrash} boxSize="18px" />}
+                    fontWeight="medium"
+                    onClick={modalProps.onOpen}
+                  >
+                    Delete
                   </MenuItem>
-                </NextLink>
-              </>
-            )}
-          </MenuList>
-        </Portal>
-      </Menu>
+                  {/* PIN */}
+                  {isPost && (
+                    // TODO ability to pin a reply
+                    <MenuItem
+                      icon={<Box as={BsPin} boxSize="18px" />}
+                      fontWeight="medium"
+                      onClick={me.pinnedPost?.id === item.id ? handleUnpinPost : handlePinPost}
+                    >
+                      {me.pinnedPost?.id === item.id ? "Unpin from profile" : "Pin to your profile"}
+                    </MenuItem>
+                  )}
+                  {/* POST ANALYTICS */}
+                  <MenuItem
+                    icon={<Box as={IoIosStats} boxSize="18px" />}
+                    fontWeight="medium"
+                    onClick={analyticsModalProps.onOpen}
+                  >
+                    View post engagements
+                  </MenuItem>
+                </>
+              ) : (
+                <>
+                  {/* FOLLOW */}
+                  <MenuItem
+                    closeOnSelect
+                    icon={<Box as={hasFollowed ? RiUserUnfollowLine : RiUserFollowLine} boxSize="18px" />}
+                    fontWeight="medium"
+                    onClick={hasFollowed ? handleUnfollow : handleFollow}
+                  >
+                    {`${hasFollowed ? "Unfollow" : "Follow"} @${item.user.handle}`}
+                  </MenuItem>
+                  {/* MUTE */}
+                  <MenuItem
+                    icon={<Box as={hasMuted ? BiVolumeFull : BiVolumeMute} boxSize="18px" />}
+                    fontWeight="medium"
+                    onClick={hasMuted ? handleUnmute : handleMute}
+                  >
+                    {`${hasMuted ? "Unmute" : "Mute"} @${item.user.handle}`}
+                  </MenuItem>
+                  {/* BLOCK */}
+                  <MenuItem
+                    icon={<Box as={BiBlock} boxSize="18px" />}
+                    fontWeight="medium"
+                    onClick={blockModalProps.onOpen}
+                  >
+                    {hasBlocked ? "Unblock" : "Block"} @{item.user.handle}
+                  </MenuItem>
+                  {/* REPORT */}
+                  <NextLink href={`/${isPost ? "posts" : "replies"}/${item.id}/report`}>
+                    <MenuItem icon={<Box as={BiFlag} boxSize="18px" />} fontWeight="medium">
+                      Report post
+                    </MenuItem>
+                  </NextLink>
+                </>
+              )}
+            </MenuList>
+          </Portal>
+        </Menu>
+      </BrowserView>
 
       {/* BLOCK/UNBLOCK MODAL */}
       <Modal {...blockModalProps} title={`${hasBlocked ? "Unblock" : "Block"} @${item.user.handle}?`}>
@@ -329,6 +472,16 @@ export function ItemMenu({ item }: Props) {
             Cancel
           </Button>
         </Stack>
+      </Modal>
+
+      {/* POST ANALYTICS MODAL */}
+      <Modal
+        {...analyticsModalProps}
+        title={item.user.id === me?.id ? "Post Analytics" : "Views"}
+        size="full"
+        closeButton
+      >
+        <PostAnalytics item={item} />
       </Modal>
     </>
   )

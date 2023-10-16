@@ -39,7 +39,7 @@ export function FollowerList({ followers }: Props) {
 
             {follower.id !== me?.id && (
               <Box>
-                <FollowButton userId={follower.id} defaultShowFollowing />
+                <FollowButton userId={follower.id} handle={follower.handle} defaultShowFollowing />
               </Box>
             )}
           </HStack>

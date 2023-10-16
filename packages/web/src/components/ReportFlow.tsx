@@ -20,10 +20,10 @@ import {
 import NextLink from "next/link"
 
 import { REPORT_ISSUE_TYPES } from "lib/static/reportIssueTypes"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 import type { ReportType } from "../../../database/src"
 import { Modal } from "./Modal"
-import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 const _ = gql`
   mutation CreateReport($data: CreateReportInput!) {
@@ -101,7 +101,7 @@ export function ReportFlow({ type, setType, handleSubmit }: Props) {
               </RadioGroup>
             </>
           ) : (
-            <Stack justify="space-between" minH="65vh">
+            <Stack justify="space-between" minH="45vh">
               <Stack>
                 <Heading as="h2" fontSize="2xl">
                   It sounds like you want to make report for{" "}

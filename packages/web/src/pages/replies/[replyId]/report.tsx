@@ -47,7 +47,8 @@ function ReportReply() {
   const handleSubmit = () => {
     if (!type || submitLoading) return
     return handler(() => submit({ variables: { data: { type, replyId: replyId } } }), {
-      onSuccess: () => {
+      onSuccess: (_, toast) => {
+        toast({ description: "Your Report has been submitted" })
         router.replace("/home")
       },
     })

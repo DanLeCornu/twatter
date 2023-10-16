@@ -4,6 +4,7 @@ import { gql } from "@apollo/client"
 import { Box, Button } from "@chakra-ui/react"
 
 import {
+  GetMyBookmarksDocument,
   GetPostDocument,
   GetPostsDocument,
   MeDocument,
@@ -45,6 +46,7 @@ export function LikePost({ postId, likeCount, size = "large" }: Props) {
         },
       },
       { query: MeDocument },
+      { query: GetMyBookmarksDocument },
     ],
   })
   const [unlikePost] = useUnlikePostMutation({
@@ -60,6 +62,7 @@ export function LikePost({ postId, likeCount, size = "large" }: Props) {
         },
       },
       { query: MeDocument },
+      { query: GetMyBookmarksDocument },
     ],
   })
 
@@ -85,7 +88,7 @@ export function LikePost({ postId, likeCount, size = "large" }: Props) {
       size={size === "small" ? "sm" : undefined}
       color={active ? "red.500" : "gray"}
       _hover={{ color: "red.500" }}
-      leftIcon={<Box as={AiOutlineHeart} boxSize={size === "large" ? "25px" : undefined} />}
+      leftIcon={<Box as={AiOutlineHeart} boxSize={size === "large" ? "25px" : "18px"} />}
       onClick={handleClick}
     >
       {likeCount > 0 && likeCount.toLocaleString()}

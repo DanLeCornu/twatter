@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Center, Spinner } from "@chakra-ui/react"
+import { Center, Heading, Spinner, Stack, Text } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 
 import { useGetProfileFollowQuery } from "lib/graphql"
@@ -34,13 +34,17 @@ function ProfileFollowers() {
     )
   return followers.length > 0 ? (
     <FollowerList followers={followers} />
+  ) : me?.handle === handle ? (
+    <Stack p={6}>
+      <Heading>Looking for followers?</Heading>
+      <Text fontSize="sm" color="gray.400">
+        When someone follows this account, they'll show up here. Posting and interacting with others helps
+        boost followers
+      </Text>
+    </Stack>
   ) : (
     <Center p={4}>
-      <NoData>
-        {me?.handle === handle
-          ? "You haven't got any followers yet"
-          : "This account hasn't got any followers yet"}
-      </NoData>
+      <NoData>This account hasn't got any followers yet</NoData>
     </Center>
   )
 }

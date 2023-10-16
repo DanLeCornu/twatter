@@ -1,4 +1,5 @@
 import * as React from "react"
+import { BiArrowBack } from "react-icons/bi"
 import { CgClose } from "react-icons/cg"
 import { Box, Center, HStack, IconButton, Spinner, Text, useColorModeValue } from "@chakra-ui/react"
 import Head from "next/head"
@@ -6,10 +7,9 @@ import NextLink from "next/link"
 import { useRouter } from "next/router"
 
 import { useMe } from "lib/hooks/useMe"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { SignupStep1 } from "components/SignupStep1"
 import { SignupStep2 } from "components/SignupStep2"
-import { BiArrowBack } from "react-icons/bi"
-import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 export default function Signup() {
   const router = useRouter()

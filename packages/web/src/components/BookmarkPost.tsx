@@ -59,9 +59,17 @@ export function BookmarkPost({ postId, children }: Props) {
 
   const handleClick = () => {
     if (hasBookmarked) {
-      return handler(() => unbookmarkPost({ variables: { postId } }))
+      return handler(() => unbookmarkPost({ variables: { postId } }), {
+        onSuccess: (_, toast) => {
+          toast({ description: "Removed from your Bookmarks" })
+        },
+      })
     } else {
-      return handler(() => bookmarkPost({ variables: { postId } }))
+      return handler(() => bookmarkPost({ variables: { postId } }), {
+        onSuccess: (_, toast) => {
+          toast({ description: "Added to your Bookmarks", link: "/bookmarks", linkText: "View" })
+        },
+      })
     }
   }
 
