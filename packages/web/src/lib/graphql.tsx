@@ -239,6 +239,8 @@ export type BookmarksResponse = {
 };
 
 export type CreatePostInput = {
+  image?: InputMaybe<Scalars['String']>;
+  tags: TagCreateNestedManyWithoutPostsInput;
   text: Scalars['String'];
 };
 
@@ -1087,7 +1089,6 @@ export type PostCreateManyUserInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
-  tagsId?: InputMaybe<Scalars['String']>;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -1176,7 +1177,6 @@ export type PostCreateOrConnectWithoutViewsInput = {
 };
 
 export type PostCreateWithoutBookmarkInput = {
-  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
@@ -1185,6 +1185,7 @@ export type PostCreateWithoutBookmarkInput = {
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
+  tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user: UserCreateNestedOneWithoutPostsInput;
@@ -1192,7 +1193,6 @@ export type PostCreateWithoutBookmarkInput = {
 };
 
 export type PostCreateWithoutLikesInput = {
-  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1201,6 +1201,7 @@ export type PostCreateWithoutLikesInput = {
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
+  tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user: UserCreateNestedOneWithoutPostsInput;
@@ -1208,7 +1209,6 @@ export type PostCreateWithoutLikesInput = {
 };
 
 export type PostCreateWithoutPinnedUserInput = {
-  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1217,6 +1217,7 @@ export type PostCreateWithoutPinnedUserInput = {
   likes?: InputMaybe<LikeCreateNestedManyWithoutPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
+  tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user: UserCreateNestedOneWithoutPostsInput;
@@ -1224,7 +1225,6 @@ export type PostCreateWithoutPinnedUserInput = {
 };
 
 export type PostCreateWithoutRepliesInput = {
-  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1233,6 +1233,7 @@ export type PostCreateWithoutRepliesInput = {
   likes?: InputMaybe<LikeCreateNestedManyWithoutPostInput>;
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
+  tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user: UserCreateNestedOneWithoutPostsInput;
@@ -1240,7 +1241,6 @@ export type PostCreateWithoutRepliesInput = {
 };
 
 export type PostCreateWithoutReportsInput = {
-  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1249,6 +1249,7 @@ export type PostCreateWithoutReportsInput = {
   likes?: InputMaybe<LikeCreateNestedManyWithoutPostInput>;
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
+  tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user: UserCreateNestedOneWithoutPostsInput;
@@ -1256,7 +1257,6 @@ export type PostCreateWithoutReportsInput = {
 };
 
 export type PostCreateWithoutUserInput = {
-  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1266,13 +1266,13 @@ export type PostCreateWithoutUserInput = {
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
+  tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutPostInput>;
 };
 
 export type PostCreateWithoutViewsInput = {
-  Tags?: InputMaybe<TagsCreateNestedOneWithoutPostsInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1282,6 +1282,7 @@ export type PostCreateWithoutViewsInput = {
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
+  tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user: UserCreateNestedOneWithoutPostsInput;
@@ -1298,7 +1299,6 @@ export type PostOrderByRelationAggregateInput = {
 };
 
 export type PostOrderByWithRelationInput = {
-  Tags?: InputMaybe<TagsOrderByWithRelationInput>;
   archivedAt?: InputMaybe<SortOrderInput>;
   bookmark?: InputMaybe<BookmarkOrderByRelationAggregateInput>;
   createdAt?: InputMaybe<SortOrder>;
@@ -1308,7 +1308,7 @@ export type PostOrderByWithRelationInput = {
   pinnedUser?: InputMaybe<UserOrderByWithRelationInput>;
   replies?: InputMaybe<ReplyOrderByRelationAggregateInput>;
   reports?: InputMaybe<ReportOrderByRelationAggregateInput>;
-  tagsId?: InputMaybe<SortOrderInput>;
+  tags?: InputMaybe<TagOrderByRelationAggregateInput>;
   text?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
   user?: InputMaybe<UserOrderByWithRelationInput>;
@@ -1326,7 +1326,6 @@ export enum PostScalarFieldEnum {
   CreatedAt = 'createdAt',
   Id = 'id',
   Image = 'image',
-  TagsId = 'tagsId',
   Text = 'text',
   UpdatedAt = 'updatedAt',
   UserId = 'userId'
@@ -1340,14 +1339,12 @@ export type PostScalarWhereInput = {
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
   image?: InputMaybe<StringNullableFilter>;
-  tagsId?: InputMaybe<UuidNullableFilter>;
   text?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   userId?: InputMaybe<UuidFilter>;
 };
 
 export type PostUpdateInput = {
-  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1357,6 +1354,7 @@ export type PostUpdateInput = {
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
+  tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -1449,7 +1447,6 @@ export type PostUpdateWithWhereUniqueWithoutUserInput = {
 };
 
 export type PostUpdateWithoutBookmarkInput = {
-  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
@@ -1458,6 +1455,7 @@ export type PostUpdateWithoutBookmarkInput = {
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
+  tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -1465,7 +1463,6 @@ export type PostUpdateWithoutBookmarkInput = {
 };
 
 export type PostUpdateWithoutLikesInput = {
-  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1474,6 +1471,7 @@ export type PostUpdateWithoutLikesInput = {
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
+  tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -1481,7 +1479,6 @@ export type PostUpdateWithoutLikesInput = {
 };
 
 export type PostUpdateWithoutPinnedUserInput = {
-  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1490,6 +1487,7 @@ export type PostUpdateWithoutPinnedUserInput = {
   likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
+  tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -1497,7 +1495,6 @@ export type PostUpdateWithoutPinnedUserInput = {
 };
 
 export type PostUpdateWithoutRepliesInput = {
-  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1506,6 +1503,7 @@ export type PostUpdateWithoutRepliesInput = {
   likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
+  tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -1513,7 +1511,6 @@ export type PostUpdateWithoutRepliesInput = {
 };
 
 export type PostUpdateWithoutReportsInput = {
-  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1522,6 +1519,7 @@ export type PostUpdateWithoutReportsInput = {
   likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
+  tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -1529,7 +1527,6 @@ export type PostUpdateWithoutReportsInput = {
 };
 
 export type PostUpdateWithoutUserInput = {
-  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1539,13 +1536,13 @@ export type PostUpdateWithoutUserInput = {
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
+  tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutPostNestedInput>;
 };
 
 export type PostUpdateWithoutViewsInput = {
-  Tags?: InputMaybe<TagsUpdateOneWithoutPostsNestedInput>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -1555,6 +1552,7 @@ export type PostUpdateWithoutViewsInput = {
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
+  tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -1600,7 +1598,6 @@ export type PostWhereInput = {
   AND?: InputMaybe<Array<PostWhereInput>>;
   NOT?: InputMaybe<Array<PostWhereInput>>;
   OR?: InputMaybe<Array<PostWhereInput>>;
-  Tags?: InputMaybe<TagsRelationFilter>;
   archivedAt?: InputMaybe<DateTimeNullableFilter>;
   bookmark?: InputMaybe<BookmarkListRelationFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
@@ -1610,7 +1607,7 @@ export type PostWhereInput = {
   pinnedUser?: InputMaybe<UserRelationFilter>;
   replies?: InputMaybe<ReplyListRelationFilter>;
   reports?: InputMaybe<ReportListRelationFilter>;
-  tagsId?: InputMaybe<UuidNullableFilter>;
+  tags?: InputMaybe<TagListRelationFilter>;
   text?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   user?: InputMaybe<UserRelationFilter>;
@@ -1639,6 +1636,7 @@ export type Query = {
   refreshToken?: Maybe<RefreshTokenResponse>;
   replies: RepliesResponse;
   reply?: Maybe<Reply>;
+  tags: TagsResponse;
   user?: Maybe<User>;
   users: UsersResponse;
 };
@@ -1711,6 +1709,16 @@ export type QueryReplyArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ReplyWhereInput>;
+};
+
+
+export type QueryTagsArgs = {
+  cursor?: InputMaybe<TagWhereUniqueInput>;
+  distinct?: InputMaybe<Array<TagScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<TagOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TagWhereInput>;
 };
 
 
@@ -2523,65 +2531,130 @@ export type StringNullableFilter = {
   startsWith?: InputMaybe<Scalars['String']>;
 };
 
-export type TagsCreateNestedOneWithoutPostsInput = {
-  connect?: InputMaybe<TagsWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<TagsCreateOrConnectWithoutPostsInput>;
-  create?: InputMaybe<TagsCreateWithoutPostsInput>;
+export type Tag = {
+  __typename?: 'Tag';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
 };
 
-export type TagsCreateOrConnectWithoutPostsInput = {
-  create: TagsCreateWithoutPostsInput;
-  where: TagsWhereUniqueInput;
+export type TagCreateNestedManyWithoutPostsInput = {
+  connect?: InputMaybe<Array<TagWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<TagCreateOrConnectWithoutPostsInput>>;
+  create?: InputMaybe<Array<TagCreateWithoutPostsInput>>;
 };
 
-export type TagsCreateWithoutPostsInput = {
+export type TagCreateOrConnectWithoutPostsInput = {
+  create: TagCreateWithoutPostsInput;
+  where: TagWhereUniqueInput;
+};
+
+export type TagCreateWithoutPostsInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
-export type TagsOrderByWithRelationInput = {
+export type TagListRelationFilter = {
+  every?: InputMaybe<TagWhereInput>;
+  none?: InputMaybe<TagWhereInput>;
+  some?: InputMaybe<TagWhereInput>;
+};
+
+export type TagOrderByRelationAggregateInput = {
+  _count?: InputMaybe<SortOrder>;
+};
+
+export type TagOrderByWithRelationInput = {
+  createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
   posts?: InputMaybe<PostOrderByRelationAggregateInput>;
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
-export type TagsRelationFilter = {
-  is?: InputMaybe<TagsWhereInput>;
-  isNot?: InputMaybe<TagsWhereInput>;
+export enum TagScalarFieldEnum {
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  Name = 'name',
+  UpdatedAt = 'updatedAt'
+}
+
+export type TagScalarWhereInput = {
+  AND?: InputMaybe<Array<TagScalarWhereInput>>;
+  NOT?: InputMaybe<Array<TagScalarWhereInput>>;
+  OR?: InputMaybe<Array<TagScalarWhereInput>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<UuidFilter>;
+  name?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
-export type TagsUpdateOneWithoutPostsNestedInput = {
-  connect?: InputMaybe<TagsWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<TagsCreateOrConnectWithoutPostsInput>;
-  create?: InputMaybe<TagsCreateWithoutPostsInput>;
-  delete?: InputMaybe<Scalars['Boolean']>;
-  disconnect?: InputMaybe<Scalars['Boolean']>;
-  update?: InputMaybe<TagsUpdateWithoutPostsInput>;
-  upsert?: InputMaybe<TagsUpsertWithoutPostsInput>;
-};
-
-export type TagsUpdateWithoutPostsInput = {
+export type TagUpdateManyMutationInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
-export type TagsUpsertWithoutPostsInput = {
-  create: TagsCreateWithoutPostsInput;
-  update: TagsUpdateWithoutPostsInput;
+export type TagUpdateManyWithWhereWithoutPostsInput = {
+  data: TagUpdateManyMutationInput;
+  where: TagScalarWhereInput;
 };
 
-export type TagsWhereInput = {
-  AND?: InputMaybe<Array<TagsWhereInput>>;
-  NOT?: InputMaybe<Array<TagsWhereInput>>;
-  OR?: InputMaybe<Array<TagsWhereInput>>;
+export type TagUpdateManyWithoutPostsNestedInput = {
+  connect?: InputMaybe<Array<TagWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<TagCreateOrConnectWithoutPostsInput>>;
+  create?: InputMaybe<Array<TagCreateWithoutPostsInput>>;
+  delete?: InputMaybe<Array<TagWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<TagScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<TagWhereUniqueInput>>;
+  set?: InputMaybe<Array<TagWhereUniqueInput>>;
+  update?: InputMaybe<Array<TagUpdateWithWhereUniqueWithoutPostsInput>>;
+  updateMany?: InputMaybe<Array<TagUpdateManyWithWhereWithoutPostsInput>>;
+  upsert?: InputMaybe<Array<TagUpsertWithWhereUniqueWithoutPostsInput>>;
+};
+
+export type TagUpdateWithWhereUniqueWithoutPostsInput = {
+  data: TagUpdateWithoutPostsInput;
+  where: TagWhereUniqueInput;
+};
+
+export type TagUpdateWithoutPostsInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type TagUpsertWithWhereUniqueWithoutPostsInput = {
+  create: TagCreateWithoutPostsInput;
+  update: TagUpdateWithoutPostsInput;
+  where: TagWhereUniqueInput;
+};
+
+export type TagWhereInput = {
+  AND?: InputMaybe<Array<TagWhereInput>>;
+  NOT?: InputMaybe<Array<TagWhereInput>>;
+  OR?: InputMaybe<Array<TagWhereInput>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
   name?: InputMaybe<StringFilter>;
   posts?: InputMaybe<PostListRelationFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
-export type TagsWhereUniqueInput = {
+export type TagWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+};
+
+export type TagsResponse = {
+  __typename?: 'TagsResponse';
+  count: Scalars['Int'];
+  items: Array<Tag>;
 };
 
 export type UpdateUserInput = {
@@ -4945,6 +5018,13 @@ export type CreatePostMutationVariables = Exact<{
 
 export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
 
+export type TagItemFragment = { __typename?: 'Tag', id: string, name: string };
+
+export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTagsQuery = { __typename?: 'Query', tags: { __typename?: 'TagsResponse', count: number, items: Array<{ __typename?: 'Tag', id: string, name: string }> } };
+
 export type ReplyReportFragment = { __typename?: 'Reply', id: string };
 
 export type GetReplyQueryVariables = Exact<{
@@ -5170,6 +5250,12 @@ export const PostDetailFragmentDoc = gql`
 }
     ${UserDetailFragmentDoc}
 ${ReplyItemFragmentDoc}`;
+export const TagItemFragmentDoc = gql`
+    fragment TagItem on Tag {
+  id
+  name
+}
+    `;
 export const ReplyReportFragmentDoc = gql`
     fragment ReplyReport on Reply {
   id
@@ -5780,6 +5866,27 @@ export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const GetTagsDocument = gql`
+    query GetTags {
+  tags {
+    items {
+      ...TagItem
+    }
+    count
+  }
+}
+    ${TagItemFragmentDoc}`;
+export function useGetTagsQuery(baseOptions?: Apollo.QueryHookOptions<GetTagsQuery, GetTagsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTagsQuery, GetTagsQueryVariables>(GetTagsDocument, options);
+      }
+export function useGetTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTagsQuery, GetTagsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTagsQuery, GetTagsQueryVariables>(GetTagsDocument, options);
+        }
+export type GetTagsQueryHookResult = ReturnType<typeof useGetTagsQuery>;
+export type GetTagsLazyQueryHookResult = ReturnType<typeof useGetTagsLazyQuery>;
+export type GetTagsQueryResult = Apollo.QueryResult<GetTagsQuery, GetTagsQueryVariables>;
 export const GetReplyDocument = gql`
     query GetReply($where: ReplyWhereInput!) {
   reply(where: $where) {

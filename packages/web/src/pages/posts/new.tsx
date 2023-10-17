@@ -3,11 +3,29 @@ import { BiArrowBack } from "react-icons/bi"
 import { BiImage } from "react-icons/bi"
 import { CgClose } from "react-icons/cg"
 import { gql } from "@apollo/client"
-import { Avatar, Box, Button, Divider, Flex, HStack, IconButton, Image, Stack, Text } from "@chakra-ui/react"
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Flex,
+  HStack,
+  IconButton,
+  Image,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react"
 import { matchSorter } from "match-sorter"
 import { useRouter } from "next/router"
 
-import { GetPostsDocument, SortOrder, useCreatePostMutation, useUpdatePostMutation } from "lib/graphql"
+import {
+  GetPostsDocument,
+  SortOrder,
+  useCreatePostMutation,
+  useGetTagsQuery,
+  useUpdatePostMutation,
+} from "lib/graphql"
 import { checkForTags } from "lib/helpers/checkForTags"
 import { uniq } from "lib/helpers/utils"
 import { useForm } from "lib/hooks/useForm"
@@ -20,11 +38,24 @@ import { AttachImage } from "components/AttachImage"
 import { Form } from "components/Form"
 import { withAuth } from "components/hoc/withAuth"
 import { Textarea } from "components/Textarea"
+import { replaceWithSelectTag } from "lib/helpers/replaceWithSelectedTag"
 
 const _ = gql`
   mutation CreatePost($data: CreatePostInput!) {
     createPost(data: $data) {
       ...PostItem
+    }
+  }
+  fragment TagItem on Tag {
+    id
+    name
+  }
+  query GetTags {
+    tags {
+      items {
+        ...TagItem
+      }
+      count
     }
   }
 `
@@ -41,7 +72,10 @@ function NewPost() {
   const [tags, setTags] = React.useState<string[]>([])
   const [tagSearch, setTagSearch] = React.useState("")
 
-  const [create, { loading }] = useCreatePostMutation({
+  const { data, loading } = useGetTagsQuery()
+  const allTagOptions = data?.tags.items.map((tag) => tag.name) || []
+
+  const [create, { loading: createloading }] = useCreatePostMutation({
     refetchQueries: [
       {
         query: GetPostsDocument,
@@ -59,30 +93,49 @@ function NewPost() {
   const [update] = useUpdatePostMutation()
 
   const handleSubmit = (data: yup.InferType<typeof PostSchema>) => {
-    return form.handler(() => create({ variables: { data } }), {
-      onSuccess: async (data) => {
-        router.push("/home")
-        if (image) {
-          const postId = data.createPost.id
-          const imageKey = (await upload(image.file, { path: UPLOAD_PATHS.postImage(postId) })).fileKey
-          return form.handler(() => update({ variables: { postId, data: { image: imageKey } } }))
-        }
+    // TODO check if there is one last tag without a space at the end, and add it to the tags list
+    const connectOrCreate = tags.map((tag) => ({
+      where: { name: tag },
+      create: { name: tag },
+    }))
+
+    return form.handler(
+      () =>
+        create({
+          variables: {
+            data: {
+              text: data.text,
+              tags: { connectOrCreate },
+            },
+          },
+        }),
+      {
+        onSuccess: async (data, toast) => {
+          router.push("/home")
+          if (image) {
+            const postId = data.createPost.id
+            const imageKey = (await upload(image.file, { path: UPLOAD_PATHS.postImage(postId) })).fileKey
+            return form.handler(() => update({ variables: { postId, data: { image: imageKey } } }))
+          }
+          await new Promise((res) => setTimeout(res, 1000)) // wait a second before showing the toast
+          toast({ description: "Your post was sent", link: `/posts/${data.createPost.id}`, linkText: "View" })
+        },
       },
-    })
+    )
   }
 
-  const allTagOptions = ["space", "tech", "politics"]
-
   const matchedTags = () => {
-    return matchSorter(allTagOptions, tagSearch)
+    return matchSorter(allTagOptions, tagSearch, { threshold: matchSorter.rankings.STARTS_WITH })
   }
 
   const handleAddTag = (tag: string) => {
     setTags(uniq([...tags, tag]))
     setTagSearch("")
-    const value = form.getValues("text")
-    form.setValue("text", value + " ")
-    // TODO replace the word in the input with the completed tag
+    const value = form.getValues("text") as string
+    const newValue = replaceWithSelectTag(value, tag)
+    if (newValue === undefined) return
+    form.setValue("text", newValue)
+    form.setFocus("text") // focus is lost after setting value, so need to refocus the input
   }
 
   return (
@@ -95,7 +148,15 @@ function NewPost() {
           m={2}
           onClick={() => router.back()}
         />
-        <Button isDisabled={submitDisabled} isLoading={loading} type="submit" mt={2} mr={3} px={4} size="sm">
+        <Button
+          isDisabled={submitDisabled}
+          isLoading={createloading}
+          type="submit"
+          mt={2}
+          mr={3}
+          px={4}
+          size="sm"
+        >
           Post
         </Button>
       </Flex>
@@ -123,11 +184,18 @@ function NewPost() {
           {!!tagSearch && (
             <Box>
               <Stack>
-                {matchedTags().map((matchedTag) => (
-                  <Text key={matchedTag} onClick={() => handleAddTag(matchedTag)}>
-                    {matchedTag}
-                  </Text>
-                ))}
+                {loading ? (
+                  <>
+                    <Text>loading tags..</Text>
+                    <Spinner />
+                  </>
+                ) : (
+                  matchedTags().map((matchedTag) => (
+                    <Text key={matchedTag} onClick={() => handleAddTag(matchedTag)}>
+                      {matchedTag}
+                    </Text>
+                  ))
+                )}
               </Stack>
             </Box>
           )}
@@ -168,9 +236,10 @@ function NewPost() {
           />
         </AttachImage>
       </HStack>
-      <Text>Tags: {tags.join(", ")}</Text>
+      {/* Testing tags */}
+      {/* <Text>Tags: {tags.join(", ")}</Text>
       <Text>Tag Search: {tagSearch}</Text>
-      <Text>Matches: {matchedTags().join(", ")}</Text>
+      <Text>Matches: {matchedTags().join(", ")}</Text> */}
     </Form>
   )
 }

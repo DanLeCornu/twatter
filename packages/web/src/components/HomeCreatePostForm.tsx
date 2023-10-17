@@ -32,6 +32,8 @@ export function DesktopHomeCreatePostForm() {
   const [submitDisabled, setSubmitDisabled] = React.useState(true)
   const [isActive, setIsActive] = React.useState(false)
   const [image, setImage] = React.useState<AttachedImage | null>(null)
+  const [tags, setTags] = React.useState<string[]>([])
+  // TODO finish tagging system here
 
   const [create, { loading }] = useCreatePostMutation({
     refetchQueries: [
@@ -48,17 +50,32 @@ export function DesktopHomeCreatePostForm() {
   const form = useForm({ schema: PostSchema, shouldResetAfterSubmit: true })
 
   const handleSubmit = (data: yup.InferType<typeof PostSchema>) => {
-    return form.handler(() => create({ variables: { data } }), {
-      onSuccess: async (data) => {
-        setIsActive(false)
-        if (image) {
-          setImage(null)
-          const postId = data.createPost.id
-          const imageKey = (await upload(image.file, { path: UPLOAD_PATHS.postImage(postId) })).fileKey
-          return form.handler(() => update({ variables: { postId, data: { image: imageKey } } }))
-        }
+    const connectOrCreate = tags.map((tag) => ({
+      where: { name: tag },
+      create: { name: tag },
+    }))
+    return form.handler(
+      () =>
+        create({
+          variables: {
+            data: {
+              text: data.text,
+              tags: { connectOrCreate },
+            },
+          },
+        }),
+      {
+        onSuccess: async (data) => {
+          setIsActive(false)
+          if (image) {
+            setImage(null)
+            const postId = data.createPost.id
+            const imageKey = (await upload(image.file, { path: UPLOAD_PATHS.postImage(postId) })).fileKey
+            return form.handler(() => update({ variables: { postId, data: { image: imageKey } } }))
+          }
+        },
       },
-    })
+    )
   }
 
   const textAreaHeight = isActive && !image ? "105px" : isActive ? "auto" : "50px"

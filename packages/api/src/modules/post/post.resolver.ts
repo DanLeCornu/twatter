@@ -80,7 +80,7 @@ export default class PostResolver {
   @UseAuth()
   @Mutation(() => Post)
   async createPost(@CurrentUser() currentUser: User, @Arg("data") data: CreatePostInput): Promise<Post> {
-    return await prisma.post.create({ data: { userId: currentUser.id, ...data } })
+    return await prisma.post.create({ data: { ...data, user: { connect: { id: currentUser.id } } } })
   }
 
   // UPDATE POST
