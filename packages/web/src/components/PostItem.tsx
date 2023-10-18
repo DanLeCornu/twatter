@@ -18,7 +18,6 @@ import {
   MenuItem,
   MenuList,
   Popover,
-  PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
@@ -33,6 +32,7 @@ import NextLink from "next/link"
 
 import { WEB_URL } from "lib/config"
 import type { PostItemFragment } from "lib/graphql"
+import { getHighlightedText } from "lib/hooks/useHighlightText"
 import { useMe } from "lib/hooks/useMe"
 import { useToast } from "lib/hooks/useToast"
 
@@ -89,7 +89,6 @@ export function PostItem({ post, isPinned = false }: Props) {
               </NextLink>
             </PopoverTrigger>
             <PopoverContent bg={popoverBg}>
-              <PopoverArrow />
               <PopoverBody>
                 <UserPopover user={post.user} />
               </PopoverBody>
@@ -107,7 +106,7 @@ export function PostItem({ post, isPinned = false }: Props) {
             </HStack>
             {/* CONTENT */}
             <Text pl={2} pb={3} pr={2} fontSize="sm">
-              {post.text}
+              {getHighlightedText(post.text)}
             </Text>
             {post.image && (
               <Box pl={2} pr={2} pb={2}>
@@ -117,6 +116,7 @@ export function PostItem({ post, isPinned = false }: Props) {
                   rounded="2xl"
                   border="1px solid"
                   borderColor="gray.700"
+                  maxH="500px"
                 />
               </Box>
             )}

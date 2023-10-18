@@ -13,7 +13,7 @@ export default class TagResolver {
   // ALL TAGS
   @Query(() => TagsResponse)
   async tags(@Args() args: FindManyTagArgs): Promise<TagsResponse> {
-    const items = await prisma.tag.findMany(args as any)
+    const items = await prisma.tag.findMany({ ...(args as any), select: { id: true, name: true } })
     const count = await prisma.tag.count({
       ...(args as any),
       take: undefined,

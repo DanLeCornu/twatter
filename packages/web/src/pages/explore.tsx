@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react"
 import Head from "next/head"
 
-import { QueryMode, useGetExploreUsersQuery } from "lib/graphql"
+import { QueryMode, useGetSearchUsersQuery } from "lib/graphql"
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { ExploreUserList } from "components/ExploreUserList"
 import { withAuth } from "components/hoc/withAuth"
@@ -30,7 +30,7 @@ const _ = gql`
     avatar
     handle
   }
-  query GetExploreUsers($orderBy: [UserOrderByWithRelationInput!], $where: UserWhereInput, $skip: Int) {
+  query GetSearchUsers($orderBy: [UserOrderByWithRelationInput!], $where: UserWhereInput, $skip: Int) {
     users(take: 10, orderBy: $orderBy, where: $where, skip: $skip) {
       items {
         ...UserSearchItem
@@ -43,7 +43,7 @@ const _ = gql`
 function Explore() {
   const [search, setSearch] = React.useState("")
 
-  const { data, loading } = useGetExploreUsersQuery({
+  const { data, loading } = useGetSearchUsersQuery({
     variables: {
       // orderBy: { createdAt: SortOrder.Desc },
       where: {

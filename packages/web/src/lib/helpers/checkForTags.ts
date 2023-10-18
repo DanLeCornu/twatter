@@ -5,7 +5,8 @@ export const checkForTags = (
   setTags: (value: React.SetStateAction<string[]>) => void,
   setTagSearch: (value: React.SetStateAction<string>) => void,
 ) => {
-  if (!!!value) {
+  // if input is empty or just "#"
+  if (!!!value || value === "#") {
     setTags([])
     setTagSearch("")
     return

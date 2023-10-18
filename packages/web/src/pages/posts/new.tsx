@@ -3,31 +3,10 @@ import { BiArrowBack } from "react-icons/bi"
 import { BiImage } from "react-icons/bi"
 import { CgClose } from "react-icons/cg"
 import { gql } from "@apollo/client"
-import {
-  Avatar,
-  Box,
-  Button,
-  Divider,
-  Flex,
-  HStack,
-  IconButton,
-  Image,
-  Spinner,
-  Stack,
-  Text,
-} from "@chakra-ui/react"
-import { matchSorter } from "match-sorter"
+import { Avatar, Box, Button, Divider, Flex, HStack, IconButton, Image, Stack } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 
-import {
-  GetPostsDocument,
-  SortOrder,
-  useCreatePostMutation,
-  useGetTagsQuery,
-  useUpdatePostMutation,
-} from "lib/graphql"
-import { checkForTags } from "lib/helpers/checkForTags"
-import { uniq } from "lib/helpers/utils"
+import { GetPostsDocument, SortOrder, useCreatePostMutation, useUpdatePostMutation } from "lib/graphql"
 import { useForm } from "lib/hooks/useForm"
 import { useMe } from "lib/hooks/useMe"
 import { useS3Upload } from "lib/hooks/useS3"
@@ -37,25 +16,12 @@ import type { AttachedImage } from "components/AttachImage"
 import { AttachImage } from "components/AttachImage"
 import { Form } from "components/Form"
 import { withAuth } from "components/hoc/withAuth"
-import { Textarea } from "components/Textarea"
-import { replaceWithSelectTag } from "lib/helpers/replaceWithSelectedTag"
+import { PostTextArea } from "components/PostTextArea"
 
 const _ = gql`
   mutation CreatePost($data: CreatePostInput!) {
     createPost(data: $data) {
       ...PostItem
-    }
-  }
-  fragment TagItem on Tag {
-    id
-    name
-  }
-  query GetTags {
-    tags {
-      items {
-        ...TagItem
-      }
-      count
     }
   }
 `
@@ -67,13 +33,11 @@ export const PostSchema = yup.object().shape({
 function NewPost() {
   const { me } = useMe()
   const router = useRouter()
+
+  const [tags, setTags] = React.useState<string[]>([])
+  const [handles, setHandles] = React.useState<string[]>([])
   const [submitDisabled, setSubmitDisabled] = React.useState(true)
   const [image, setImage] = React.useState<AttachedImage | null>(null)
-  const [tags, setTags] = React.useState<string[]>([])
-  const [tagSearch, setTagSearch] = React.useState("")
-
-  const { data, loading } = useGetTagsQuery()
-  const allTagOptions = data?.tags.items.map((tag) => tag.name) || []
 
   const [create, { loading: createloading }] = useCreatePostMutation({
     refetchQueries: [
@@ -94,18 +58,21 @@ function NewPost() {
 
   const handleSubmit = (data: yup.InferType<typeof PostSchema>) => {
     // TODO check if there is one last tag without a space at the end, and add it to the tags list
-    const connectOrCreate = tags.map((tag) => ({
+    const mentionCreates = handles.map((handle) => ({
+      user: { connect: { handle } },
+    }))
+    const tagConnectOrCreate = tags.map((tag) => ({
       where: { name: tag },
       create: { name: tag },
     }))
-
     return form.handler(
       () =>
         create({
           variables: {
             data: {
               text: data.text,
-              tags: { connectOrCreate },
+              tags: { connectOrCreate: tagConnectOrCreate },
+              mentions: { create: mentionCreates },
             },
           },
         }),
@@ -122,20 +89,6 @@ function NewPost() {
         },
       },
     )
-  }
-
-  const matchedTags = () => {
-    return matchSorter(allTagOptions, tagSearch, { threshold: matchSorter.rankings.STARTS_WITH })
-  }
-
-  const handleAddTag = (tag: string) => {
-    setTags(uniq([...tags, tag]))
-    setTagSearch("")
-    const value = form.getValues("text") as string
-    const newValue = replaceWithSelectTag(value, tag)
-    if (newValue === undefined) return
-    form.setValue("text", newValue)
-    form.setFocus("text") // focus is lost after setting value, so need to refocus the input
   }
 
   return (
@@ -165,40 +118,16 @@ function NewPost() {
           <Avatar src={me?.avatar || undefined} boxSize="40px" />
         </Box>
         <Stack pt={3} justify="space-between">
-          <Textarea
-            name="text"
-            h={image ? "40px" : "150px"}
-            pl={1}
-            variant="unstyled"
-            placeholder="What is happening?!"
-            size="lg"
-            autoFocus
-            resize="none"
-            validations={false}
-            bordered={false}
-            onChange={(e) => {
-              checkForTags(e.target.value, setTags, setTagSearch)
-              e.target.value ? setSubmitDisabled(false) : setSubmitDisabled(true)
-            }}
+          {/* INPUT */}
+          <PostTextArea
+            hasImage={!!image}
+            setSubmitDisabled={setSubmitDisabled}
+            tags={tags}
+            setTags={setTags}
+            handles={handles}
+            setHandles={setHandles}
+            form={form}
           />
-          {!!tagSearch && (
-            <Box>
-              <Stack>
-                {loading ? (
-                  <>
-                    <Text>loading tags..</Text>
-                    <Spinner />
-                  </>
-                ) : (
-                  matchedTags().map((matchedTag) => (
-                    <Text key={matchedTag} onClick={() => handleAddTag(matchedTag)}>
-                      {matchedTag}
-                    </Text>
-                  ))
-                )}
-              </Stack>
-            </Box>
-          )}
           {image && (
             <Box pl={3} pb={4} position="relative">
               <IconButton
@@ -237,9 +166,11 @@ function NewPost() {
         </AttachImage>
       </HStack>
       {/* Testing tags */}
-      {/* <Text>Tags: {tags.join(", ")}</Text>
-      <Text>Tag Search: {tagSearch}</Text>
-      <Text>Matches: {matchedTags().join(", ")}</Text> */}
+      {/* <Stack mt="200px">
+        <Text>Tags: {tags.join(", ")}</Text>
+        <Text>Tag Search: {tagSearch}</Text>
+        <Text>Matches: {matchedTags().join(", ")}</Text>
+      </Stack> */}
     </Form>
   )
 }

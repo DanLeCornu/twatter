@@ -6,7 +6,6 @@ import {
   HStack,
   Image,
   Popover,
-  PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
@@ -49,7 +48,6 @@ export function ReplyItem({ reply }: Props) {
             </NextLink>
           </PopoverTrigger>
           <PopoverContent bg={popoverBg}>
-            <PopoverArrow />
             <PopoverBody>
               <UserPopover user={reply.user} />
             </PopoverBody>

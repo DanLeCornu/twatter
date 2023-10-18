@@ -32,8 +32,8 @@ export function DesktopHomeCreatePostForm() {
   const [submitDisabled, setSubmitDisabled] = React.useState(true)
   const [isActive, setIsActive] = React.useState(false)
   const [image, setImage] = React.useState<AttachedImage | null>(null)
-  const [tags, setTags] = React.useState<string[]>([])
-  // TODO finish tagging system here
+  // const [tags, setTags] = React.useState<string[]>([])
+  // const [tagSearch, setTagSearch] = React.useState("")
 
   const [create, { loading }] = useCreatePostMutation({
     refetchQueries: [
@@ -50,17 +50,16 @@ export function DesktopHomeCreatePostForm() {
   const form = useForm({ schema: PostSchema, shouldResetAfterSubmit: true })
 
   const handleSubmit = (data: yup.InferType<typeof PostSchema>) => {
-    const connectOrCreate = tags.map((tag) => ({
-      where: { name: tag },
-      create: { name: tag },
-    }))
+    // const connectOrCreate = tags.map((tag) => ({
+    //   where: { name: tag },
+    //   create: { name: tag },
+    // }))
     return form.handler(
       () =>
         create({
           variables: {
             data: {
               text: data.text,
-              tags: { connectOrCreate },
             },
           },
         }),
@@ -107,6 +106,7 @@ export function DesktopHomeCreatePostForm() {
             bordered={false}
             validations={false}
             onChange={(e) => {
+              // checkForTags(e.target.value, setTags, setTagSearch)
               e.target.value ? setSubmitDisabled(false) : setSubmitDisabled(true)
             }}
             onClick={() => setIsActive(true)}

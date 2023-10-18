@@ -23,7 +23,6 @@ import {
   MenuItem,
   MenuList,
   Popover,
-  PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
@@ -211,7 +210,6 @@ function Post() {
                   </NextLink>
                 </PopoverTrigger>
                 <PopoverContent bg={popoverBg}>
-                  <PopoverArrow />
                   <PopoverBody>
                     <UserPopover user={post.user} />
                   </PopoverBody>
@@ -232,7 +230,6 @@ function Post() {
                   </NextLink>
                 </PopoverTrigger>
                 <PopoverContent bg={popoverBg}>
-                  <PopoverArrow />
                   <PopoverBody>
                     <UserPopover user={post.user} />
                   </PopoverBody>

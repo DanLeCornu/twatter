@@ -1,7 +1,10 @@
 import { IsNotEmpty } from "class-validator"
 import { Field, InputType } from "type-graphql"
 
-import { TagCreateNestedManyWithoutPostsInput } from "@twatter/database/dist/generated"
+import {
+  MentionCreateNestedManyWithoutPostInput,
+  TagCreateNestedManyWithoutPostsInput,
+} from "@twatter/database/dist/generated"
 
 import { Post } from "../post.model"
 
@@ -15,6 +18,9 @@ export class CreatePostInput implements Partial<Post> {
   @Field(() => String, { nullable: true })
   image?: string
 
-  @Field()
+  @Field({ nullable: true })
   tags?: TagCreateNestedManyWithoutPostsInput
+
+  @Field({ nullable: true })
+  mentions?: MentionCreateNestedManyWithoutPostInput
 }

@@ -45,7 +45,10 @@ export function HomeLayout(props: Props) {
           <MobileTopBar />
         </MobileView>
       )} */}
-      <Limiter>{props.children}</Limiter>
+      <MobileView>{props.children}</MobileView>
+      <BrowserView>
+        <Limiter>{props.children}</Limiter>
+      </BrowserView>
       <MobileView>
         <MobileCreatePostButton />
       </MobileView>

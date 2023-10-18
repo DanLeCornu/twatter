@@ -1,8 +1,9 @@
-export const replaceWithSelectTag = (value: string, tag: string) => {
+export const replaceWithSelectedTag = (value: string, tag: string) => {
   const words = value
     .replace(/\n/g, " ") // replace all linebreaks with spaces
     .replace(/[.,\/!?$%\^&\*;:{}=\-_`~()]/g, "") // remove all punctuation (excluding #)
     .split(" ") // split by space
+  // .split(/\s+/) // split by space or linebreak
 
   // find the last word that is a subtring of the selected tag, and return the (reversed) index of that substring
   let index: number | undefined = undefined
