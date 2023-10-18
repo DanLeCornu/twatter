@@ -3,7 +3,19 @@ import { BiArrowBack } from "react-icons/bi"
 import { BiImage } from "react-icons/bi"
 import { CgClose } from "react-icons/cg"
 import { gql } from "@apollo/client"
-import { Avatar, Box, Button, Divider, Flex, HStack, IconButton, Image, Stack } from "@chakra-ui/react"
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Flex,
+  HStack,
+  IconButton,
+  Image,
+  Stack,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react"
 import { useRouter } from "next/router"
 
 import { GetPostsDocument, SortOrder, useCreatePostMutation, useUpdatePostMutation } from "lib/graphql"
@@ -16,6 +28,7 @@ import type { AttachedImage } from "components/AttachImage"
 import { AttachImage } from "components/AttachImage"
 import { Form } from "components/Form"
 import { withAuth } from "components/hoc/withAuth"
+import { Modal } from "components/Modal"
 import { PostTextArea } from "components/PostTextArea"
 
 const _ = gql`
@@ -33,6 +46,7 @@ export const PostSchema = yup.object().shape({
 function NewPost() {
   const { me } = useMe()
   const router = useRouter()
+  const modalProps = useDisclosure()
 
   const [tags, setTags] = React.useState<string[]>([])
   const [handles, setHandles] = React.useState<string[]>([])
@@ -99,7 +113,7 @@ function NewPost() {
           icon={<Box as={BiArrowBack} boxSize="20px" />}
           variant="ghost"
           m={2}
-          onClick={() => router.back()}
+          onClick={() => (!!form.getValues("text") ? modalProps.onOpen() : router.back())}
         />
         <Button
           isDisabled={submitDisabled}
@@ -165,12 +179,21 @@ function NewPost() {
           />
         </AttachImage>
       </HStack>
-      {/* Testing tags */}
-      {/* <Stack mt="200px">
-        <Text>Tags: {tags.join(", ")}</Text>
-        <Text>Tag Search: {tagSearch}</Text>
-        <Text>Matches: {matchedTags().join(", ")}</Text>
-      </Stack> */}
+
+      {/* DISCARD CHANGES MODAL */}
+      <Modal {...modalProps} title="Discard post?">
+        <Text mb={6} fontSize="15px" color="gray.400">
+          This can't be undone and you'll lose your changes
+        </Text>
+        <Stack>
+          <Button w="100%" bg="red" _hover={{ bg: "red" }} onClick={() => router.back()}>
+            Discard
+          </Button>
+          <Button colorScheme="monochrome" variant="outline" onClick={modalProps.onClose}>
+            Cancel
+          </Button>
+        </Stack>
+      </Modal>
     </Form>
   )
 }

@@ -13,7 +13,7 @@ import { User } from "./user.model"
 @Service()
 export class UserService {
   async login(data: LoginInput): Promise<User> {
-    const user = await prisma.user.findUnique({ where: { email: data.email } })
+    const user = await prisma.user.findUnique({ where: { email: data.email.toLowerCase().trim() } })
     if (!user || !user.password) throw new AppError("Incorrect email or password")
     const isValidPassword = await bcrypt.compare(data.password, user.password)
     if (!isValidPassword) throw new AppError("Incorrect email or password")

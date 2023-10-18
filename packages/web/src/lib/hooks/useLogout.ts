@@ -20,12 +20,11 @@ export const useLogout = () => {
 
   const handleLogout = async () => {
     return handler(() => logout(), {
-      onSuccess: async (_, toast) => {
+      onSuccess: async () => {
         await router.replace("/logout")
         localStorage.removeItem(ACCESS_TOKEN)
         await fetch("/api/logout", { method: "post" })
         await client.resetStore()
-        toast({ description: "Successfully logged out!" })
       },
     })
   }

@@ -1,4 +1,5 @@
 import * as React from "react"
+import { AiOutlineTwitter } from "react-icons/ai"
 import { BiMoon, BiSun, BiUser } from "react-icons/bi"
 import { FiBookmark, FiLogOut, FiSettings } from "react-icons/fi"
 import {
@@ -23,12 +24,16 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import NextLink from "next/link"
-import logout from "pages/logout"
 
+import { useLogout } from "lib/hooks/useLogout"
 import { useMe } from "lib/hooks/useMe"
+
+import { Modal } from "./Modal"
 
 export function MobileTopBarAvatar() {
   const { me } = useMe()
+  const logout = useLogout()
+  const modalProps = useDisclosure()
   const drawerProps = useDisclosure()
   const drawerBg = useColorModeValue("white", "brand.bgDark")
   const { colorMode, toggleColorMode } = useColorMode()
@@ -43,12 +48,14 @@ export function MobileTopBarAvatar() {
           <DrawerBody pl={4} pt={4}>
             <Stack spacing={4}>
               <NextLink href={`/${me?.handle}`}>
-                <Stack spacing={0} onClick={drawerProps.onClose}>
+                <Stack spacing={1} onClick={drawerProps.onClose}>
                   <Avatar src={me?.avatar || undefined} boxSize="38px" />
-                  <Text fontWeight="medium">{me?.name}</Text>
-                  <Text color="gray.400" fontSize="sm">
-                    @{me?.handle}
-                  </Text>
+                  <Stack spacing={0}>
+                    <Text fontWeight="medium">{me?.name}</Text>
+                    <Text color="gray.400" fontSize="sm">
+                      @{me?.handle}
+                    </Text>
+                  </Stack>
                 </Stack>
               </NextLink>
 
@@ -115,7 +122,7 @@ export function MobileTopBarAvatar() {
                               Toggle theme
                             </Text>
                           </HStack>
-                          <HStack spacing={3} onClick={logout}>
+                          <HStack spacing={3} onClick={modalProps.onOpen}>
                             <Icon as={FiLogOut} boxSize="15px" />
                             <Text fontWeight="medium" fontSize="sm">
                               Log out
@@ -131,6 +138,19 @@ export function MobileTopBarAvatar() {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
+
+      {/* LOGOUT MODAL */}
+      <Modal {...modalProps} title="Log out of Twatter?" icon={AiOutlineTwitter}>
+        <Text mb={6}>You can always log back in at any time.</Text>
+        <Stack>
+          <Button colorScheme="monochrome" onClick={logout}>
+            Log out
+          </Button>
+          <Button colorScheme="monochrome" variant="outline" onClick={modalProps.onClose}>
+            Cancel
+          </Button>
+        </Stack>
+      </Modal>
     </>
   )
 }

@@ -1,6 +1,7 @@
 import * as React from "react"
 import { gql } from "@apollo/client"
 import {
+  Avatar,
   Box,
   HStack,
   Popover,
@@ -14,7 +15,7 @@ import {
 } from "@chakra-ui/react"
 import { matchSorter } from "match-sorter"
 
-import { QueryMode, useGetSearchUsersQuery, useGetTagsQuery } from "lib/graphql"
+import { useGetSearchUsersQuery, useGetTagsQuery } from "lib/graphql"
 import { checkForMentions } from "lib/helpers/checkForMentions"
 import { checkForTags } from "lib/helpers/checkForTags"
 import { replaceWithSelectedMention } from "lib/helpers/replaceWithSelectedMention"
@@ -29,7 +30,7 @@ const _ = gql`
     name
   }
   query GetTags($where: TagWhereInput) {
-    tags(take: 8, where: $where) {
+    tags(where: $where) {
       items {
         ...TagItem
       }
@@ -62,43 +63,38 @@ export function PostTextArea({
   const [selectedIndex, setSelectedIndex] = React.useState(0)
   const [text, setText] = React.useState("")
 
-  const { data: tagData, loading: tagLoading } = useGetTagsQuery({
-    variables: {
-      where: {
-        name: tagSearch ? { contains: tagSearch, mode: QueryMode.Insensitive } : undefined,
-      },
-    },
+  const { data: tagData, loading: tagsLoading } = useGetTagsQuery({
+    // variables: {
+    //   where: {
+    //     name: tagSearch ? { contains: tagSearch, mode: QueryMode.Insensitive } : undefined,
+    //   },
+    // },
   })
   const allTagOptions = React.useMemo(() => tagData?.tags.items.map((tag) => tag.name) || [], [tagData])
 
-  const { data: userData, loading: userLoading } = useGetSearchUsersQuery({
+  const { data: userData, loading: usersLoading } = useGetSearchUsersQuery({
     variables: {
       where: {
         handle: { not: { equals: null } },
-        OR: [
-          { name: handleSearch ? { contains: handleSearch, mode: QueryMode.Insensitive } : undefined },
-          { handle: handleSearch ? { contains: handleSearch, mode: QueryMode.Insensitive } : undefined },
-        ],
+        // OR: [
+        //   { name: handleSearch ? { contains: handleSearch, mode: QueryMode.Insensitive } : undefined },
+        //   { handle: handleSearch ? { contains: handleSearch, mode: QueryMode.Insensitive } : undefined },
+        // ],
       },
     },
   })
-  const allUserOptions = React.useMemo(
-    () => userData?.users.items.map((user) => user.handle as string) || [],
-    [userData],
-  )
+  const allUserOptions = React.useMemo(() => userData?.users.items || [], [userData])
 
-  console.log("allUserOptions", allUserOptions)
-
-  // TODO review below, maybe no longer necessary as already querying from the backend
   const matchedTags = React.useCallback(() => {
     return matchSorter(allTagOptions, tagSearch, { threshold: matchSorter.rankings.STARTS_WITH })
   }, [allTagOptions, tagSearch])
 
-  const matchedHandles = React.useCallback(() => {
-    return matchSorter(allUserOptions, handleSearch, { threshold: matchSorter.rankings.STARTS_WITH })
+  const matchedUsers = React.useCallback(() => {
+    return matchSorter(allUserOptions, handleSearch, {
+      keys: ["name", "handle"],
+      threshold: matchSorter.rankings.STARTS_WITH,
+    })
   }, [allUserOptions, handleSearch])
-
-  console.log("matchedHandles", matchedHandles())
 
   const handleAddTag = React.useCallback(
     (tag: string) => {
@@ -114,7 +110,8 @@ export function PostTextArea({
   )
 
   const handleAddHandle = React.useCallback(
-    (handle: string) => {
+    (handle?: string | null) => {
+      if (!handle) return
       setHandleSearch("")
       setHandles(uniq([...handles, handle]))
       // need to use a state for "text" here because form.getValue("text") was "" because reasons
@@ -137,7 +134,7 @@ export function PostTextArea({
         if (!!tagSearch) {
           if (selectedIndex + 1 === matchedTags().length) return
         } else if (!!handleSearch) {
-          if (selectedIndex + 1 === matchedHandles().length) return
+          if (selectedIndex + 1 === matchedUsers().length) return
         }
         setSelectedIndex(selectedIndex + 1)
       } else if (e.key === "Enter") {
@@ -145,14 +142,14 @@ export function PostTextArea({
           e.preventDefault()
           const selectedTag = matchedTags()[selectedIndex]
           handleAddTag(selectedTag)
-        } else if (!!handleSearch && matchedHandles().length > 0) {
+        } else if (!!handleSearch && matchedUsers().length > 0) {
           e.preventDefault()
-          const selectedHandle = matchedHandles()[selectedIndex]
-          handleAddHandle(selectedHandle)
+          const selectedUser = matchedUsers()[selectedIndex]
+          handleAddHandle(selectedUser.handle)
         }
       }
     },
-    [selectedIndex, handleAddTag, matchedTags, handleAddHandle, handleSearch, matchedHandles, tagSearch],
+    [selectedIndex, handleAddTag, matchedTags, handleAddHandle, handleSearch, matchedUsers, tagSearch],
   )
 
   React.useEffect(() => {
@@ -160,7 +157,6 @@ export function PostTextArea({
       document.addEventListener("keydown", onKeyDown)
     } else {
       setSelectedIndex(0)
-      // setSelectedHandleIndex(0)
       document.removeEventListener("keydown", onKeyDown)
     }
     return () => {
@@ -172,9 +168,9 @@ export function PostTextArea({
   const popoverBg = useColorModeValue("white", "brand.bgDark")
 
   const shouldShowSearchList =
-    (!!tagSearch && matchedTags().length > 0) || (!!handleSearch && matchedHandles().length > 0)
+    (!!tagSearch && matchedTags().length > 0) || (!!handleSearch && matchedUsers().length > 0)
 
-  const isLoading = tagLoading || userLoading
+  const isLoading = tagsLoading || usersLoading
 
   return (
     <Popover
@@ -197,7 +193,7 @@ export function PostTextArea({
           setText(e.target.value)
           checkForTags(e.target.value, setTags, setTagSearch)
           checkForMentions(e.target.value, setHandles, setHandleSearch)
-          e.target.value ? setSubmitDisabled(false) : setSubmitDisabled(true)
+          !!e.target.value ? setSubmitDisabled(false) : setSubmitDisabled(true)
         }}
       />
       <PopoverAnchor>
@@ -206,44 +202,65 @@ export function PostTextArea({
       </PopoverAnchor>
       <PopoverContent bg={popoverBg} overflow="hidden">
         <PopoverBody p={0}>
-          {isLoading ? (
-            <HStack>
-              <Spinner />
-            </HStack>
-          ) : (
-            <Stack spacing={0}>
-              {!!tagSearch &&
-                matchedTags().map((matchedTag, i) => (
-                  <Text
-                    key={i}
-                    onClick={() => handleAddTag(matchedTag)}
-                    _hover={{ bg: bgHover }}
-                    cursor="pointer"
-                    bg={selectedIndex === i ? bgHover : undefined}
-                    px={4}
-                    py={3}
-                  >
-                    #{matchedTag}
-                  </Text>
-                ))}
-              {!!handleSearch &&
-                matchedHandles().map((matchedHandle, i) => (
-                  <Text
-                    key={i}
-                    onClick={() => handleAddHandle(matchedHandle)}
-                    _hover={{ bg: bgHover }}
-                    cursor="pointer"
-                    bg={selectedIndex === i ? bgHover : undefined}
-                    px={4}
-                    py={3}
-                  >
-                    @{matchedHandle}
-                  </Text>
-                ))}
-            </Stack>
-          )}
+          <Stack spacing={0}>
+            {isLoading ? (
+              <Spinner mx={4} my={3} />
+            ) : (
+              <>
+                {!!tagSearch &&
+                  matchedTags().length > 0 &&
+                  matchedTags().map((matchedTag, i) => (
+                    <Text
+                      key={i}
+                      onClick={() => handleAddTag(matchedTag)}
+                      _hover={{ bg: bgHover }}
+                      cursor="pointer"
+                      bg={selectedIndex === i ? bgHover : undefined}
+                      px={4}
+                      py={3}
+                    >
+                      #{matchedTag}
+                    </Text>
+                  ))}
+                {!!handleSearch &&
+                  matchedUsers().length > 0 &&
+                  matchedUsers().map((matchedUser, i) => (
+                    <HStack
+                      key={i}
+                      onClick={() => handleAddHandle(matchedUser.handle)}
+                      _hover={{ bg: bgHover }}
+                      cursor="pointer"
+                      bg={selectedIndex === i ? bgHover : undefined}
+                      px={4}
+                      py={3}
+                      spacing={3}
+                    >
+                      <Avatar src={matchedUser.avatar || undefined} boxSize="40px" />
+                      <Stack spacing={0}>
+                        <Text>{matchedUser.name}</Text>
+                        <Text color="gray.400" fontSize="sm">
+                          @{matchedUser.handle}
+                        </Text>
+                      </Stack>
+                    </HStack>
+                  ))}
+              </>
+            )}
+          </Stack>
         </PopoverBody>
       </PopoverContent>
+      {/* Testing tags */}
+      {/* <Stack mt="200px">
+        <Text>Show popover? {shouldShowSearchList.toString()}</Text>
+        <hr />
+        <Text>Tags: {tags.join(", ")}</Text>
+        <Text>Tag Search: {tagSearch}</Text>
+        <Text>Matched Tags: {matchedTags().join(", ")}</Text>
+        <hr />
+        <Text>Handles: {handles.join(", ")}</Text>
+        <Text>Handle Search: {handleSearch}</Text>
+        <Text>Matched Handles: {matchedHandles().join(", ")}</Text>
+      </Stack> */}
     </Popover>
   )
 }

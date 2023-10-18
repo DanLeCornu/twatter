@@ -41,6 +41,11 @@ export default class PostFieldResolver {
   }
 
   @FieldResolver(() => Number)
+  bookmarkCount(@Root() post: Post) {
+    return prisma.bookmark.count({ where: { postId: post.id } })
+  }
+
+  @FieldResolver(() => Number)
   viewCount(@Root() post: Post) {
     return prisma.view.count({ where: { postId: post.id } })
   }

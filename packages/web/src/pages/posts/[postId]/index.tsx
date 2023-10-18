@@ -1,4 +1,5 @@
 import * as React from "react"
+import { BrowserView } from "react-device-detect"
 import { AiOutlineLink } from "react-icons/ai"
 import { BiArrowBack, BiImage } from "react-icons/bi"
 import { BsPinFill } from "react-icons/bs"
@@ -85,6 +86,7 @@ export const _ = gql`
     createdAt
     replyCount
     likeCount
+    bookmarkCount
     viewCount
     user {
       ...UserDetail
@@ -317,13 +319,14 @@ function Post() {
           {/* BOOKMARK */}
           <BookmarkPost postId={post.id}>
             {(hasBookmarked: boolean) => (
-              <IconButton
-                aria-label="Bookmark"
+              <Button
                 variant="ghost"
                 color={hasBookmarked ? "primary.500" : "gray"}
                 _hover={{ color: "primary.500" }}
-                icon={<Box as={FiBookmark} boxSize="25px" />}
-              />
+                leftIcon={<Box as={FiBookmark} boxSize="25px" />}
+              >
+                {post.bookmarkCount > 0 && post.bookmarkCount.toLocaleString()}
+              </Button>
             )}
           </BookmarkPost>
           {/* SHARE */}
@@ -363,7 +366,9 @@ function Post() {
         <Box px={4}>
           <Divider />
         </Box>
-        <ReplyForm post={post} />
+        <BrowserView>
+          <ReplyForm post={post} />
+        </BrowserView>
       </Stack>
       {/* REPLIES */}
       {replies.length > 0 ? replies.map((reply) => <ReplyItem key={reply.id} reply={reply} />) : null}

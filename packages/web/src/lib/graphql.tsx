@@ -1252,6 +1252,7 @@ export enum NullsOrder {
 export type Post = {
   __typename?: 'Post';
   archivedAt?: Maybe<Scalars['DateTime']>;
+  bookmarkCount: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   image?: Maybe<Scalars['String']>;
@@ -5377,6 +5378,7 @@ export type GetSearchUsersQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<UserOrderByWithRelationInput> | UserOrderByWithRelationInput>;
   where?: InputMaybe<UserWhereInput>;
   skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -5398,14 +5400,14 @@ export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Au
 
 export type ReplyItemFragment = { __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
 
-export type PostDetailFragment = { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> };
+export type PostDetailFragment = { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, bookmarkCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> };
 
 export type GetPostQueryVariables = Exact<{
   where: PostWhereInput;
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> } | null };
+export type GetPostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, bookmarkCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> } | null };
 
 export type CreatePostMutationVariables = Exact<{
   data: CreatePostInput;
@@ -5635,6 +5637,7 @@ export const PostDetailFragmentDoc = gql`
   createdAt
   replyCount
   likeCount
+  bookmarkCount
   viewCount
   user {
     ...UserDetail
@@ -5890,7 +5893,7 @@ export type GetPostsLazyQueryHookResult = ReturnType<typeof useGetPostsLazyQuery
 export type GetPostsQueryResult = Apollo.QueryResult<GetPostsQuery, GetPostsQueryVariables>;
 export const GetTagsDocument = gql`
     query GetTags($where: TagWhereInput) {
-  tags(take: 8, where: $where) {
+  tags(where: $where) {
     items {
       ...TagItem
     }
@@ -6194,8 +6197,8 @@ export type ClearAllBookmarksMutationHookResult = ReturnType<typeof useClearAllB
 export type ClearAllBookmarksMutationResult = Apollo.MutationResult<ClearAllBookmarksMutation>;
 export type ClearAllBookmarksMutationOptions = Apollo.BaseMutationOptions<ClearAllBookmarksMutation, ClearAllBookmarksMutationVariables>;
 export const GetSearchUsersDocument = gql`
-    query GetSearchUsers($orderBy: [UserOrderByWithRelationInput!], $where: UserWhereInput, $skip: Int) {
-  users(take: 10, orderBy: $orderBy, where: $where, skip: $skip) {
+    query GetSearchUsers($orderBy: [UserOrderByWithRelationInput!], $where: UserWhereInput, $skip: Int, $take: Int) {
+  users(take: $take, orderBy: $orderBy, where: $where, skip: $skip) {
     items {
       ...UserSearchItem
     }

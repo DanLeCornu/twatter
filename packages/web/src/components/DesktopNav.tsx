@@ -193,11 +193,9 @@ export function DesktopNav() {
             </MenuList>
           </Portal>
         </Menu>
+        {/* LOGOUT MODAL */}
         <Modal {...modalProps} title="Log out of Twatter?" icon={AiOutlineTwitter}>
-          <Text mb={6}>
-            You can always log back in at any time. If you just want to switch accounts, you can do that by
-            adding an existing account.
-          </Text>
+          <Text mb={6}>You can always log back in at any time.</Text>
           <Stack>
             <Button colorScheme="monochrome" onClick={logout}>
               Log out

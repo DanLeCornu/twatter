@@ -30,8 +30,13 @@ const _ = gql`
     avatar
     handle
   }
-  query GetSearchUsers($orderBy: [UserOrderByWithRelationInput!], $where: UserWhereInput, $skip: Int) {
-    users(take: 10, orderBy: $orderBy, where: $where, skip: $skip) {
+  query GetSearchUsers(
+    $orderBy: [UserOrderByWithRelationInput!]
+    $where: UserWhereInput
+    $skip: Int
+    $take: Int
+  ) {
+    users(take: $take, orderBy: $orderBy, where: $where, skip: $skip) {
       items {
         ...UserSearchItem
       }
@@ -46,6 +51,7 @@ function Explore() {
   const { data, loading } = useGetSearchUsersQuery({
     variables: {
       // orderBy: { createdAt: SortOrder.Desc },
+      take: 10,
       where: {
         OR: [
           { name: search ? { contains: search, mode: QueryMode.Insensitive } : undefined },
