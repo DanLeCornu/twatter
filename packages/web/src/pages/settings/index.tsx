@@ -1,47 +1,50 @@
 import * as React from "react"
-import { gql } from "@apollo/client"
+import { BiArrowBack, BiChevronRight } from "react-icons/bi"
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
+  Box,
   Center,
-  Flex,
+  Heading,
+  HStack,
+  Icon,
+  IconButton,
   Spinner,
   Stack,
   Text,
-  useDisclosure,
+  useColorModeValue,
 } from "@chakra-ui/react"
+import Head from "next/head"
+import NextLink from "next/link"
+import router from "next/router"
 
-import { useDestroyAccountMutation } from "lib/graphql"
-import { useLogout } from "lib/hooks/useLogout"
 import { useMe } from "lib/hooks/useMe"
-import { useMutationHandler } from "lib/hooks/useMutationHandler"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { withAuth } from "components/hoc/withAuth"
-import { HomeLayout } from "components/HomeLayout"
-import { ProfileLayout } from "components/ProfileLayout"
+import { HEADING_CONTAINER_HEIGHT, HomeLayout } from "components/HomeLayout"
 
-const _ = gql`
-  mutation DestroyAccount {
-    destroyAccount
-  }
-`
+// const _ = gql`
+//   mutation DestroyAccount {
+//     destroyAccount
+//   }
+// `
 
 function Settings() {
-  const alertProps = useDisclosure()
   const { me, loading } = useMe()
-  const logout = useLogout()
-  const cancelRef = React.useRef<HTMLButtonElement>(null)
-  const handler = useMutationHandler()
 
-  const [destroy, { loading: destroyLoading }] = useDestroyAccountMutation()
+  // const [destroy, { loading: destroyLoading }] = useDestroyAccountMutation()
 
-  const handleDestroy = () => {
-    return handler(destroy, { onSuccess: () => logout() })
-  }
+  // const handleDestroy = () => {
+  //   return handler(destroy, { onSuccess: () => logout() })
+  // }
+
+  const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
+  const borderColor = useColorModeValue("gray.100", "gray.700")
+
+  const SETTINGS = [
+    { text: "Your account", path: "/settings/account" },
+    { text: "Privacy and safety", path: "/settings/privacy" },
+    { text: "Additional resources", path: "/settings/about" },
+  ]
+
   if (loading)
     return (
       <Center>
@@ -50,42 +53,53 @@ function Settings() {
     )
   if (!me) return null
   return (
-    <Stack spacing={6}>
-      <Text fontSize="sm">
-        Permanently delete your account and all of its contents from this website. This action is not
-        reversible - please continue with caution.
-      </Text>
-      <Flex w="100%" justify="flex-end">
-        <Button size="sm" colorScheme="red" isLoading={destroyLoading} onClick={alertProps.onOpen}>
-          Delete account
-        </Button>
-      </Flex>
-      <AlertDialog {...alertProps} motionPreset="slideInBottom" isCentered leastDestructiveRef={cancelRef}>
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete account
-            </AlertDialogHeader>
-            <AlertDialogBody>Are you sure? You can't undo this action afterwards.</AlertDialogBody>
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={alertProps.onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme="red" onClick={handleDestroy} isLoading={destroyLoading} ml={3}>
-                Delete
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-    </Stack>
+    <Box>
+      <Head>
+        <title>Settings / Twatter</title>
+      </Head>
+      <HStack
+        position="fixed"
+        top={0}
+        left={0}
+        w="100%"
+        h={HEADING_CONTAINER_HEIGHT + "px"}
+        zIndex={1}
+        p={2}
+        backdropFilter="blur(10px)"
+        bgColor={bgColor}
+        borderBottom="1px"
+        borderColor={borderColor}
+      >
+        <IconButton
+          aria-label="back"
+          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          variant="ghost"
+          onClick={() => router.back()}
+        />
+
+        <Stack spacing={0}>
+          <Heading fontSize="lg">Settings</Heading>
+          <Text color="gray.400" fontSize="xs">
+            @{me?.handle}
+          </Text>
+        </Stack>
+      </HStack>
+      <Stack mt={HEADING_CONTAINER_HEIGHT + "px"} py={2}>
+        {SETTINGS.map((setting, i) => (
+          <NextLink key={i} href={setting.path}>
+            <HStack justify="space-between" px={4} py={2}>
+              <Text color="gray.300" fontSize="sm">
+                {setting.text}
+              </Text>
+              <Icon as={BiChevronRight} boxSize="24px" color="gray.400" />
+            </HStack>
+          </NextLink>
+        ))}
+      </Stack>
+    </Box>
   )
 }
 
-Settings.getLayout = (page: React.ReactNode) => (
-  <HomeLayout>
-    <ProfileLayout>{page}</ProfileLayout>
-  </HomeLayout>
-)
+Settings.getLayout = (page: React.ReactNode) => <HomeLayout showCreateButton={false}>{page}</HomeLayout>
 
 export default withAuth(Settings)

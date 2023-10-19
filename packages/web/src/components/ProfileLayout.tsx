@@ -1,10 +1,8 @@
 import * as React from "react"
 import { AiOutlineLink } from "react-icons/ai"
-import { BiArrowBack, BiBlock, BiFlag, BiVolumeFull, BiVolumeMute } from "react-icons/bi"
+import { BiArrowBack } from "react-icons/bi"
 import { BsBalloon, BsCalendar3 } from "react-icons/bs"
-import { CgUnblock } from "react-icons/cg"
 import { FiMail } from "react-icons/fi"
-import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import { SlLocationPin } from "react-icons/sl"
 import { gql } from "@apollo/client"
 import {
@@ -20,15 +18,9 @@ import {
   Icon,
   IconButton,
   Link,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Portal,
   Spinner,
   Stack,
   Text,
-  useClipboard,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -36,7 +28,6 @@ import dayjs from "dayjs"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
-import { WEB_URL } from "lib/config"
 import {
   DobPrivacy,
   GetPostsDocument,
@@ -50,12 +41,12 @@ import {
 } from "lib/graphql"
 import { useMe } from "lib/hooks/useMe"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
-import { useToast } from "lib/hooks/useToast"
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
 import { FollowButton } from "./FollowButton"
 import { Modal } from "./Modal"
 import { NoData } from "./NoData"
+import { ProfileMenu } from "./ProfileMenu"
 import { ProfileTab } from "./ProfileTab"
 
 const _ = gql`
@@ -99,12 +90,12 @@ const _ = gql`
 
 export function ProfileLayout({ children }: { children: React.ReactNode }) {
   const { me } = useMe()
-  const toast = useToast()
   const router = useRouter()
+  const drawerProps = useDisclosure()
   const handler = useMutationHandler()
-  const avatarModalProps = useDisclosure()
-  const blockModalProps = useDisclosure()
   const muteModalProps = useDisclosure()
+  const blockModalProps = useDisclosure()
+  const avatarModalProps = useDisclosure()
   const handle = router.query.handle as string
 
   const [showBlockedPosts, setShowBlockedPosts] = React.useState(false)
@@ -116,8 +107,10 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
 
   const borderColor = useColorModeValue("gray.100", "gray.700")
 
-  const hasMuted = user && me?.mutedAccounts.map((mutedAccount) => mutedAccount.id).includes(user.id)
-  const hasBlocked = user && me?.blockedAccounts.map((blockedAccount) => blockedAccount.id).includes(user.id)
+  const isMuted =
+    (user && me?.mutedAccounts.map((mutedAccount) => mutedAccount.id).includes(user.id)) || false
+  const isBlocked =
+    (user && me?.blockedAccounts.map((blockedAccount) => blockedAccount.id).includes(user.id)) || false
 
   const [mute, { loading: muteLoading }] = useMuteUserMutation({
     refetchQueries: [
@@ -131,6 +124,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
   const [unmute, { loading: unmuteLoading }] = useUnmuteUserMutation({
     refetchQueries: [{ query: MeDocument }],
   })
+
   const [block, { loading: blockLoading }] = useBlockUserMutation({
     refetchQueries: [
       { query: MeDocument },
@@ -143,10 +137,12 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
   const [unblock, { loading: unblockLoading }] = useUnblockUserMutation({
     refetchQueries: [{ query: MeDocument }],
   })
+
   const handleMute = () => {
     if (!user || muteLoading) return
     return handler(() => mute({ variables: { userId: user.id } }), {
       onSuccess: (_, toast) => {
+        drawerProps.onClose()
         toast({
           description: `@${handle} has been muted`,
           action: (
@@ -165,13 +161,26 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
       onSuccess: (_, toast) => {
         toast({ description: `@${handle} has been unmuted` })
         muteModalProps.onClose()
+        drawerProps.onClose()
       },
     })
   }
+
+  const handleUnblock = () => {
+    if (!user || unblockLoading) return
+    return handler(() => unblock({ variables: { userId: user.id } }), {
+      onSuccess: () => {
+        blockModalProps.onClose()
+        drawerProps.onClose()
+      },
+    })
+  }
+
   const handleBlock = () => {
     if (!user || blockLoading) return
     return handler(() => block({ variables: { userId: user.id } }), {
       onSuccess: (_, toast) => {
+        drawerProps.onClose()
         toast({
           description: "Successfully blocked",
           action: (
@@ -184,17 +193,8 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
       },
     })
   }
-  const handleUnblock = () => {
-    if (!user || unblockLoading) return
-    return handler(() => unblock({ variables: { userId: user.id } }), {
-      onSuccess: () => {
-        blockModalProps.onClose()
-      },
-    })
-  }
 
   const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
-  const { onCopy } = useClipboard(`${WEB_URL}/${user?.handle}`)
 
   const websiteUrl = user?.website
     ? user.website.startsWith("https://") || user.website.startsWith("http://")
@@ -261,7 +261,6 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
               boxSize="80px"
               onClick={avatarModalProps.onOpen}
               borderWidth="2px"
-              // borderColor="brand.bgDark"
               borderColor="brand.bgDark"
             />
             {user.id === me?.id ? (
@@ -274,59 +273,17 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
               </Flex>
             ) : (
               <HStack>
-                <Menu placement="bottom">
-                  <MenuButton
-                    as={IconButton}
-                    aria-label="more"
-                    icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" color="gray.200" />}
-                    variant="outline"
-                    minW="34px"
-                    boxSize="34px"
-                  />
-                  <Portal>
-                    <MenuList onClick={(e) => e.stopPropagation()}>
-                      {!hasBlocked && (
-                        <>
-                          {/* COPY */}
-                          <MenuItem
-                            icon={<Box as={AiOutlineLink} boxSize="18px" />}
-                            fontWeight="medium"
-                            onClick={() => {
-                              onCopy()
-                              toast({ description: "Copied to clipboard" })
-                            }}
-                          >
-                            Copy link to profile
-                          </MenuItem>
-                          {/* MUTE */}
-                          <MenuItem
-                            icon={<Box as={hasMuted ? BiVolumeFull : BiVolumeMute} boxSize="18px" />}
-                            fontWeight="medium"
-                            onClick={hasMuted ? handleUnmute : handleMute}
-                          >
-                            {`${hasMuted ? "Unmute" : "Mute"} @${user.handle}`}
-                          </MenuItem>
-                        </>
-                      )}
-                      {/* BLOCK */}
-                      <MenuItem
-                        icon={<Box as={hasBlocked ? CgUnblock : BiBlock} boxSize="18px" />}
-                        fontWeight="medium"
-                        onClick={blockModalProps.onOpen}
-                      >
-                        {`${hasBlocked ? "Unblock" : "Block"} @${user.handle}`}
-                      </MenuItem>
-                      {/* REPORT */}
-                      <NextLink href={`/${handle}/report`}>
-                        <MenuItem icon={<Box as={BiFlag} boxSize="18px" />} fontWeight="medium">
-                          Report @{user.handle}
-                        </MenuItem>
-                      </NextLink>
-                    </MenuList>
-                  </Portal>
-                </Menu>
+                <ProfileMenu
+                  isMuted={isMuted}
+                  isBlocked={isBlocked}
+                  handle={handle}
+                  onOpen={blockModalProps.onOpen}
+                  handleMute={handleMute}
+                  handleUnmute={handleUnmute}
+                  drawerProps={drawerProps}
+                />
 
-                {hasBlocked ? (
+                {isBlocked ? (
                   <Button
                     bg="red"
                     size="sm"
@@ -367,7 +324,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                 @{user.handle}
               </Text>
             </Stack>
-            {!hasBlocked && (
+            {!isBlocked && (
               <>
                 <Text fontSize="sm">{user.bio}</Text>
                 <Flex flexWrap="wrap">
@@ -432,7 +389,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                 </Button>
               </NextLink>
             </HStack>
-            {hasMuted && (
+            {isMuted && (
               <Text color="gray.400" fontSize="sm">
                 You have muted posts from this account.{" "}
                 <Button variant="link" color="blue.500" fontWeight="medium" onClick={muteModalProps.onOpen}>
@@ -445,7 +402,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
       </Box>
 
       {/* TABS */}
-      {hasBlocked && !showBlockedPosts ? (
+      {isBlocked && !showBlockedPosts ? (
         <Stack px={4} my={16} spacing={6}>
           <Stack>
             <Heading>@{user.handle} is blocked</Heading>
@@ -470,17 +427,17 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
       )}
 
       {/* CONTENT */}
-      {(showBlockedPosts || !hasBlocked) && <Box>{children}</Box>}
+      {(showBlockedPosts || !isBlocked) && <Box>{children}</Box>}
 
       {/* BLOCK/UNBLOCK MODAL */}
-      <Modal {...blockModalProps} title={`${hasBlocked ? "Unblock" : "Block"} @${user.handle}?`}>
+      <Modal {...blockModalProps} title={`${isBlocked ? "Unblock" : "Block"} @${user.handle}?`}>
         <Text mb={6} fontSize="sm" color="gray.400">
-          {hasBlocked
+          {isBlocked
             ? "They will be able to follow you and view your posts."
             : `They will not be able to follow you or view your posts, and you will not see posts or notifications from @${user.handle}.`}
         </Text>
         <Stack>
-          {hasBlocked ? (
+          {isBlocked ? (
             <Button colorScheme="monochrome" onClick={handleUnblock}>
               Unblock
             </Button>
@@ -496,14 +453,14 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
       </Modal>
 
       {/* MUTE/UNMUTE MODAL */}
-      <Modal {...muteModalProps} title={`${hasMuted ? "Unmute" : "Mute"} @${user.handle}?`}>
+      <Modal {...muteModalProps} title={`${isMuted ? "Unmute" : "Mute"} @${user.handle}?`}>
         <Text mb={6}>
-          {hasMuted
+          {isMuted
             ? "Posts from this account will now be allowed in your Home timeline."
             : `They will not be able to follow you or view your posts, and you will not see posts or notifications from @${user.handle}.`}
         </Text>
         <Stack>
-          {hasMuted ? (
+          {isMuted ? (
             <Button colorScheme="monochrome" onClick={handleUnmute}>
               Unmute
             </Button>

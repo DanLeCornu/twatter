@@ -54,7 +54,6 @@ export function ItemHeading({ item, noPopover = false }: Props) {
             </PopoverContent>
           </Portal>
         </Popover>
-
         <Popover
           isLazy
           trigger="hover"
@@ -75,7 +74,6 @@ export function ItemHeading({ item, noPopover = false }: Props) {
             </PopoverContent>
           </Portal>
         </Popover>
-
         <Tooltip label={dayjs(item.createdAt).format("h:mm A MMM DD YYYY")}>
           <Text fontSize="14px" color="gray.400" flexShrink={0}>
             <Text as="span" mr={1}>

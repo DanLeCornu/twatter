@@ -90,9 +90,6 @@ export default function Login() {
 
   return (
     <Center flexDir="column" pt={3} px={6}>
-      <Head>
-        <title>Log in to Twatter</title>
-      </Head>
       <NextLink href="/">
         <IconButton
           icon={<Box as={CgClose} boxSize="20px" />}

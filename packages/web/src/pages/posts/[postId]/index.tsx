@@ -1,11 +1,10 @@
 import * as React from "react"
 import { BrowserView } from "react-device-detect"
-import { AiOutlineLink } from "react-icons/ai"
 import { BiArrowBack, BiImage } from "react-icons/bi"
 import { BsPinFill } from "react-icons/bs"
 import { CgClose } from "react-icons/cg"
 import { FaRegComment } from "react-icons/fa"
-import { FiBookmark, FiMail, FiShare } from "react-icons/fi"
+import { FiBookmark } from "react-icons/fi"
 import { gql } from "@apollo/client"
 import {
   Avatar,
@@ -19,19 +18,13 @@ import {
   Icon,
   IconButton,
   Image,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Popover,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
-  Portal,
   Spinner,
   Stack,
   Text,
-  useClipboard,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -40,7 +33,6 @@ import NextLink from "next/link"
 import { useRouter } from "next/router"
 import { ReplySchema } from "pages/replies/new"
 
-import { WEB_URL } from "lib/config"
 import type { PostDetailFragment } from "lib/graphql"
 import { useUpdateReplyMutation } from "lib/graphql"
 import { MeDocument, useUnblockUserMutation } from "lib/graphql"
@@ -49,7 +41,6 @@ import { useForm } from "lib/hooks/useForm"
 import { useMe } from "lib/hooks/useMe"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
 import { useS3Upload } from "lib/hooks/useS3"
-import { useToast } from "lib/hooks/useToast"
 import { useViewPost } from "lib/hooks/useViewPost"
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { UPLOAD_PATHS } from "lib/uploadPaths"
@@ -65,6 +56,7 @@ import { ItemMenu } from "components/ItemMenu"
 import { LikePost } from "components/LikePost"
 import { Modal } from "components/Modal"
 import { NoData } from "components/NoData"
+import { PostDetailShareMenu } from "components/PostDetailShareMenu"
 import { ReplyItem } from "components/ReplyItem"
 import { Textarea } from "components/Textarea"
 import { UserPopover } from "components/UserPopover"
@@ -104,7 +96,6 @@ export const _ = gql`
 
 function Post() {
   const { me } = useMe()
-  const toast = useToast()
   const router = useRouter()
   const handler = useMutationHandler()
   const modalProps = useDisclosure()
@@ -133,7 +124,6 @@ function Post() {
 
   const popoverBg = useColorModeValue("white", "#1A202C")
   const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
-  const { onCopy } = useClipboard(`${WEB_URL}/posts/${postId}`)
 
   const handleUnblock = () => {
     if (!post || unblockLoading) return
@@ -329,39 +319,9 @@ function Post() {
               </Button>
             )}
           </BookmarkPost>
+
           {/* SHARE */}
-          <Menu placement="bottom">
-            <MenuButton
-              as={IconButton}
-              variant="ghost"
-              color="gray"
-              _hover={{ color: "primary.500" }}
-              icon={<Box as={FiShare} boxSize="22px" />}
-            />
-            <Portal>
-              <MenuList onClick={(e) => e.stopPropagation()}>
-                <MenuItem
-                  icon={<Box as={AiOutlineLink} boxSize="18px" />}
-                  fontWeight="medium"
-                  onClick={() => {
-                    onCopy()
-                    toast({ description: "Copied to clipboard" })
-                  }}
-                >
-                  Copy link
-                </MenuItem>
-                <MenuItem
-                  icon={<Box as={FiMail} boxSize="18px" />}
-                  fontWeight="medium"
-                  // onClick={() => {
-                  // stuff
-                  // }}
-                >
-                  Send via Direct Message
-                </MenuItem>
-              </MenuList>
-            </Portal>
-          </Menu>
+          <PostDetailShareMenu postId={postId} />
         </HStack>
         <Box px={4}>
           <Divider />

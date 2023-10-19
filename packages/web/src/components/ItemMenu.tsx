@@ -161,11 +161,21 @@ export function ItemMenu({ item }: Props) {
 
   const handleFollow = () => {
     if (followLoading) return
-    return handler(() => follow({ variables: { userId: item.user.id } }))
+    return handler(() => follow({ variables: { userId: item.user.id } }), {
+      onSuccess: (_, toast) => {
+        drawerProps.onClose()
+        toast({ description: `You followed @${item.user.handle}` })
+      },
+    })
   }
   const handleUnfollow = () => {
     if (unfollowLoading) return
-    return handler(() => unfollow({ variables: { userId: item.user.id } }))
+    return handler(() => unfollow({ variables: { userId: item.user.id } }), {
+      onSuccess: (_, toast) => {
+        drawerProps.onClose()
+        toast({ description: `You unfollowed @${item.user.handle}` })
+      },
+    })
   }
   const handleMute = () => {
     if (muteLoading) return
@@ -204,7 +214,7 @@ export function ItemMenu({ item }: Props) {
           ),
         })
         blockModalProps.onClose()
-        // router.replace(`/${item.user.handle}`) // I don't think we want to redirect to the profile?
+        router.replace("/home")
       },
     })
   }
@@ -254,14 +264,14 @@ export function ItemMenu({ item }: Props) {
     <>
       <MobileView>
         <IconButton
-          aria-label="open drawer"
+          aria-label="open item menu"
           variant="ghost"
           boxSize="35px"
           minW="35px" // needed otherwise Chakra default styling overrides and makes it wider
           icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" color="gray.400" />}
           onClick={(e) => {
             e.preventDefault() // Stops Next link
-            drawerProps.onToggle()
+            drawerProps.onOpen()
           }}
         />
         <Drawer {...drawerProps} placement="bottom" trapFocus={false}>
@@ -344,6 +354,10 @@ export function ItemMenu({ item }: Props) {
                     </NextLink>
                   </>
                 )}
+
+                <Button variant="outline" colorScheme="monochrome" onClick={drawerProps.onClose}>
+                  Cancel
+                </Button>
               </Stack>
             </DrawerBody>
           </DrawerContent>

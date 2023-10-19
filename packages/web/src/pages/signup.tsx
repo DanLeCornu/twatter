@@ -34,9 +34,6 @@ export default function Signup() {
   }
   return (
     <Box minH="100vh">
-      <Head>
-        <title>Sign up for Twatter</title>
-      </Head>
       <HStack
         position="fixed"
         top={0}

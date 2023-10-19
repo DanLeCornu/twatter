@@ -1,7 +1,8 @@
 import * as React from "react"
 import { Link } from "@chakra-ui/react"
+import NextLink from "next/link"
 
-export function getHighlightedText(text: string, higlight?: RegExp) {
+export function useHighlightedText(text: string, higlight?: RegExp) {
   // new RegExp(/\B\#\w+/) // srarts with #
   // Split text on higlight term, include term itself into parts, ignore case
   // var parts = text.split(new RegExp(`(${higlight})`, "gi"));
@@ -9,8 +10,10 @@ export function getHighlightedText(text: string, higlight?: RegExp) {
   return parts.map((part, index) => (
     <React.Fragment key={index}>
       {part.startsWith("#") || part.startsWith("@") ? (
-        <Link onClick={(e) => e.preventDefault()} color="brand.blue">
-          {part + " "}
+        <Link color="brand.blue" onClick={(e) => e.preventDefault()}>
+          <NextLink href={part.startsWith("@") ? `/${part.replace("@", "")}` : "/explore"}>
+            {part + " "}
+          </NextLink>
         </Link>
       ) : (
         part + " "

@@ -15,10 +15,11 @@ export const TAB_HEIGHT = 37
 export const TOTAL_HEADER_HEIGHT = HEADING_CONTAINER_HEIGHT + TAB_HEIGHT
 
 interface Props {
+  showCreateButton?: boolean
   children: React.ReactNode
 }
 
-export function HomeLayout(props: Props) {
+export function HomeLayout({ showCreateButton = true, children }: Props) {
   const { me, loading } = useMe()
   const router = useRouter()
 
@@ -45,13 +46,15 @@ export function HomeLayout(props: Props) {
           <MobileTopBar />
         </MobileView>
       )} */}
-      <MobileView>{props.children}</MobileView>
+      <MobileView>{children}</MobileView>
       <BrowserView>
-        <Limiter>{props.children}</Limiter>
+        <Limiter>{children}</Limiter>
       </BrowserView>
-      <MobileView>
-        <MobileCreatePostButton />
-      </MobileView>
+      {showCreateButton && (
+        <MobileView>
+          <MobileCreatePostButton />
+        </MobileView>
+      )}
       <MobileView>
         <MobileBottomTabs />
       </MobileView>
