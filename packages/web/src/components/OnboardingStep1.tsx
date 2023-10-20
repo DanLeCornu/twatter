@@ -2,7 +2,7 @@ import * as React from "react"
 import { gql } from "@apollo/client"
 import { Button, Heading, Stack, Text } from "@chakra-ui/react"
 
-import { MeDocument, useUpdatePasswordMutation } from "lib/graphql"
+import { MeDocument, useUpdateHandleMutation } from "lib/graphql"
 import { suggestHandle } from "lib/helpers/suggestHandle"
 import { useForm } from "lib/hooks/useForm"
 import yup from "lib/yup"
@@ -33,7 +33,7 @@ export function OnboardingStep1({ name, handle, setStep }: Props) {
   }
   const form = useForm({ schema: Onboarding1Schema, defaultValues })
 
-  const [update, { loading }] = useUpdatePasswordMutation({ refetchQueries: [{ query: MeDocument }] })
+  const [update, { loading }] = useUpdateHandleMutation({ refetchQueries: [{ query: MeDocument }] })
 
   const onSubmit = (data: yup.InferType<typeof Onboarding1Schema>) => {
     return form.handler(() => update({ variables: { data: { handle: data.handle } } }), {

@@ -47,4 +47,7 @@ export class User extends BaseModel implements Prisma.User {
 
   @Field(() => String, { nullable: true })
   pinnedPostId: string | null
+
+  @Field(() => Date, { nullable: true })
+  archivedAt: Date | null
 }

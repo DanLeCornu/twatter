@@ -79,6 +79,7 @@ export const Input = ({ name, label, subLabel, maxLength, ...props }: Props) => 
           onChange={handleOnChange}
           variant="unstyled"
           maxLength={maxLength}
+          autoCapitalize="none"
         />
       </Box>
       <InputError error={fieldError} />

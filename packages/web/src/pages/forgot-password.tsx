@@ -8,6 +8,7 @@ import { useRouter } from "next/router"
 import type { MutationForgotPasswordArgs } from "lib/graphql"
 import { useForgotPasswordMutation } from "lib/graphql"
 import { useForm } from "lib/hooks/useForm"
+import { useMe } from "lib/hooks/useMe"
 import { useToast } from "lib/hooks/useToast"
 import yup from "lib/yup"
 import { Form } from "components/Form"
@@ -24,8 +25,10 @@ const ResetSchema = yup.object().shape({
 })
 
 export default function ForgotPassword() {
+  const { me } = useMe()
   const router = useRouter()
-  const defaultValues = { email: "" }
+
+  const defaultValues = { email: me?.email || "" }
 
   const form = useForm({ schema: ResetSchema, defaultValues })
   const [reset, { loading }] = useForgotPasswordMutation()
@@ -34,10 +37,7 @@ export default function ForgotPassword() {
   const handleSubmit = async (variables: MutationForgotPasswordArgs) => {
     return form.handler(() => reset({ variables }), {
       onSuccess: () => {
-        toast({
-          status: "success",
-          description: "Email has been sent to " + variables.email,
-        })
+        toast({ description: "Email has been sent to " + variables.email })
         router.push("/")
       },
     })
@@ -57,7 +57,7 @@ export default function ForgotPassword() {
             <Button w="100%" colorScheme="blue" type="submit" isLoading={loading}>
               Send instructions
             </Button>
-            <Link href="/login">Login</Link>
+            {!me && <Link href="/login">Login</Link>}
           </Stack>
         </Form>
       </Box>

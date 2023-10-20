@@ -58,6 +58,7 @@ model User {
   dobYearPrivacy     DobPrivacy @default(PRIVATE)
   createdAt          DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt          DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
+  archivedAt         DateTime?  @db.Timestamptz(6)
 
   pinnedPost       Post?          @relation(name: "PinnedPost", fields: [pinnedPostId], references: [id])
   pinnedPostId     String?        @unique @db.Uuid

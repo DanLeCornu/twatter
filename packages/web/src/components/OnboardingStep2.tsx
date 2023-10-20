@@ -2,7 +2,7 @@ import * as React from "react"
 import { gql } from "@apollo/client"
 import { Button, Heading, Stack, Text } from "@chakra-ui/react"
 
-import { useUpdatePasswordMutation } from "lib/graphql"
+import { useUpdatePasswordOnboardingMutation } from "lib/graphql"
 import { useForm } from "lib/hooks/useForm"
 import yup from "lib/yup"
 
@@ -10,7 +10,7 @@ import { Form } from "./Form"
 import { Input } from "./Input"
 
 const _ = gql`
-  mutation UpdatePassword($data: UpdateUserInput!) {
+  mutation UpdatePasswordOnboarding($data: UpdateUserInput!) {
     updateMe(data: $data) {
       id
     }
@@ -27,7 +27,7 @@ interface Props {
 export function OnboardingStep2({ setStep }: Props) {
   const form = useForm({ schema: Onboarding2Schema })
 
-  const [update, { loading }] = useUpdatePasswordMutation()
+  const [update, { loading }] = useUpdatePasswordOnboardingMutation()
 
   const onSubmit = (data: yup.InferType<typeof Onboarding2Schema>) => {
     return form.handler(() => update({ variables: { data: { password: data.password } } }), {

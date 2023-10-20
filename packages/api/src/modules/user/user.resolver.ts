@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs"
 import { Arg, Args, Ctx, Mutation, Query, Resolver } from "type-graphql"
 import { Inject, Service } from "typedi"
 
@@ -17,9 +18,11 @@ import { CurrentUser } from "../shared/currentUser"
 import { UseAuth } from "../shared/middleware/UseAuth"
 import { ResolverContext } from "../shared/resolverContext"
 import { VerifyInput } from "../verification/inputs/verify.input"
+import { DeactivateAccountInput } from "./inputs/deactivateAccount.input"
 import { LoginInput } from "./inputs/login.input"
 import { RegisterInput } from "./inputs/register.input"
 import { ResetPasswordInput } from "./inputs/resetPassword.input"
+import { UpdatePasswordInput } from "./inputs/updatePassword.input"
 import { UpdateUserInput } from "./inputs/updateUser.input"
 import { AuthResponse } from "./responses/auth.response"
 import { RefreshTokenResponse } from "./responses/refreshToken.response"
@@ -37,14 +40,19 @@ export default class UserResolver {
   @UseAuth()
   @Query(() => User, { nullable: true })
   async user(@Args() args: FindFirstUserArgs): Promise<User | null> {
-    return await prisma.user.findFirst(args as any)
+    return await prisma.user.findFirst({ ...(args as any), where: { ...args.where, archivedAt: null } })
   }
 
   // @UseAuth([Role.ADMIN])
   @Query(() => UsersResponse)
   async users(@Args() args: FindManyUserArgs): Promise<UsersResponse> {
-    const items = await prisma.user.findMany(args as any)
-    const count = await prisma.user.count({ ...(args as any), take: undefined, skip: undefined })
+    const items = await prisma.user.findMany({ ...(args as any), where: { ...args.where, archivedAt: null } })
+    const count = await prisma.user.count({
+      ...(args as any),
+      where: { ...args.where, archivedAt: null },
+      take: undefined,
+      skip: undefined,
+    })
     return { items, count }
   }
 
@@ -144,10 +152,16 @@ export default class UserResolver {
     return true
   }
 
-  // DESTROY ACCOUNT
+  // DEACTIVATE ACCOUNT
   @Mutation(() => Boolean)
-  async destroyAccount(@CurrentUser() currentUser: User): Promise<boolean> {
-    await prisma.user.delete({ where: { id: currentUser.id } })
+  async deactivateAccount(
+    @CurrentUser() currentUser: User,
+    @Arg("data") data: DeactivateAccountInput,
+  ): Promise<boolean> {
+    if (!currentUser.password) throw new AppError("Incorrect password")
+    const isValidPassword = await bcrypt.compare(data.password, currentUser.password)
+    if (!isValidPassword) throw new AppError("Incorrect password")
+    await prisma.user.update({ where: { id: currentUser.id }, data: { archivedAt: new Date() } })
     return true
   }
 
@@ -163,6 +177,23 @@ export default class UserResolver {
       return true
     } catch (error) {
       return false
+    }
+  }
+
+  // UPDATE PASSWORD
+  @Mutation(() => Boolean)
+  async updatePassword(
+    @CurrentUser() currentUser: User,
+    @Arg("data") data: UpdatePasswordInput,
+  ): Promise<boolean> {
+    try {
+      if (!currentUser.password) throw new AppError("Incorrect password")
+      const isValidPassword = await bcrypt.compare(data.currentPassword, currentUser.password)
+      if (!isValidPassword) throw new AppError("Incorrect password")
+      await prisma.user.update({ where: { id: currentUser.id }, data: { password: data.newPassword } })
+      return true
+    } catch (error) {
+      throw new AppError("Incorrect password")
     }
   }
 

@@ -16,24 +16,12 @@ import { PostsResponse } from "./responses/posts.response"
 export default class PostResolver {
   // GET POST
   @Query(() => Post, { nullable: true })
-  async post(@CurrentUser() currentUser: User, @Args() args: FindFirstPostArgs): Promise<Post | null> {
-    // const mutedAccountIds =
-    //   (
-    //     await prisma.user
-    //       .findUnique({ where: { id: currentUser.id } })
-    //       .mutedAccounts({ select: { id: true } })
-    //   )?.map((u) => u.id) || []
-    // const blockedAccountIds =
-    //   (
-    //     await prisma.user
-    //       .findUnique({ where: { id: currentUser.id } })
-    //       .blockedAccounts({ select: { id: true } })
-    //   )?.map((u) => u.id) || []
+  async post(@Args() args: FindFirstPostArgs): Promise<Post | null> {
     return await prisma.post.findFirst({
       ...(args as any),
       where: {
         archivedAt: null,
-        // user: { id: { notIn: [...mutedAccountIds, ...blockedAccountIds] } },
+        user: { archivedAt: null },
         ...args.where,
       },
     })
@@ -59,7 +47,7 @@ export default class PostResolver {
       ...(args as any),
       where: {
         archivedAt: null,
-        user: { id: { notIn: [...mutedAccountIds, ...blockedAccountIds] } },
+        user: { id: { notIn: [...mutedAccountIds, ...blockedAccountIds] }, archivedAt: null },
         ...args.where,
       },
     })
@@ -67,7 +55,7 @@ export default class PostResolver {
       ...(args as any),
       where: {
         archivedAt: null,
-        user: { id: { notIn: [...mutedAccountIds, ...blockedAccountIds] } },
+        user: { id: { notIn: [...mutedAccountIds, ...blockedAccountIds] }, archivedAt: null },
         ...args.where,
       },
       take: undefined,
@@ -94,12 +82,4 @@ export default class PostResolver {
     // @ts-ignore
     return await prisma.post.update({ where: { id: postId }, data })
   }
-
-  // // DESTROY POST
-  // @Mutation(() => Boolean)
-  // async destroyPost(@CurrentUser() currentUser: User, @Arg("postId") postId: string): Promise<boolean> {
-  //   // TODO permissions: only delete your own posts
-  //   await prisma.post.delete({ where: { id: postId } })
-  //   return true
-  // }
 }

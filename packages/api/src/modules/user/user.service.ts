@@ -13,8 +13,10 @@ import { User } from "./user.model"
 @Service()
 export class UserService {
   async login(data: LoginInput): Promise<User> {
-    const user = await prisma.user.findUnique({ where: { email: data.email.toLowerCase().trim() } })
-    if (!user || !user.password) throw new AppError("Incorrect email or password")
+    const user = await prisma.user.findUnique({
+      where: { email: data.email.toLowerCase().trim() },
+    })
+    if (!user || !user.password || !!user.archivedAt) throw new AppError("Incorrect email or password")
     const isValidPassword = await bcrypt.compare(data.password, user.password)
     if (!isValidPassword) throw new AppError("Incorrect email or password")
     return user
@@ -35,7 +37,7 @@ export class UserService {
 }
 
 export async function checkUserExists(where: UserWhereInput, currentUser?: User) {
-  const user = await prisma.user.findFirst({ where })
+  const user = await prisma.user.findFirst({ where: { ...where, archivedAt: null } })
   if (currentUser?.id === user?.id) return // Ensures you can "udpate" a unique field to be the same value, if it's your own account
   if (user) {
     throw new AppError(

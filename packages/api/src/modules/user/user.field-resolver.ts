@@ -29,31 +29,33 @@ export default class UserFieldResolver {
 
   @FieldResolver(() => [User])
   followers(@Root() user: User) {
-    return prisma.user
-      .findUnique({ where: { id: user.id } })
-      .followers({ select: { id: true, avatar: true, name: true, handle: true, bio: true } })
+    return prisma.user.findUnique({ where: { id: user.id } }).followers({
+      select: { id: true, avatar: true, name: true, handle: true, bio: true },
+      where: { archivedAt: null },
+    })
   }
 
   @FieldResolver(() => Number)
   async followerCount(@Root() user: User) {
     const followers = await prisma.user
       .findUnique({ where: { id: user.id } })
-      .followers({ select: { id: true } })
+      .followers({ select: { id: true }, where: { archivedAt: null } })
     return followers?.length || 0
   }
 
   @FieldResolver(() => [User])
   following(@Root() user: User) {
-    return prisma.user
-      .findUnique({ where: { id: user.id } })
-      .following({ select: { id: true, avatar: true, name: true, handle: true, bio: true } })
+    return prisma.user.findUnique({ where: { id: user.id } }).following({
+      select: { id: true, avatar: true, name: true, handle: true, bio: true },
+      where: { archivedAt: null },
+    })
   }
 
   @FieldResolver(() => Number)
   async followingCount(@Root() user: User) {
     const following = await prisma.user
       .findUnique({ where: { id: user.id } })
-      .following({ select: { id: true } })
+      .following({ select: { id: true }, where: { archivedAt: null } })
     return following?.length || 0
   }
 
@@ -85,18 +87,6 @@ export default class UserFieldResolver {
   @FieldResolver(() => [Bookmark])
   bookmarks(@Root() user: User) {
     return prisma.user.findUnique({ where: { id: user.id } }).bookmarks({
-      // select: {
-      //   id: true,
-      //   postId: true,
-      //   post: {
-      //     select: {
-      //       text: true,
-      //       image: true,
-      //       createdAt: true,
-      //       user: { select: { avatar: true, name: true, handle: true } },
-      //     },
-      //   },
-      // },
       orderBy: { createdAt: "desc" },
       where: { post: { archivedAt: null } },
     })
@@ -104,12 +94,16 @@ export default class UserFieldResolver {
 
   @FieldResolver(() => [User])
   mutedAccounts(@Root() user: User) {
-    return prisma.user.findUnique({ where: { id: user.id } }).mutedAccounts({ select: { id: true } })
+    return prisma.user
+      .findUnique({ where: { id: user.id } })
+      .mutedAccounts({ select: { id: true }, where: { archivedAt: null } })
   }
 
   @FieldResolver(() => [User])
   blockedAccounts(@Root() user: User) {
-    return prisma.user.findUnique({ where: { id: user.id } }).blockedAccounts({ select: { id: true } })
+    return prisma.user
+      .findUnique({ where: { id: user.id } })
+      .blockedAccounts({ select: { id: true }, where: { archivedAt: null } })
   }
 
   @FieldResolver(() => [Report])

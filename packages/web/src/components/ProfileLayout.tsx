@@ -225,14 +225,22 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
         bgColor={bgColor}
         zIndex={1}
       >
-        <NextLink href="/home">
+        {/* <NextLink href="/home">
           <IconButton
             aria-label="back"
             icon={<Box as={BiArrowBack} boxSize="20px" />}
             variant="ghost"
             m={2}
           />
-        </NextLink>
+        </NextLink> */}
+        {/* Can't decide for router.back or back to /home always */}
+        <IconButton
+          aria-label="back"
+          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          variant="ghost"
+          m={2}
+          onClick={() => router.back()}
+        />
         <Stack px={4} spacing={0} w="100%" justify="center">
           <Heading as="h1" size="md" noOfLines={1} maxW="80%">
             {user.name}
