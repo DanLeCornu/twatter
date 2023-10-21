@@ -1,7 +1,7 @@
 import { Field, ObjectType } from "type-graphql"
 
 import * as Prisma from "@twatter/database"
-import { DobPrivacy, Role } from "@twatter/database/dist/generated"
+import { AllowMessagesFrom, DobPrivacy, Role } from "@twatter/database/dist/generated"
 
 import { BaseModel } from "../shared/base.model"
 import { UseIsCurrentUser } from "./middleware/UseIsCurrentUser"
@@ -44,6 +44,9 @@ export class User extends BaseModel implements Prisma.User {
 
   @Field(() => DobPrivacy)
   dobYearPrivacy: Prisma.DobPrivacy
+
+  @Field(() => AllowMessagesFrom)
+  allowMessagesFrom: Prisma.AllowMessagesFrom
 
   @Field(() => String, { nullable: true })
   pinnedPostId: string | null

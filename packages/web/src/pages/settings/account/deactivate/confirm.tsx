@@ -7,12 +7,14 @@ import {
   Heading,
   HStack,
   IconButton,
+  Link,
   Spinner,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Head from "next/head"
+import NextLink from "next/link"
 import { useRouter } from "next/router"
 
 import { useDeactivateAccountMutation } from "lib/graphql"
@@ -103,7 +105,12 @@ function AccountConfirmDeactivateSettings() {
         </Text>
         <Form {...form} onSubmit={handleSubmit}>
           <Stack spacing={4}>
-            <Input name="password" label="Password" type="password" />
+            <Stack spacing={0}>
+              <Input name="password" label="Password" type="password" />
+              <NextLink href="/forgot-password">
+                <Link fontSize="xs">Forgot password?</Link>
+              </NextLink>
+            </Stack>
             <ButtonGroup>
               <Button
                 size="sm"

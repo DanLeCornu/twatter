@@ -1,3 +1,4 @@
+import * as React from "react"
 import { BiArrowBack } from "react-icons/bi"
 import {
   Box,

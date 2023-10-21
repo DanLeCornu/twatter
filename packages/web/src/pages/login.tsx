@@ -1,8 +1,19 @@
 import * as React from "react"
-import { AiOutlineTwitter } from "react-icons/ai"
 import { CgClose } from "react-icons/cg"
 import { gql } from "@apollo/client"
-import { Box, Button, Center, Heading, Icon, IconButton, Link, Spinner, Stack, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  IconButton,
+  Image,
+  Link,
+  Spinner,
+  Stack,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react"
 import * as Sentry from "@sentry/nextjs"
 import Head from "next/head"
 import NextLink from "next/link"
@@ -36,6 +47,7 @@ const LoginSchema = yup.object().shape({
 })
 
 export default function Login() {
+  const { colorMode } = useColorMode()
   const { me, loading } = useMe({ fetchPolicy: "network-only" })
 
   const [login, { loading: loginLoading }] = useLoginMutation()
@@ -102,7 +114,11 @@ export default function Login() {
           left={2}
         />
       </NextLink>
-      <Icon as={AiOutlineTwitter} boxSize="30px" />
+      <Image
+        alt="twatter logo"
+        src={colorMode === "dark" ? "twatter-logo-white.png" : "twatter-logo-black.png"}
+        w="30px"
+      />
       <Box w={["100%", 400]} px={6} pt={24}>
         <Form onSubmit={onSubmit} {...form}>
           <Stack spacing={8}>

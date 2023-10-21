@@ -94,16 +94,18 @@ export default class UserFieldResolver {
 
   @FieldResolver(() => [User])
   mutedAccounts(@Root() user: User) {
-    return prisma.user
-      .findUnique({ where: { id: user.id } })
-      .mutedAccounts({ select: { id: true }, where: { archivedAt: null } })
+    return prisma.user.findUnique({ where: { id: user.id } }).mutedAccounts({
+      select: { id: true, avatar: true, name: true, handle: true },
+      where: { archivedAt: null },
+    })
   }
 
   @FieldResolver(() => [User])
   blockedAccounts(@Root() user: User) {
-    return prisma.user
-      .findUnique({ where: { id: user.id } })
-      .blockedAccounts({ select: { id: true }, where: { archivedAt: null } })
+    return prisma.user.findUnique({ where: { id: user.id } }).blockedAccounts({
+      select: { id: true, avatar: true, name: true, handle: true },
+      where: { archivedAt: null },
+    })
   }
 
   @FieldResolver(() => [Report])

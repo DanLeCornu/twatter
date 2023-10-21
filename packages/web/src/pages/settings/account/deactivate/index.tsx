@@ -85,7 +85,7 @@ function AccountDeactivateSettings() {
         </Text>
         <Heading fontSize="lg">What else you should know</Heading>
         <Text color="gray.400" fontSize="xs">
-          If you just want to chaneg your @username, you don't need to deactivate your account - edit it in
+          If you just want to change your @username, you don't need to deactivate your account - edit it in
           your{" "}
           <NextLink href="/settings/account/data/username">
             <Link>settings</Link>

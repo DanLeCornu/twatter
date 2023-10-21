@@ -1,7 +1,7 @@
 import * as React from "react"
 import type { IconType } from "react-icons"
 import type { ModalProps } from "@chakra-ui/react"
-import { Icon } from "@chakra-ui/react"
+import { Icon, Image } from "@chakra-ui/react"
 import {
   Modal as CModal,
   ModalBody,
@@ -14,14 +14,16 @@ import {
 interface Props extends ModalProps {
   title?: string
   icon?: IconType
+  image?: string
   closeButton?: boolean
 }
-export function Modal({ title, icon, closeButton = false, ...props }: Props) {
+export function Modal({ title, icon, image, closeButton = false, ...props }: Props) {
   return (
     <CModal {...props} size="xs" isCentered>
       <ModalOverlay />
       <ModalContent borderRadius="md">
-        {icon && <Icon as={icon} boxSize="50px" mt={4} mx="auto" />}
+        {image && <Image alt="modal image" src={image} w="50px" mt={5} mx="auto" />}
+        {icon && <Icon as={icon} boxSize="50px" mt={5} mx="auto" />}
         {closeButton && <ModalCloseButton />}
         {title && (
           <ModalHeader pb={0} px={7}>

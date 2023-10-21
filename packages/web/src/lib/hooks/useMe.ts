@@ -5,6 +5,13 @@ import type { MeQuery, MeQueryVariables } from "lib/graphql"
 import { useMeQuery } from "lib/graphql"
 
 export const _ = gql`
+  fragment BlockedMutedAccount on User {
+    id
+    avatar
+    name
+    handle
+  }
+
   fragment Me on User {
     id
     email
@@ -19,6 +26,7 @@ export const _ = gql`
     dob
     dobDayMonthPrivacy
     dobYearPrivacy
+    allowMessagesFrom
     followingCount
     followerCount
     createdAt
@@ -32,10 +40,10 @@ export const _ = gql`
       id
     }
     mutedAccounts {
-      id
+      ...BlockedMutedAccount
     }
     blockedAccounts {
-      id
+      ...BlockedMutedAccount
     }
     createdReports {
       id

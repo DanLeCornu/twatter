@@ -1,17 +1,17 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import { AiOutlineTwitter } from "react-icons/ai"
 import {
   Box,
   Center,
   Heading,
-  Icon,
+  Image,
   Spinner,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Head from "next/head"
@@ -28,6 +28,7 @@ import { PostList } from "components/PostList"
 
 function Home() {
   const { me } = useMe()
+  const { colorMode } = useColorMode()
 
   const followingIds = me?.following.map((user) => user.id) || []
 
@@ -81,8 +82,12 @@ function Home() {
           <Box position="relative">
             <MobileTopBarAvatar />
 
-            <Center w="100%" position="absolute" top={0}>
-              <Icon as={AiOutlineTwitter} boxSize="30px" />
+            <Center w="100%" position="absolute" top="5px">
+              <Image
+                alt="twatter logo"
+                src={colorMode === "dark" ? "twatter-logo-white.png" : "twatter-logo-black.png"}
+                w="28px"
+              />
             </Center>
           </Box>
         </Box>

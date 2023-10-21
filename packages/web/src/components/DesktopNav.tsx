@@ -194,7 +194,11 @@ export function DesktopNav() {
           </Portal>
         </Menu>
         {/* LOGOUT MODAL */}
-        <Modal {...modalProps} title="Log out of Twatter?" icon={AiOutlineTwitter}>
+        <Modal
+          {...modalProps}
+          title="Log out of Twatter?"
+          image={colorMode === "dark" ? "twatter-logo-white.png" : "twatter-logo-black.png"}
+        >
           <Text mb={6}>You can always log back in at any time.</Text>
           <Stack>
             <Button colorScheme="monochrome" onClick={logout}>

@@ -27,6 +27,11 @@ enum DobPrivacy {
   PRIVATE
 }
 
+enum AllowMessagesFrom {
+  NO_ONE
+  EVERYONE
+}
+
 enum ReportType {
   HATE
   ABUSE
@@ -41,24 +46,25 @@ enum ReportType {
 }
 
 model User {
-  id                 String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email              String     @unique
+  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email              String            @unique
   /// @TypeGraphQL.omit(output: true)
   password           String?
-  role               Role       @default(USER)
-  name               String     @db.VarChar(50)
-  handle             String?    @unique @db.VarChar(15)
+  role               Role              @default(USER)
+  name               String            @db.VarChar(50)
+  handle             String?           @unique @db.VarChar(15)
   avatar             String?
   cover              String?
-  bio                String?    @db.VarChar(160)
-  location           String?    @db.VarChar(30)
-  website            String?    @db.VarChar(100)
+  bio                String?           @db.VarChar(160)
+  location           String?           @db.VarChar(30)
+  website            String?           @db.VarChar(100)
   dob                String?
-  dobDayMonthPrivacy DobPrivacy @default(PRIVATE)
-  dobYearPrivacy     DobPrivacy @default(PRIVATE)
-  createdAt          DateTime   @default(now()) @db.Timestamptz(6)
-  updatedAt          DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
-  archivedAt         DateTime?  @db.Timestamptz(6)
+  dobDayMonthPrivacy DobPrivacy        @default(PRIVATE)
+  dobYearPrivacy     DobPrivacy        @default(PRIVATE)
+  allowMessagesFrom  AllowMessagesFrom @default(NO_ONE)
+  createdAt          DateTime          @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
+  archivedAt         DateTime?         @db.Timestamptz(6)
 
   pinnedPost       Post?          @relation(name: "PinnedPost", fields: [pinnedPostId], references: [id])
   pinnedPostId     String?        @unique @db.Uuid

@@ -1,6 +1,16 @@
 import * as React from "react"
-import { AiOutlineTwitter } from "react-icons/ai"
-import { Button, Center, Flex, Heading, Icon, Link, Spinner, Stack, Text } from "@chakra-ui/react"
+import {
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Image,
+  Link,
+  Spinner,
+  Stack,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react"
 import Head from "next/head"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -9,6 +19,7 @@ import { useMe } from "lib/hooks/useMe"
 
 export default function Landing() {
   const router = useRouter()
+  const { colorMode } = useColorMode()
   const { me, loading } = useMe({ fetchPolicy: "network-only" })
 
   React.useEffect(() => {
@@ -25,7 +36,11 @@ export default function Landing() {
 
   return (
     <Stack p={8} spacing={10}>
-      <Icon as={AiOutlineTwitter} boxSize="60px" />
+      <Image
+        alt="twatter logo"
+        src={colorMode === "dark" ? "twatter-logo-white.png" : "twatter-logo-black.png"}
+        w="50px"
+      />
       <Stack spacing={1}>
         <Heading as="h1" fontSize="4xl">
           Twatter

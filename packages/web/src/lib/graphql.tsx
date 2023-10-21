@@ -17,6 +17,11 @@ export type Scalars = {
   DateTime: string;
 };
 
+export enum AllowMessagesFrom {
+  Everyone = 'EVERYONE',
+  NoOne = 'NO_ONE'
+}
+
 export type AuthResponse = {
   __typename?: 'AuthResponse';
   refreshToken: Scalars['String'];
@@ -296,6 +301,13 @@ export enum DobPrivacy {
   Private = 'PRIVATE',
   Public = 'PUBLIC'
 }
+
+export type EnumAllowMessagesFromFilter = {
+  equals?: InputMaybe<AllowMessagesFrom>;
+  in?: InputMaybe<Array<AllowMessagesFrom>>;
+  not?: InputMaybe<NestedEnumAllowMessagesFromFilter>;
+  notIn?: InputMaybe<Array<AllowMessagesFrom>>;
+};
 
 export type EnumDobPrivacyFilter = {
   equals?: InputMaybe<DobPrivacy>;
@@ -1092,6 +1104,13 @@ export type NestedDateTimeNullableFilter = {
   lte?: InputMaybe<Scalars['DateTime']>;
   not?: InputMaybe<NestedDateTimeNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['DateTime']>>;
+};
+
+export type NestedEnumAllowMessagesFromFilter = {
+  equals?: InputMaybe<AllowMessagesFrom>;
+  in?: InputMaybe<Array<AllowMessagesFrom>>;
+  not?: InputMaybe<NestedEnumAllowMessagesFromFilter>;
+  notIn?: InputMaybe<Array<AllowMessagesFrom>>;
 };
 
 export type NestedEnumDobPrivacyFilter = {
@@ -2947,6 +2966,7 @@ export type UpdatePasswordInput = {
 };
 
 export type UpdateUserInput = {
+  allowMessagesFrom?: InputMaybe<Scalars['String']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
   cover?: InputMaybe<Scalars['String']>;
@@ -2964,6 +2984,7 @@ export type UpdateUserInput = {
 
 export type User = {
   __typename?: 'User';
+  allowMessagesFrom: AllowMessagesFrom;
   archivedAt?: Maybe<Scalars['DateTime']>;
   avatar?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
@@ -2996,6 +3017,7 @@ export type User = {
 };
 
 export type UserCreateInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3221,6 +3243,7 @@ export type UserCreateOrConnectWithoutViewsInput = {
 };
 
 export type UserCreateWithoutBlockedAccountsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3258,6 +3281,7 @@ export type UserCreateWithoutBlockedAccountsInput = {
 };
 
 export type UserCreateWithoutBlockedByInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3295,6 +3319,7 @@ export type UserCreateWithoutBlockedByInput = {
 };
 
 export type UserCreateWithoutBookmarksInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3332,6 +3357,7 @@ export type UserCreateWithoutBookmarksInput = {
 };
 
 export type UserCreateWithoutCreatedReportsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3369,6 +3395,7 @@ export type UserCreateWithoutCreatedReportsInput = {
 };
 
 export type UserCreateWithoutFollowersInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3406,6 +3433,7 @@ export type UserCreateWithoutFollowersInput = {
 };
 
 export type UserCreateWithoutFollowingInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3443,6 +3471,7 @@ export type UserCreateWithoutFollowingInput = {
 };
 
 export type UserCreateWithoutLikesInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3480,6 +3509,7 @@ export type UserCreateWithoutLikesInput = {
 };
 
 export type UserCreateWithoutMentionsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3517,6 +3547,7 @@ export type UserCreateWithoutMentionsInput = {
 };
 
 export type UserCreateWithoutMessagesReceivedInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3554,6 +3585,7 @@ export type UserCreateWithoutMessagesReceivedInput = {
 };
 
 export type UserCreateWithoutMessagesSentInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3591,6 +3623,7 @@ export type UserCreateWithoutMessagesSentInput = {
 };
 
 export type UserCreateWithoutMutedAccountsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3628,6 +3661,7 @@ export type UserCreateWithoutMutedAccountsInput = {
 };
 
 export type UserCreateWithoutMutedByInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3665,6 +3699,7 @@ export type UserCreateWithoutMutedByInput = {
 };
 
 export type UserCreateWithoutPinnedPostInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3702,6 +3737,7 @@ export type UserCreateWithoutPinnedPostInput = {
 };
 
 export type UserCreateWithoutPostsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3739,6 +3775,7 @@ export type UserCreateWithoutPostsInput = {
 };
 
 export type UserCreateWithoutRepliesInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3776,6 +3813,7 @@ export type UserCreateWithoutRepliesInput = {
 };
 
 export type UserCreateWithoutReportsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3813,6 +3851,7 @@ export type UserCreateWithoutReportsInput = {
 };
 
 export type UserCreateWithoutViewsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -3860,6 +3899,7 @@ export type UserOrderByRelationAggregateInput = {
 };
 
 export type UserOrderByWithRelationInput = {
+  allowMessagesFrom?: InputMaybe<SortOrder>;
   archivedAt?: InputMaybe<SortOrderInput>;
   avatar?: InputMaybe<SortOrderInput>;
   bio?: InputMaybe<SortOrderInput>;
@@ -3904,6 +3944,7 @@ export type UserRelationFilter = {
 };
 
 export enum UserScalarFieldEnum {
+  AllowMessagesFrom = 'allowMessagesFrom',
   ArchivedAt = 'archivedAt',
   Avatar = 'avatar',
   Bio = 'bio',
@@ -3928,6 +3969,7 @@ export type UserScalarWhereInput = {
   AND?: InputMaybe<Array<UserScalarWhereInput>>;
   NOT?: InputMaybe<Array<UserScalarWhereInput>>;
   OR?: InputMaybe<Array<UserScalarWhereInput>>;
+  allowMessagesFrom?: InputMaybe<EnumAllowMessagesFromFilter>;
   archivedAt?: InputMaybe<DateTimeNullableFilter>;
   avatar?: InputMaybe<StringNullableFilter>;
   bio?: InputMaybe<StringNullableFilter>;
@@ -3949,6 +3991,7 @@ export type UserScalarWhereInput = {
 };
 
 export type UserUpdateManyMutationInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4199,6 +4242,7 @@ export type UserUpdateWithWhereUniqueWithoutMutedByInput = {
 };
 
 export type UserUpdateWithoutBlockedAccountsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4236,6 +4280,7 @@ export type UserUpdateWithoutBlockedAccountsInput = {
 };
 
 export type UserUpdateWithoutBlockedByInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4273,6 +4318,7 @@ export type UserUpdateWithoutBlockedByInput = {
 };
 
 export type UserUpdateWithoutBookmarksInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4310,6 +4356,7 @@ export type UserUpdateWithoutBookmarksInput = {
 };
 
 export type UserUpdateWithoutCreatedReportsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4347,6 +4394,7 @@ export type UserUpdateWithoutCreatedReportsInput = {
 };
 
 export type UserUpdateWithoutFollowersInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4384,6 +4432,7 @@ export type UserUpdateWithoutFollowersInput = {
 };
 
 export type UserUpdateWithoutFollowingInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4421,6 +4470,7 @@ export type UserUpdateWithoutFollowingInput = {
 };
 
 export type UserUpdateWithoutLikesInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4458,6 +4508,7 @@ export type UserUpdateWithoutLikesInput = {
 };
 
 export type UserUpdateWithoutMentionsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4495,6 +4546,7 @@ export type UserUpdateWithoutMentionsInput = {
 };
 
 export type UserUpdateWithoutMessagesReceivedInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4532,6 +4584,7 @@ export type UserUpdateWithoutMessagesReceivedInput = {
 };
 
 export type UserUpdateWithoutMessagesSentInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4569,6 +4622,7 @@ export type UserUpdateWithoutMessagesSentInput = {
 };
 
 export type UserUpdateWithoutMutedAccountsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4606,6 +4660,7 @@ export type UserUpdateWithoutMutedAccountsInput = {
 };
 
 export type UserUpdateWithoutMutedByInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4643,6 +4698,7 @@ export type UserUpdateWithoutMutedByInput = {
 };
 
 export type UserUpdateWithoutPinnedPostInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4680,6 +4736,7 @@ export type UserUpdateWithoutPinnedPostInput = {
 };
 
 export type UserUpdateWithoutPostsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4717,6 +4774,7 @@ export type UserUpdateWithoutPostsInput = {
 };
 
 export type UserUpdateWithoutRepliesInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4754,6 +4812,7 @@ export type UserUpdateWithoutRepliesInput = {
 };
 
 export type UserUpdateWithoutReportsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4791,6 +4850,7 @@ export type UserUpdateWithoutReportsInput = {
 };
 
 export type UserUpdateWithoutViewsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   avatar?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
@@ -4922,6 +4982,7 @@ export type UserWhereInput = {
   AND?: InputMaybe<Array<UserWhereInput>>;
   NOT?: InputMaybe<Array<UserWhereInput>>;
   OR?: InputMaybe<Array<UserWhereInput>>;
+  allowMessagesFrom?: InputMaybe<EnumAllowMessagesFromFilter>;
   archivedAt?: InputMaybe<DateTimeNullableFilter>;
   avatar?: InputMaybe<StringNullableFilter>;
   bio?: InputMaybe<StringNullableFilter>;
@@ -5367,19 +5428,21 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
-export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> };
+export type BlockedMutedAccountFragment = { __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null };
+
+export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } | null };
 
 export type GetSignedUrlForPutMutationVariables = Exact<{
   data: S3SignedUrlInput;
@@ -5469,7 +5532,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string }>, blockedAccounts: Array<{ __typename?: 'User', id: string }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
 
 export type ReplyItemFragment = { __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
 
@@ -5624,6 +5687,14 @@ export const PostItemFragmentDoc = gql`
   }
 }
     ${UserDetailFragmentDoc}`;
+export const BlockedMutedAccountFragmentDoc = gql`
+    fragment BlockedMutedAccount on User {
+  id
+  avatar
+  name
+  handle
+}
+    `;
 export const MeFragmentDoc = gql`
     fragment Me on User {
   id
@@ -5639,6 +5710,7 @@ export const MeFragmentDoc = gql`
   dob
   dobDayMonthPrivacy
   dobYearPrivacy
+  allowMessagesFrom
   followingCount
   followerCount
   createdAt
@@ -5652,10 +5724,10 @@ export const MeFragmentDoc = gql`
     id
   }
   mutedAccounts {
-    id
+    ...BlockedMutedAccount
   }
   blockedAccounts {
-    id
+    ...BlockedMutedAccount
   }
   createdReports {
     id
@@ -5665,7 +5737,8 @@ export const MeFragmentDoc = gql`
     replyId
   }
 }
-    ${PostItemFragmentDoc}`;
+    ${PostItemFragmentDoc}
+${BlockedMutedAccountFragmentDoc}`;
 export const UserReportFragmentDoc = gql`
     fragment UserReport on User {
   id

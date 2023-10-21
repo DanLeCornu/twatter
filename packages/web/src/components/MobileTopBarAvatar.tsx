@@ -1,5 +1,4 @@
 import * as React from "react"
-import { AiOutlineTwitter } from "react-icons/ai"
 import { BiMoon, BiSun, BiUser } from "react-icons/bi"
 import { FiBookmark, FiLogOut, FiSettings } from "react-icons/fi"
 import {
@@ -140,7 +139,11 @@ export function MobileTopBarAvatar() {
       </Drawer>
 
       {/* LOGOUT MODAL */}
-      <Modal {...modalProps} title="Log out of Twatter?" icon={AiOutlineTwitter}>
+      <Modal
+        {...modalProps}
+        title="Log out of Twatter?"
+        image={colorMode === "dark" ? "twatter-logo-white.png" : "twatter-logo-black.png"}
+      >
         <Text mb={6}>You can always log back in at any time.</Text>
         <Stack>
           <Button colorScheme="monochrome" onClick={logout}>

@@ -47,7 +47,7 @@ function AccountDataSettings() {
         <>
           <Text>{dayjs(me?.dob).format("MMM DD, YYYY")}</Text>
           <Text>
-            Add your date of birth to your{" "}
+            {me?.dob ? "You can change your date of birth in your " : "Add your date of birth to your "}
             <NextLink href={`/${me?.handle}`}>
               <Link>profile</Link>
             </NextLink>

@@ -22,12 +22,11 @@ import { withAuth } from "components/hoc/withAuth"
 import { HEADING_CONTAINER_HEIGHT, HomeLayout } from "components/HomeLayout"
 
 const LIST_ITEMS = [
-  { text: "Your account", path: "/settings/account" },
-  { text: "Privacy and safety", path: "/settings/privacy" },
-  { text: "Additional resources", path: "/settings/about" },
+  { text: "Blocked accounts", path: "/settings/privacy/mute-and-block/blocked" },
+  { text: "Muted accounts", path: "/settings/privacy/mute-and-block/muted" },
 ]
 
-function Settings() {
+function PrivacyMuteBlockSettings() {
   const { me, loading } = useMe()
 
   const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
@@ -63,28 +62,35 @@ function Settings() {
         />
 
         <Stack spacing={0}>
-          <Heading fontSize="md">Settings</Heading>
+          <Heading fontSize="md">Mute and block</Heading>
           <Text color="gray.400" fontSize="xs">
             @{me?.handle}
           </Text>
         </Stack>
       </HStack>
-      <Stack mt={HEADING_CONTAINER_HEIGHT + "px"} py={2} px={4}>
-        {LIST_ITEMS.map((listItem, i) => (
-          <NextLink key={i} href={listItem.path}>
-            <HStack justify="space-between" py={2}>
-              <Text color="gray.300" fontSize="sm">
-                {listItem.text}
-              </Text>
-              <Icon as={BiChevronRight} boxSize="24px" color="gray.400" />
-            </HStack>
-          </NextLink>
-        ))}
+      <Stack mt={HEADING_CONTAINER_HEIGHT + "px"} py={2} px={4} spacing={4}>
+        <Text color="gray.400" fontSize="xs">
+          Manage the accounts that you've muted or blocked
+        </Text>
+        <Stack>
+          {LIST_ITEMS.map((listItem, i) => (
+            <NextLink key={i} href={listItem.path}>
+              <HStack justify="space-between" py={2}>
+                <Text color="gray.300" fontSize="sm">
+                  {listItem.text}
+                </Text>
+                <Icon as={BiChevronRight} boxSize="24px" color="gray.400" />
+              </HStack>
+            </NextLink>
+          ))}
+        </Stack>
       </Stack>
     </Box>
   )
 }
 
-Settings.getLayout = (page: React.ReactNode) => <HomeLayout showCreateButton={false}>{page}</HomeLayout>
+PrivacyMuteBlockSettings.getLayout = (page: React.ReactNode) => (
+  <HomeLayout showCreateButton={false}>{page}</HomeLayout>
+)
 
-export default withAuth(Settings)
+export default withAuth(PrivacyMuteBlockSettings)

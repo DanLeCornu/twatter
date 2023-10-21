@@ -25,6 +25,9 @@ export function HomeLayout({ showCreateButton = true, children }: Props) {
 
   React.useEffect(() => {
     if (loading) return
+    if (!me && !loading) {
+      router.replace("/")
+    }
     if (me && !me.handle) {
       // If no handle, needs to complete onboarding
       router.replace("/onboarding")
@@ -32,13 +35,12 @@ export function HomeLayout({ showCreateButton = true, children }: Props) {
     }
   }, [loading, me, router])
 
-  if (loading || (me && !me.handle))
+  if (loading || !me || (me && !me.handle))
     return (
       <Center minH="100vh">
         <Spinner />
       </Center>
     )
-  if (!me || loading) return null
   return (
     <Box pb={{ base: MOBILE_BOTTOM_TAB_HEIGHT, sm: undefined }}>
       {/* {["/home", "/explore", "/notifications", "/messages"].includes(router.asPath) && (
