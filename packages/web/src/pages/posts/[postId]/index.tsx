@@ -211,7 +211,7 @@ function Post() {
               <Popover isLazy trigger="hover" placement="bottom-start">
                 <PopoverTrigger>
                   <NextLink href={`/${post.user.handle}`}>
-                    <Stack spacing={-1}>
+                    <Stack spacing={0}>
                       <Text fontWeight="bold" _hover={{ textDecoration: "underline" }} noOfLines={1}>
                         {post.user.name}
                       </Text>

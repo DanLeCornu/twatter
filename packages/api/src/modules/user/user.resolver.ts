@@ -43,7 +43,6 @@ export default class UserResolver {
     return await prisma.user.findFirst({ ...(args as any), where: { ...args.where, archivedAt: null } })
   }
 
-  // @UseAuth([Role.ADMIN])
   @Query(() => UsersResponse)
   async users(@Args() args: FindManyUserArgs): Promise<UsersResponse> {
     const items = await prisma.user.findMany({ ...(args as any), where: { ...args.where, archivedAt: null } })

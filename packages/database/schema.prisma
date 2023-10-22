@@ -169,10 +169,11 @@ model Notification {
 }
 
 model Message {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  text      String
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  text       String
+  createdAt  DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  archivedAt DateTime? @db.Timestamptz(6)
 
   sender     User   @relation(name: "MessagesSent", fields: [senderId], references: [id])
   senderId   String @db.Uuid

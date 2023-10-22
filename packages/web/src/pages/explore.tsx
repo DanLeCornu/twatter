@@ -18,10 +18,10 @@ import Head from "next/head"
 
 import { QueryMode, useGetSearchUsersQuery } from "lib/graphql"
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
-import { ExploreUserList } from "components/ExploreUserList"
 import { withAuth } from "components/hoc/withAuth"
 import { HomeLayout } from "components/HomeLayout"
 import { MobileTopBarAvatar } from "components/MobileTopBarAvatar"
+import { UserSearchItem } from "components/UserSearchItem"
 
 const _ = gql`
   fragment UserSearchItem on User {
@@ -50,9 +50,9 @@ function Explore() {
 
   const { data, loading } = useGetSearchUsersQuery({
     variables: {
-      // orderBy: { createdAt: SortOrder.Desc },
       take: 10,
       where: {
+        handle: { not: null },
         OR: [
           { name: search ? { contains: search, mode: QueryMode.Insensitive } : undefined },
           { handle: search ? { contains: search, mode: QueryMode.Insensitive } : undefined },
@@ -89,7 +89,7 @@ function Explore() {
         <MobileView>
           <MobileTopBarAvatar />
         </MobileView>
-        <Search search={search} setSearch={setSearch} />
+        <ExploreSearch search={search} setSearch={setSearch} />
       </HStack>
       {loading ? (
         <Center pt="60px">
@@ -97,7 +97,9 @@ function Explore() {
         </Center>
       ) : (
         <Box pt="60px">
-          <ExploreUserList users={users} />
+          {users.map((user, i) => (
+            <UserSearchItem key={i} user={user} />
+          ))}
         </Box>
       )}
     </Box>
@@ -113,7 +115,7 @@ interface Props extends InputProps {
   setSearch: React.Dispatch<React.SetStateAction<string>>
 }
 
-export function Search({ search, setSearch, ...props }: Props) {
+function ExploreSearch({ search, setSearch, ...props }: Props) {
   return (
     <InputGroup>
       <InputLeftElement h="100%" pl={2}>

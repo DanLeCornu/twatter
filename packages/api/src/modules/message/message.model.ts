@@ -14,4 +14,7 @@ export class Message extends BaseModel implements Prisma.Message {
 
   @Field()
   receiverId: string
+
+  @Field(() => Date, { nullable: true })
+  archivedAt: Date | null
 }
