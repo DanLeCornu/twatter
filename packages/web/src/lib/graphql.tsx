@@ -251,8 +251,9 @@ export type BookmarksResponse = {
 
 export type Conversation = {
   __typename?: 'Conversation';
-  conversationId: Scalars['String'];
+  id: Scalars['String'];
   messages: Array<ConversationMessage>;
+  user: User;
 };
 
 export type ConversationMessage = {
@@ -760,6 +761,17 @@ export type MentionWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
 };
 
+export type Message = {
+  __typename?: 'Message';
+  archivedAt?: Maybe<Scalars['DateTime']>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  receiverId: Scalars['String'];
+  senderId: Scalars['String'];
+  text: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
 export type MessageCreateManyReceiverInput = {
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -839,6 +851,28 @@ export type MessageListRelationFilter = {
 export type MessageOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
+
+export type MessageOrderByWithRelationInput = {
+  archivedAt?: InputMaybe<SortOrderInput>;
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  receiver?: InputMaybe<UserOrderByWithRelationInput>;
+  receiverId?: InputMaybe<SortOrder>;
+  sender?: InputMaybe<UserOrderByWithRelationInput>;
+  senderId?: InputMaybe<SortOrder>;
+  text?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export enum MessageScalarFieldEnum {
+  ArchivedAt = 'archivedAt',
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  ReceiverId = 'receiverId',
+  SenderId = 'senderId',
+  Text = 'text',
+  UpdatedAt = 'updatedAt'
+}
 
 export type MessageScalarWhereInput = {
   AND?: InputMaybe<Array<MessageScalarWhereInput>>;
@@ -956,6 +990,12 @@ export type MessageWhereInput = {
 
 export type MessageWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
+};
+
+export type MessagesResponse = {
+  __typename?: 'MessagesResponse';
+  count: Scalars['Int'];
+  items: Array<Message>;
 };
 
 export type Mutation = {
@@ -1985,6 +2025,7 @@ export type Query = {
   likes: LikesResponse;
   me?: Maybe<User>;
   myConversations: ConversationsResponse;
+  myMessages: MessagesResponse;
   post?: Maybe<Post>;
   posts: PostsResponse;
   refreshToken?: Maybe<RefreshTokenResponse>;
@@ -2018,6 +2059,16 @@ export type QueryLikesArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<LikeWhereInput>;
+};
+
+
+export type QueryMyMessagesArgs = {
+  cursor?: InputMaybe<MessageWhereUniqueInput>;
+  distinct?: InputMaybe<Array<MessageScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<MessageOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MessageWhereInput>;
 };
 
 
@@ -5585,12 +5636,40 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
 
+export type MessageItemFragment = { __typename?: 'Message', id: string, senderId: string, receiverId: string, text: string, createdAt: string };
+
+export type GetMyMessagesQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<MessageOrderByWithRelationInput> | MessageOrderByWithRelationInput>;
+  where?: InputMaybe<MessageWhereInput>;
+}>;
+
+
+export type GetMyMessagesQuery = { __typename?: 'Query', myMessages: { __typename?: 'MessagesResponse', count: number, items: Array<{ __typename?: 'Message', id: string, senderId: string, receiverId: string, text: string, createdAt: string }> } };
+
+export type UserMessageFragment = { __typename?: 'User', id: string, name: string, avatar?: string | null };
+
+export type GetUserMessageQueryVariables = Exact<{
+  where: UserWhereInput;
+}>;
+
+
+export type GetUserMessageQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, avatar?: string | null } | null };
+
+export type SendMessageMutationVariables = Exact<{
+  data: CreateMessageInput;
+}>;
+
+
+export type SendMessageMutation = { __typename?: 'Mutation', createMessage: boolean };
+
+export type ConversationUserItemFragment = { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null };
+
 export type ConversationMessageItemFragment = { __typename?: 'ConversationMessage', id: string, senderId: string, receiverId: string, text: string, createdAt: string };
 
 export type MyConversationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyConversationsQuery = { __typename?: 'Query', myConversations: { __typename?: 'ConversationsResponse', count: number, items: Array<{ __typename?: 'Conversation', conversationId: string, messages: Array<{ __typename?: 'ConversationMessage', id: string, senderId: string, receiverId: string, text: string, createdAt: string }> }> } };
+export type MyConversationsQuery = { __typename?: 'Query', myConversations: { __typename?: 'ConversationsResponse', count: number, items: Array<{ __typename?: 'Conversation', id: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null }, messages: Array<{ __typename?: 'ConversationMessage', id: string, senderId: string, receiverId: string, text: string, createdAt: string }> }> } };
 
 export type ReplyItemFragment = { __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
 
@@ -5830,6 +5909,30 @@ export const UserSearchItemFragmentDoc = gql`
   name
   avatar
   handle
+}
+    `;
+export const MessageItemFragmentDoc = gql`
+    fragment MessageItem on Message {
+  id
+  senderId
+  receiverId
+  text
+  createdAt
+}
+    `;
+export const UserMessageFragmentDoc = gql`
+    fragment UserMessage on User {
+  id
+  name
+  avatar
+}
+    `;
+export const ConversationUserItemFragmentDoc = gql`
+    fragment ConversationUserItem on User {
+  id
+  name
+  handle
+  avatar
 }
     `;
 export const ConversationMessageItemFragmentDoc = gql`
@@ -6470,11 +6573,65 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const GetMyMessagesDocument = gql`
+    query GetMyMessages($orderBy: [MessageOrderByWithRelationInput!], $where: MessageWhereInput) {
+  myMessages(orderBy: $orderBy, where: $where) {
+    items {
+      ...MessageItem
+    }
+    count
+  }
+}
+    ${MessageItemFragmentDoc}`;
+export function useGetMyMessagesQuery(baseOptions?: Apollo.QueryHookOptions<GetMyMessagesQuery, GetMyMessagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyMessagesQuery, GetMyMessagesQueryVariables>(GetMyMessagesDocument, options);
+      }
+export function useGetMyMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyMessagesQuery, GetMyMessagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyMessagesQuery, GetMyMessagesQueryVariables>(GetMyMessagesDocument, options);
+        }
+export type GetMyMessagesQueryHookResult = ReturnType<typeof useGetMyMessagesQuery>;
+export type GetMyMessagesLazyQueryHookResult = ReturnType<typeof useGetMyMessagesLazyQuery>;
+export type GetMyMessagesQueryResult = Apollo.QueryResult<GetMyMessagesQuery, GetMyMessagesQueryVariables>;
+export const GetUserMessageDocument = gql`
+    query GetUserMessage($where: UserWhereInput!) {
+  user(where: $where) {
+    ...UserMessage
+  }
+}
+    ${UserMessageFragmentDoc}`;
+export function useGetUserMessageQuery(baseOptions: Apollo.QueryHookOptions<GetUserMessageQuery, GetUserMessageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserMessageQuery, GetUserMessageQueryVariables>(GetUserMessageDocument, options);
+      }
+export function useGetUserMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserMessageQuery, GetUserMessageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserMessageQuery, GetUserMessageQueryVariables>(GetUserMessageDocument, options);
+        }
+export type GetUserMessageQueryHookResult = ReturnType<typeof useGetUserMessageQuery>;
+export type GetUserMessageLazyQueryHookResult = ReturnType<typeof useGetUserMessageLazyQuery>;
+export type GetUserMessageQueryResult = Apollo.QueryResult<GetUserMessageQuery, GetUserMessageQueryVariables>;
+export const SendMessageDocument = gql`
+    mutation SendMessage($data: CreateMessageInput!) {
+  createMessage(data: $data)
+}
+    `;
+export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<SendMessageMutation, SendMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendMessageMutation, SendMessageMutationVariables>(SendMessageDocument, options);
+      }
+export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
+export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
+export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
 export const MyConversationsDocument = gql`
     query MyConversations {
   myConversations {
     items {
-      conversationId
+      id
+      user {
+        ...ConversationUserItem
+      }
       messages {
         ...ConversationMessageItem
       }
@@ -6482,7 +6639,8 @@ export const MyConversationsDocument = gql`
     count
   }
 }
-    ${ConversationMessageItemFragmentDoc}`;
+    ${ConversationUserItemFragmentDoc}
+${ConversationMessageItemFragmentDoc}`;
 export function useMyConversationsQuery(baseOptions?: Apollo.QueryHookOptions<MyConversationsQuery, MyConversationsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<MyConversationsQuery, MyConversationsQueryVariables>(MyConversationsDocument, options);

@@ -12,9 +12,19 @@ interface Props extends InputProps {
   label?: string
   subLabel?: string
   maxLength?: number
+  bordered?: boolean
+  validations?: boolean
 }
 
-export const Input = ({ name, label, subLabel, maxLength, ...props }: Props) => {
+export const Input = ({
+  name,
+  label,
+  subLabel,
+  maxLength,
+  bordered = true,
+  validations = true,
+  ...props
+}: Props) => {
   const {
     register,
     getValues,
@@ -37,7 +47,7 @@ export const Input = ({ name, label, subLabel, maxLength, ...props }: Props) => 
       <Box
         px={2}
         py={1}
-        borderWidth="1px"
+        borderWidth={bordered ? "1px" : undefined}
         rounded="md"
         borderColor={!!fieldError ? "red.500 !important" : "gray.600"}
         sx={{
@@ -82,7 +92,7 @@ export const Input = ({ name, label, subLabel, maxLength, ...props }: Props) => 
           autoCapitalize="none"
         />
       </Box>
-      <InputError error={fieldError} />
+      {validations && <InputError error={fieldError} />}
     </FormControl>
   )
 }

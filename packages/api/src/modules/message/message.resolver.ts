@@ -1,5 +1,7 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql"
+import { Arg, Args, Mutation, Query, Resolver } from "type-graphql"
 import { Service } from "typedi"
+
+import { FindManyMessageArgs } from "@twatter/database/dist/generated"
 
 import { prisma } from "../../lib/prisma"
 import { CurrentUser } from "../shared/currentUser"
@@ -8,32 +10,32 @@ import { User } from "../user/user.model"
 import { CreateMessageInput } from "./inputs/createMessage.input"
 import { Message } from "./message.model"
 import { Conversation, ConversationsResponse } from "./responses/conversations.response"
+import { MessagesResponse } from "./responses/messages.response"
 
 @Service()
 @Resolver(() => Message)
 export default class MessageResolver {
-  // // MY MESSAGES
-  // @Query(() => MessagesResponse)
-  // async myMessages(
-  //   @CurrentUser() currentUser: User,
-  //   @Args() args: FindManyMessageArgs,
-  // ): Promise<MessagesResponse> {
-  //   const items = await prisma.message.findMany({
-  //     ...(args as any),
-  //     where: {
-  //       ...args.where,
-  //       archivedAt: null,
-  //       OR: [{ senderId: currentUser.id }, { receiverId: currentUser.id }],
-  //     },
-  //   })
-  //   const count = await prisma.message.count({
-  //     ...(args as any),
-  //     where: { ...args.where, archivedAt: null },
-  //     take: undefined,
-  //     skip: undefined,
-  //   })
-  //   return { items, count }
-  // }
+  // MY MESSAGES
+  @Query(() => MessagesResponse)
+  async myMessages(
+    @CurrentUser() currentUser: User,
+    @Args() args: FindManyMessageArgs,
+  ): Promise<MessagesResponse> {
+    const items = await prisma.message.findMany({
+      ...(args as any),
+      where: {
+        ...args.where,
+        archivedAt: null,
+      },
+    })
+    const count = await prisma.message.count({
+      ...(args as any),
+      where: { ...args.where, archivedAt: null },
+      take: undefined,
+      skip: undefined,
+    })
+    return { items, count }
+  }
 
   // MY CONVERSATIONS
   @Query(() => ConversationsResponse)
@@ -45,31 +47,38 @@ export default class MessageResolver {
           CASE
             WHEN "senderId" = ${currentUser.id}::uuid THEN "receiverId"
             WHEN "receiverId" = ${currentUser.id}::uuid THEN "senderId"
-          END AS "conversationId",
-          id,
+          END AS id,
+          id as "messageId",
           "senderId",
           "receiverId",
           text,
-          "createdAt"
+          "Message"."createdAt"
         FROM "Message"
         WHERE "senderId" = ${currentUser.id}::uuid OR "receiverId" = ${currentUser.id}::uuid
       )
       SELECT
-      "conversationId",
+        uc.id,
+        JSON_BUILD_OBJECT(
+          'id', "User".id,
+          'name', "User".name,
+          'handle', "User".handle,
+          'avatar', "User".avatar
+        ) AS user,
         JSON_AGG(
           JSON_BUILD_OBJECT(
-            'id', id,
+            'id', uc."messageId",
             'senderId', "senderId",
             'receiverId', "receiverId",
             'text', text,
-            'createdAt', "createdAt"
-          ) ORDER BY "createdAt"
+            'createdAt', uc."createdAt"
+          ) ORDER BY uc."createdAt"
         ) AS messages
-      FROM UserConversations
-      GROUP BY "conversationId"
-      ORDER BY MAX("createdAt") DESC
+      FROM UserConversations uc
+        JOIN "User" ON uc.id = "User".id
+      GROUP BY uc.id, "User".id
+      ORDER BY MAX(uc."createdAt") DESC
     `
-    console.dir(items, { depth: null })
+    // console.dir(items, { depth: null })
     return { items, count: items.length }
   }
 

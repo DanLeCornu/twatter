@@ -31,6 +31,12 @@ import { HEADING_CONTAINER_HEIGHT } from "components/HomeLayout"
 import { UserSearchItem } from "components/UserSearchItem"
 
 const _ = gql`
+  fragment ConversationUserItem on User {
+    id
+    name
+    handle
+    avatar
+  }
   fragment ConversationMessageItem on ConversationMessage {
     id
     senderId
@@ -41,7 +47,10 @@ const _ = gql`
   query MyConversations {
     myConversations {
       items {
-        conversationId
+        id
+        user {
+          ...ConversationUserItem
+        }
         messages {
           ...ConversationMessageItem
         }
@@ -144,9 +153,14 @@ function NewMessage() {
             <Spinner />
           </Center>
         ) : (
-          conversations.map((conversation) =>
-            conversation.messages.map((message, i) => <p key={i}>{message.text}</p>),
-          )
+          conversations.map((conversation, i) => (
+            <UserSearchItem
+              key={i}
+              user={conversation.user}
+              size="small"
+              path={`/messages/${conversation.user.id}`}
+            />
+          ))
         )}
       </Stack>
     </Box>

@@ -1,6 +1,7 @@
 import { Field, ObjectType } from "type-graphql"
 
 import { ConnectionResponse } from "../../shared/response/connection.response"
+import { User } from "../../user/user.model"
 
 @ObjectType()
 export class ConversationsResponse extends ConnectionResponse(() => [Conversation]) {}
@@ -8,12 +9,16 @@ export class ConversationsResponse extends ConnectionResponse(() => [Conversatio
 @ObjectType()
 export class Conversation {
   @Field()
-  conversationId: string
+  id: string
+
+  @Field()
+  user: User
 
   @Field(() => [ConversationMessage])
   messages: ConversationMessage[]
 }
 
+// Note: Using this custom type instead of regular Message object as otherwise graphql complains about unable to serialize createdAt string to Date
 @ObjectType()
 class ConversationMessage {
   @Field()

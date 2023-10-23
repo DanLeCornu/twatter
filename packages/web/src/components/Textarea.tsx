@@ -35,6 +35,7 @@ export const Textarea = ({
   const [charCount, setCharCount] = React.useState(initialCharCount)
 
   const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    register(name).onChange(e)
     setCharCount(e?.target?.value?.toString().length || 0)
   }
 
@@ -46,7 +47,6 @@ export const Textarea = ({
         borderWidth={bordered ? "1px" : undefined}
         rounded="md"
         borderColor={fieldError ? "red.500" : "gray.600"}
-        // minH="50px"
         sx={{
           "&:has(textarea:focus)": {
             borderColor: "blue.500",
@@ -85,7 +85,6 @@ export const Textarea = ({
           variant="unstyled"
           onChange={handleOnChange}
           resize="none"
-          minH="50px"
           {...props}
         />
       </Box>
