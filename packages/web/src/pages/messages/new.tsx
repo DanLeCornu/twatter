@@ -2,7 +2,6 @@ import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
 import { BiSearch, BiX } from "react-icons/bi"
 import { CgClose } from "react-icons/cg"
-import { gql } from "@apollo/client"
 import type { InputProps } from "@chakra-ui/react"
 import {
   Box,
@@ -30,42 +29,12 @@ import { withAuth } from "components/hoc/withAuth"
 import { HEADING_CONTAINER_HEIGHT } from "components/HomeLayout"
 import { UserSearchItem } from "components/UserSearchItem"
 
-const _ = gql`
-  fragment ConversationUserItem on User {
-    id
-    name
-    handle
-    avatar
-  }
-  fragment ConversationMessageItem on ConversationMessage {
-    id
-    senderId
-    receiverId
-    text
-    createdAt
-  }
-  query MyConversations {
-    myConversations {
-      items {
-        id
-        user {
-          ...ConversationUserItem
-        }
-        messages {
-          ...ConversationMessageItem
-        }
-      }
-      count
-    }
-  }
-`
-
 function NewMessage() {
-  const { me } = useMe()
+  const { me, loading } = useMe()
   const router = useRouter()
   const [search, setSearch] = React.useState("")
 
-  const { data, loading } = useMyConversationsQuery()
+  const { data, loading: conversationsLoading } = useMyConversationsQuery()
 
   const conversations = data?.myConversations.items || []
 
@@ -87,6 +56,13 @@ function NewMessage() {
 
   const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
 
+  if (loading)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    )
+  if (!me) return null
   return (
     <Box>
       <Head>
@@ -148,7 +124,7 @@ function NewMessage() {
               <UserSearchItem key={i} user={user} size="small" path={`/messages/${user.id}`} />
             ))
           )
-        ) : loading ? (
+        ) : conversationsLoading ? (
           <Center>
             <Spinner />
           </Center>

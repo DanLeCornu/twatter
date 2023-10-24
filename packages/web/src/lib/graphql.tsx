@@ -5666,6 +5666,8 @@ export type ConversationUserItemFragment = { __typename?: 'User', id: string, na
 
 export type ConversationMessageItemFragment = { __typename?: 'ConversationMessage', id: string, senderId: string, receiverId: string, text: string, createdAt: string };
 
+export type ConversationItemFragment = { __typename?: 'Conversation', id: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null }, messages: Array<{ __typename?: 'ConversationMessage', id: string, senderId: string, receiverId: string, text: string, createdAt: string }> };
+
 export type MyConversationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -5944,6 +5946,18 @@ export const ConversationMessageItemFragmentDoc = gql`
   createdAt
 }
     `;
+export const ConversationItemFragmentDoc = gql`
+    fragment ConversationItem on Conversation {
+  id
+  user {
+    ...ConversationUserItem
+  }
+  messages {
+    ...ConversationMessageItem
+  }
+}
+    ${ConversationUserItemFragmentDoc}
+${ConversationMessageItemFragmentDoc}`;
 export const ReplyItemFragmentDoc = gql`
     fragment ReplyItem on Reply {
   id
@@ -6628,19 +6642,12 @@ export const MyConversationsDocument = gql`
     query MyConversations {
   myConversations {
     items {
-      id
-      user {
-        ...ConversationUserItem
-      }
-      messages {
-        ...ConversationMessageItem
-      }
+      ...ConversationItem
     }
     count
   }
 }
-    ${ConversationUserItemFragmentDoc}
-${ConversationMessageItemFragmentDoc}`;
+    ${ConversationItemFragmentDoc}`;
 export function useMyConversationsQuery(baseOptions?: Apollo.QueryHookOptions<MyConversationsQuery, MyConversationsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<MyConversationsQuery, MyConversationsQueryVariables>(MyConversationsDocument, options);
