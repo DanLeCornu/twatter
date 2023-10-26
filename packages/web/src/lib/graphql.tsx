@@ -763,7 +763,10 @@ export type MentionWhereUniqueInput = {
 
 export type Message = {
   __typename?: 'Message';
-  archivedAt?: Maybe<Scalars['DateTime']>;
+  archivedAtA?: Maybe<Scalars['DateTime']>;
+  archivedAtB?: Maybe<Scalars['DateTime']>;
+  archivedByA?: Maybe<Scalars['String']>;
+  archivedByB?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   receiverId: Scalars['String'];
@@ -773,7 +776,10 @@ export type Message = {
 };
 
 export type MessageCreateManyReceiverInput = {
-  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  archivedAtA?: InputMaybe<Scalars['DateTime']>;
+  archivedAtB?: InputMaybe<Scalars['DateTime']>;
+  archivedByA?: InputMaybe<Scalars['String']>;
+  archivedByB?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   senderId: Scalars['String'];
@@ -787,7 +793,10 @@ export type MessageCreateManyReceiverInputEnvelope = {
 };
 
 export type MessageCreateManySenderInput = {
-  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  archivedAtA?: InputMaybe<Scalars['DateTime']>;
+  archivedAtB?: InputMaybe<Scalars['DateTime']>;
+  archivedByA?: InputMaybe<Scalars['String']>;
+  archivedByB?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   receiverId: Scalars['String'];
@@ -825,7 +834,10 @@ export type MessageCreateOrConnectWithoutSenderInput = {
 };
 
 export type MessageCreateWithoutReceiverInput = {
-  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  archivedAtA?: InputMaybe<Scalars['DateTime']>;
+  archivedAtB?: InputMaybe<Scalars['DateTime']>;
+  archivedByA?: InputMaybe<Scalars['String']>;
+  archivedByB?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   sender: UserCreateNestedOneWithoutMessagesSentInput;
@@ -834,7 +846,10 @@ export type MessageCreateWithoutReceiverInput = {
 };
 
 export type MessageCreateWithoutSenderInput = {
-  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  archivedAtA?: InputMaybe<Scalars['DateTime']>;
+  archivedAtB?: InputMaybe<Scalars['DateTime']>;
+  archivedByA?: InputMaybe<Scalars['String']>;
+  archivedByB?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   receiver: UserCreateNestedOneWithoutMessagesReceivedInput;
@@ -853,7 +868,10 @@ export type MessageOrderByRelationAggregateInput = {
 };
 
 export type MessageOrderByWithRelationInput = {
-  archivedAt?: InputMaybe<SortOrderInput>;
+  archivedAtA?: InputMaybe<SortOrderInput>;
+  archivedAtB?: InputMaybe<SortOrderInput>;
+  archivedByA?: InputMaybe<SortOrderInput>;
+  archivedByB?: InputMaybe<SortOrderInput>;
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   receiver?: InputMaybe<UserOrderByWithRelationInput>;
@@ -865,7 +883,10 @@ export type MessageOrderByWithRelationInput = {
 };
 
 export enum MessageScalarFieldEnum {
-  ArchivedAt = 'archivedAt',
+  ArchivedAtA = 'archivedAtA',
+  ArchivedAtB = 'archivedAtB',
+  ArchivedByA = 'archivedByA',
+  ArchivedByB = 'archivedByB',
   CreatedAt = 'createdAt',
   Id = 'id',
   ReceiverId = 'receiverId',
@@ -878,7 +899,10 @@ export type MessageScalarWhereInput = {
   AND?: InputMaybe<Array<MessageScalarWhereInput>>;
   NOT?: InputMaybe<Array<MessageScalarWhereInput>>;
   OR?: InputMaybe<Array<MessageScalarWhereInput>>;
-  archivedAt?: InputMaybe<DateTimeNullableFilter>;
+  archivedAtA?: InputMaybe<DateTimeNullableFilter>;
+  archivedAtB?: InputMaybe<DateTimeNullableFilter>;
+  archivedByA?: InputMaybe<StringNullableFilter>;
+  archivedByB?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
   receiverId?: InputMaybe<UuidFilter>;
@@ -888,7 +912,10 @@ export type MessageScalarWhereInput = {
 };
 
 export type MessageUpdateManyMutationInput = {
-  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  archivedAtA?: InputMaybe<Scalars['DateTime']>;
+  archivedAtB?: InputMaybe<Scalars['DateTime']>;
+  archivedByA?: InputMaybe<Scalars['String']>;
+  archivedByB?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
@@ -944,7 +971,10 @@ export type MessageUpdateWithWhereUniqueWithoutSenderInput = {
 };
 
 export type MessageUpdateWithoutReceiverInput = {
-  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  archivedAtA?: InputMaybe<Scalars['DateTime']>;
+  archivedAtB?: InputMaybe<Scalars['DateTime']>;
+  archivedByA?: InputMaybe<Scalars['String']>;
+  archivedByB?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   sender?: InputMaybe<UserUpdateOneRequiredWithoutMessagesSentNestedInput>;
@@ -953,7 +983,10 @@ export type MessageUpdateWithoutReceiverInput = {
 };
 
 export type MessageUpdateWithoutSenderInput = {
-  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  archivedAtA?: InputMaybe<Scalars['DateTime']>;
+  archivedAtB?: InputMaybe<Scalars['DateTime']>;
+  archivedByA?: InputMaybe<Scalars['String']>;
+  archivedByB?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   receiver?: InputMaybe<UserUpdateOneRequiredWithoutMessagesReceivedNestedInput>;
@@ -977,7 +1010,10 @@ export type MessageWhereInput = {
   AND?: InputMaybe<Array<MessageWhereInput>>;
   NOT?: InputMaybe<Array<MessageWhereInput>>;
   OR?: InputMaybe<Array<MessageWhereInput>>;
-  archivedAt?: InputMaybe<DateTimeNullableFilter>;
+  archivedAtA?: InputMaybe<DateTimeNullableFilter>;
+  archivedAtB?: InputMaybe<DateTimeNullableFilter>;
+  archivedByA?: InputMaybe<StringNullableFilter>;
+  archivedByB?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
   receiver?: InputMaybe<UserRelationFilter>;
@@ -1011,6 +1047,7 @@ export type Mutation = {
   createUser: User;
   createView: Scalars['Boolean'];
   deactivateAccount: Scalars['Boolean'];
+  deleteConversation: Scalars['Boolean'];
   destroyBookmark: Scalars['Boolean'];
   destroyLike: Scalars['Boolean'];
   followUser: Scalars['Boolean'];
@@ -1080,6 +1117,11 @@ export type MutationCreateViewArgs = {
 
 export type MutationDeactivateAccountArgs = {
   data: DeactivateAccountInput;
+};
+
+
+export type MutationDeleteConversationArgs = {
+  messageIds: Array<Scalars['String']>;
 };
 
 
@@ -5377,6 +5419,13 @@ export type ClearAllBookmarksMutationVariables = Exact<{ [key: string]: never; }
 
 export type ClearAllBookmarksMutation = { __typename?: 'Mutation', clearAllBookmarks: boolean };
 
+export type DeleteConversationMutationVariables = Exact<{
+  messageIds: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type DeleteConversationMutation = { __typename?: 'Mutation', deleteConversation: boolean };
+
 export type FollowUserMutationVariables = Exact<{
   userId: Scalars['String'];
 }>;
@@ -5668,10 +5717,10 @@ export type ConversationMessageItemFragment = { __typename?: 'ConversationMessag
 
 export type ConversationItemFragment = { __typename?: 'Conversation', id: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null }, messages: Array<{ __typename?: 'ConversationMessage', id: string, senderId: string, receiverId: string, text: string, createdAt: string }> };
 
-export type MyConversationsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetMyConversationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyConversationsQuery = { __typename?: 'Query', myConversations: { __typename?: 'ConversationsResponse', count: number, items: Array<{ __typename?: 'Conversation', id: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null }, messages: Array<{ __typename?: 'ConversationMessage', id: string, senderId: string, receiverId: string, text: string, createdAt: string }> }> } };
+export type GetMyConversationsQuery = { __typename?: 'Query', myConversations: { __typename?: 'ConversationsResponse', count: number, items: Array<{ __typename?: 'Conversation', id: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null }, messages: Array<{ __typename?: 'ConversationMessage', id: string, senderId: string, receiverId: string, text: string, createdAt: string }> }> } };
 
 export type ReplyItemFragment = { __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
 
@@ -6078,6 +6127,18 @@ export function useClearAllBookmarksMutation(baseOptions?: Apollo.MutationHookOp
 export type ClearAllBookmarksMutationHookResult = ReturnType<typeof useClearAllBookmarksMutation>;
 export type ClearAllBookmarksMutationResult = Apollo.MutationResult<ClearAllBookmarksMutation>;
 export type ClearAllBookmarksMutationOptions = Apollo.BaseMutationOptions<ClearAllBookmarksMutation, ClearAllBookmarksMutationVariables>;
+export const DeleteConversationDocument = gql`
+    mutation DeleteConversation($messageIds: [String!]!) {
+  deleteConversation(messageIds: $messageIds)
+}
+    `;
+export function useDeleteConversationMutation(baseOptions?: Apollo.MutationHookOptions<DeleteConversationMutation, DeleteConversationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteConversationMutation, DeleteConversationMutationVariables>(DeleteConversationDocument, options);
+      }
+export type DeleteConversationMutationHookResult = ReturnType<typeof useDeleteConversationMutation>;
+export type DeleteConversationMutationResult = Apollo.MutationResult<DeleteConversationMutation>;
+export type DeleteConversationMutationOptions = Apollo.BaseMutationOptions<DeleteConversationMutation, DeleteConversationMutationVariables>;
 export const FollowUserDocument = gql`
     mutation FollowUser($userId: String!) {
   followUser(userId: $userId)
@@ -6638,8 +6699,8 @@ export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
 export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
 export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
-export const MyConversationsDocument = gql`
-    query MyConversations {
+export const GetMyConversationsDocument = gql`
+    query GetMyConversations {
   myConversations {
     items {
       ...ConversationItem
@@ -6648,17 +6709,17 @@ export const MyConversationsDocument = gql`
   }
 }
     ${ConversationItemFragmentDoc}`;
-export function useMyConversationsQuery(baseOptions?: Apollo.QueryHookOptions<MyConversationsQuery, MyConversationsQueryVariables>) {
+export function useGetMyConversationsQuery(baseOptions?: Apollo.QueryHookOptions<GetMyConversationsQuery, GetMyConversationsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MyConversationsQuery, MyConversationsQueryVariables>(MyConversationsDocument, options);
+        return Apollo.useQuery<GetMyConversationsQuery, GetMyConversationsQueryVariables>(GetMyConversationsDocument, options);
       }
-export function useMyConversationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyConversationsQuery, MyConversationsQueryVariables>) {
+export function useGetMyConversationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyConversationsQuery, GetMyConversationsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MyConversationsQuery, MyConversationsQueryVariables>(MyConversationsDocument, options);
+          return Apollo.useLazyQuery<GetMyConversationsQuery, GetMyConversationsQueryVariables>(GetMyConversationsDocument, options);
         }
-export type MyConversationsQueryHookResult = ReturnType<typeof useMyConversationsQuery>;
-export type MyConversationsLazyQueryHookResult = ReturnType<typeof useMyConversationsLazyQuery>;
-export type MyConversationsQueryResult = Apollo.QueryResult<MyConversationsQuery, MyConversationsQueryVariables>;
+export type GetMyConversationsQueryHookResult = ReturnType<typeof useGetMyConversationsQuery>;
+export type GetMyConversationsLazyQueryHookResult = ReturnType<typeof useGetMyConversationsLazyQuery>;
+export type GetMyConversationsQueryResult = Apollo.QueryResult<GetMyConversationsQuery, GetMyConversationsQueryVariables>;
 export const GetPostDocument = gql`
     query GetPost($where: PostWhereInput!) {
   post(where: $where) {

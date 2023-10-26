@@ -21,16 +21,26 @@ export default class MessageResolver {
     @CurrentUser() currentUser: User,
     @Args() args: FindManyMessageArgs,
   ): Promise<MessagesResponse> {
+    // const notArchivedByMe = {
+    //   AND: [
+    //     { archivedByA: { not: { equals: currentUser.id } } },
+    //     { archivedByB: { not: { equals: currentUser.id } } },
+    //   ],
+    // }
+
     const items = await prisma.message.findMany({
       ...(args as any),
       where: {
         ...args.where,
-        archivedAt: null,
+        // ...notArchivedByMe,
       },
     })
     const count = await prisma.message.count({
       ...(args as any),
-      where: { ...args.where, archivedAt: null },
+      where: {
+        ...args.where,
+        // ...notArchivedByMe,
+      },
       take: undefined,
       skip: undefined,
     })
@@ -52,9 +62,13 @@ export default class MessageResolver {
           "senderId",
           "receiverId",
           text,
-          "Message"."createdAt"
+          "Message"."createdAt",
+          "archivedByA",
+          "archivedByB"
         FROM "Message"
         WHERE "senderId" = ${currentUser.id}::uuid OR "receiverId" = ${currentUser.id}::uuid
+        -- WHERE ("archivedByA" != ${currentUser.id}::uuid AND "archivedByB" != ${currentUser.id}::uuid)
+          -- AND ("senderId" = ${currentUser.id}::uuid OR "receiverId" = ${currentUser.id}::uuid)
       )
       SELECT
         uc.id,
@@ -78,7 +92,7 @@ export default class MessageResolver {
       GROUP BY uc.id, "User".id
       ORDER BY MAX(uc."createdAt") DESC
     `
-    // console.dir(items, { depth: null })
+    console.dir(items, { depth: null })
     return { items, count: items.length }
   }
 
@@ -90,6 +104,18 @@ export default class MessageResolver {
     @Arg("data") data: CreateMessageInput,
   ): Promise<Boolean> {
     await prisma.message.create({ data: { senderId: currentUser.id, ...data } })
+    return true
+  }
+
+  // DELETE CONVERSATION
+  @UseAuth()
+  @Mutation(() => Boolean)
+  async deleteConversation(
+    @CurrentUser() currentUser: User,
+    @Arg("messageIds", () => [String]) messageIds: string[],
+  ): Promise<Boolean> {
+    console.log(messageIds)
+    // await prisma.message.updateMany({ where: { id: { in: messageIds } }, data: {} })
     return true
   }
 }

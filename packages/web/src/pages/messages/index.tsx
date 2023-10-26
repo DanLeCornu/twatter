@@ -11,6 +11,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import Head from "next/head"
 
@@ -20,10 +21,11 @@ import { withAuth } from "components/hoc/withAuth"
 import { HEADING_CONTAINER_HEIGHT, HomeLayout } from "components/HomeLayout"
 import { MobileTopBarAvatar } from "components/MobileTopBarAvatar"
 import { gql } from "@apollo/client"
-import { ConversationItemFragment, useMyConversationsQuery } from "lib/graphql"
+import { ConversationItemFragment, useGetMyConversationsQuery } from "lib/graphql"
 import NextLink from "next/link"
 import { postTimeFromNow } from "lib/helpers/utils"
 import { HiOutlineDotsHorizontal } from "react-icons/hi"
+import { ConversationMenu } from "components/ConversationMenu"
 
 const _ = gql`
   fragment ConversationUserItem on User {
@@ -48,7 +50,7 @@ const _ = gql`
       ...ConversationMessageItem
     }
   }
-  query MyConversations {
+  query GetMyConversations {
     myConversations {
       items {
         ...ConversationItem
@@ -60,13 +62,24 @@ const _ = gql`
 
 function Messages() {
   const { me, loading } = useMe()
+  const drawerProps = useDisclosure()
+  const menuProps = useDisclosure()
+  const [selectedConversation, setSelectedConversation] = React.useState<
+    ConversationItemFragment | undefined
+  >()
 
-  const { data, loading: conversationsLoading } = useMyConversationsQuery()
+  const { data, loading: conversationsLoading } = useGetMyConversationsQuery()
 
   const conversations = data?.myConversations.items || []
 
   const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const borderColor = useColorModeValue("gray.100", "gray.700")
+
+  const handleOpenMenu = (conversation: ConversationItemFragment) => {
+    setSelectedConversation(conversation)
+    drawerProps.onOpen()
+    menuProps.onOpen()
+  }
 
   if (loading)
     return (
@@ -124,9 +137,13 @@ function Messages() {
             <Spinner />
           </Center>
         ) : (
-          conversations.map((conversation, i) => <ConversationItem key={i} conversation={conversation} />)
+          conversations.map((conversation, i) => (
+            <ConversationItem key={i} conversation={conversation} handleOpenMenu={handleOpenMenu} />
+          ))
         )}
       </Stack>
+
+      <ConversationMenu drawerProps={drawerProps} menuProps={menuProps} conversation={selectedConversation} />
     </Box>
   )
 }
@@ -137,30 +154,32 @@ export default withAuth(Messages)
 
 interface Props {
   conversation: ConversationItemFragment
+  handleOpenMenu: (conversation: ConversationItemFragment) => void
 }
 
-function ConversationItem({ conversation }: Props) {
+function ConversationItem({ conversation, handleOpenMenu }: Props) {
   const bgHover = useColorModeValue("gray.50", "#182234")
   const latestMessage = conversation.messages[conversation.messages.length - 1]
   return (
     <NextLink href={`/messages/${conversation.user.id}`}>
       <HStack _hover={{ bg: bgHover }}>
         <Avatar src={conversation.user.avatar || undefined} boxSize="40px" />
-        <HStack justify="space-between" w="100%" border="1px">
+        <HStack
+          justify="space-between"
+          align="flex-start"
+          w="calc(100% - 48px)" // 40px avatar boxSize + 8px HStack spacing
+          spacing={2}
+        >
           <Stack
             spacing={0}
-            // w="calc(100% - 35px)"
-            w="100%"
-            border="1px"
+            w="calc(100% - 33px)" // 25px menu button boxSize + 8px HStack spacing
+            py={1}
           >
-            {/* <Box 
-            w="calc(100% - 45px)"
-            > */}
-            <HStack w="calc(100% - 90px)" border="1px">
-              <Text fontWeight="bold" fontSize="sm" isTruncated>
+            <HStack spacing={0}>
+              <Text fontWeight="bold" fontSize="sm" mr={2} isTruncated>
                 {conversation.user.name}
               </Text>
-              <Text color="gray.400" fontSize="sm" isTruncated>
+              <Text color="gray.400" fontSize="sm" mr={1} isTruncated>
                 @{conversation.user.handle}
               </Text>
               <Text color="gray.400" fontSize="sm" flexShrink={0}>
@@ -170,21 +189,19 @@ function ConversationItem({ conversation }: Props) {
                 {postTimeFromNow(latestMessage.createdAt)}
               </Text>
             </HStack>
-            {/* </Box> */}
-            <Text color="gray.400" fontSize="sm" isTruncated w="calc(100% - 90px)" border="1px">
+            <Text color="gray.400" fontSize="sm" isTruncated>
               {latestMessage.text}
             </Text>
           </Stack>
           <IconButton
-            border="1px"
             aria-label="open menu"
             variant="ghost"
-            boxSize="35px"
-            minW="35px" // needed otherwise Chakra default styling overrides and makes it wider
-            icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" color="gray.400" />}
+            boxSize="25px"
+            minW="25px" // needed otherwise Chakra default styling overrides and makes it wider
+            icon={<Box as={HiOutlineDotsHorizontal} boxSize="18px" color="gray.400" />}
             onClick={(e) => {
               e.preventDefault() // Stops Next link
-              // drawerProps.onOpen()
+              handleOpenMenu(conversation)
             }}
           />
         </HStack>
