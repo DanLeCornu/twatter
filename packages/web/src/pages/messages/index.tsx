@@ -1,11 +1,15 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
+import { FiSettings } from "react-icons/fi"
+import { HiOutlineDotsHorizontal } from "react-icons/hi"
+import { gql } from "@apollo/client"
 import {
   Avatar,
   Box,
   Center,
   Heading,
   HStack,
+  Icon,
   IconButton,
   Spinner,
   Stack,
@@ -14,18 +18,17 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import Head from "next/head"
+import NextLink from "next/link"
 
+import type { ConversationItemFragment } from "lib/graphql"
+import { useGetMyConversationsQuery } from "lib/graphql"
+import { postTimeFromNow } from "lib/helpers/utils"
 import { useMe } from "lib/hooks/useMe"
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
+import { ConversationMenu } from "components/ConversationMenu"
 import { withAuth } from "components/hoc/withAuth"
 import { HEADING_CONTAINER_HEIGHT, HomeLayout } from "components/HomeLayout"
 import { MobileTopBarAvatar } from "components/MobileTopBarAvatar"
-import { gql } from "@apollo/client"
-import { ConversationItemFragment, useGetMyConversationsQuery } from "lib/graphql"
-import NextLink from "next/link"
-import { postTimeFromNow } from "lib/helpers/utils"
-import { HiOutlineDotsHorizontal } from "react-icons/hi"
-import { ConversationMenu } from "components/ConversationMenu"
 
 const _ = gql`
   fragment ConversationUserItem on User {
@@ -123,9 +126,14 @@ function Messages() {
             px={4}
             w="100%"
           >
-            <HStack position="relative" spacing={6}>
-              <MobileTopBarAvatar />
-              <Heading fontSize="lg">Messages</Heading>
+            <HStack justify="space-between">
+              <HStack position="relative" spacing={6}>
+                <MobileTopBarAvatar />
+                <Heading fontSize="lg">Messages</Heading>
+              </HStack>
+              <NextLink href="/settings/privacy/messages">
+                <Icon as={FiSettings} />
+              </NextLink>
             </HStack>
           </Box>
         </MobileView>
@@ -135,6 +143,15 @@ function Messages() {
         {conversationsLoading ? (
           <Center>
             <Spinner />
+          </Center>
+        ) : conversations.length === 0 ? (
+          <Center p={6}>
+            <Stack>
+              <Heading>Send a message, get a message</Heading>
+              <Text fontSize="sm" color="gray.400">
+                Direct messages are private conversations between you and other people on Twatter
+              </Text>
+            </Stack>
           </Center>
         ) : (
           conversations.map((conversation, i) => (

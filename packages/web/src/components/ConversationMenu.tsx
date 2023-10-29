@@ -1,30 +1,32 @@
-import {
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerBody,
-  Stack,
-  Button,
-  Menu,
-  Portal,
-  MenuList,
-  useColorModeValue,
-  HStack,
-  Text,
-  Icon,
-  useDisclosure,
-  MenuItem,
-  Box,
-} from "@chakra-ui/react"
-import { ConversationItemFragment, useDeleteConversationMutation } from "lib/graphql"
 import * as React from "react"
-import { MobileView, BrowserView } from "react-device-detect"
-import { DisclosureProps } from "./ProfileMenu"
-import NextLink from "next/link"
-import { BiFlag, BiTrash } from "react-icons/bi"
-import { Modal } from "./Modal"
+import { BrowserView, MobileView } from "react-device-detect"
+import { BiTrash } from "react-icons/bi"
 import { gql } from "@apollo/client"
+import {
+  Box,
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerOverlay,
+  HStack,
+  Icon,
+  Menu,
+  MenuItem,
+  MenuList,
+  Portal,
+  Stack,
+  Text,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react"
+
+import type { ConversationItemFragment } from "lib/graphql"
+import { GetMyConversationsDocument, useDeleteConversationMutation } from "lib/graphql"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
+
+import { Modal } from "./Modal"
+import type { DisclosureProps } from "./ProfileMenu"
 
 const _ = gql`
   mutation DeleteConversation($messageIds: [String!]!) {
@@ -43,7 +45,9 @@ export function ConversationMenu({ conversation, drawerProps, menuProps }: Props
   const handler = useMutationHandler()
   const drawerBg = useColorModeValue("white", "brand.bgDark")
 
-  const [deleteConversation] = useDeleteConversationMutation()
+  const [deleteConversation] = useDeleteConversationMutation({
+    refetchQueries: [{ query: GetMyConversationsDocument }],
+  })
 
   const handleOpenModal = () => {
     drawerProps.onClose()
@@ -73,15 +77,16 @@ export function ConversationMenu({ conversation, drawerProps, menuProps }: Props
                 {/* TODO PIN CONVERSATION */}
                 {/* TODO SNOOZE CONVERSATION */}
 
+                {/* TODO: figure out how to report an entire conversation */}
                 {/* REPORT */}
-                <NextLink href={`/conversations/${conversation.id}/report`}>
+                {/* <NextLink href={`/messages/${conversation.id}/report`}>
                   <HStack spacing={3}>
                     <Icon as={BiFlag} boxSize="18px" />
                     <Text fontWeight="bold" fontSize="sm">
                       Report conversation
                     </Text>
                   </HStack>
-                </NextLink>
+                </NextLink> */}
 
                 {/* DELETE */}
                 <HStack spacing={3} onClick={handleOpenModal}>
@@ -103,12 +108,16 @@ export function ConversationMenu({ conversation, drawerProps, menuProps }: Props
         <Menu {...menuProps}>
           <Portal>
             <MenuList p={0}>
+              {/* TODO PIN CONVERSATION */}
+              {/* TODO SNOOZE CONVERSATION */}
+
+              {/* TODO: figure out how to report an entire conversation */}
               {/* REPORT */}
-              <NextLink href={`/conversations/${conversation.id}/report`}>
+              {/* <NextLink href={`/messages/${conversation.id}/report`}>
                 <MenuItem icon={<Box as={BiFlag} />} fontWeight="bold" py={2}>
                   Report conversation
                 </MenuItem>
-              </NextLink>
+              </NextLink> */}
 
               {/* DELETE */}
               <MenuItem icon={<Box as={BiTrash} />} fontWeight="bold" py={2} onClick={handleOpenModal}>

@@ -1,7 +1,7 @@
-import { Arg, Args, Mutation, Query, Resolver } from "type-graphql"
+import { Arg, Mutation, Query, Resolver } from "type-graphql"
 import { Service } from "typedi"
 
-import { FindManyMessageArgs } from "@twatter/database/dist/generated"
+import { MessageOrderByWithRelationInput } from "@twatter/database/dist/generated"
 
 import { prisma } from "../../lib/prisma"
 import { CurrentUser } from "../shared/currentUser"
@@ -15,31 +15,53 @@ import { MessagesResponse } from "./responses/messages.response"
 @Service()
 @Resolver(() => Message)
 export default class MessageResolver {
+  // GET MESSAGE
+  @Query(() => Message, { nullable: true })
+  async message(
+    @CurrentUser() currentUser: User,
+    @Arg("messageId") messageId: string,
+  ): Promise<Message | null> {
+    const where = {
+      OR: [{ senderId: { equals: currentUser.id } }, { receiverId: { equals: currentUser.id } }],
+    }
+    return await prisma.message.findFirst({
+      where: {
+        id: messageId,
+        ...where,
+      },
+    })
+  }
+
   // MY MESSAGES
   @Query(() => MessagesResponse)
   async myMessages(
     @CurrentUser() currentUser: User,
-    @Args() args: FindManyMessageArgs,
+    @Arg("userId") userId: string,
+    @Arg("orderBy", () => [MessageOrderByWithRelationInput]) orderBy: MessageOrderByWithRelationInput[],
   ): Promise<MessagesResponse> {
-    // const notArchivedByMe = {
-    //   AND: [
-    //     { archivedByA: { not: { equals: currentUser.id } } },
-    //     { archivedByB: { not: { equals: currentUser.id } } },
-    //   ],
-    // }
-
+    const where = {
+      OR: [
+        { AND: [{ senderId: { equals: currentUser.id } }, { receiverId: { equals: userId } }] },
+        { AND: [{ senderId: { equals: userId } }, { receiverId: { equals: currentUser.id } }] },
+      ],
+    }
+    const notArchivedByMe = {
+      AND: [
+        { OR: [{ archivedByAId: { not: { equals: currentUser.id } } }, { archivedByAId: { equals: null } }] },
+        { OR: [{ archivedByBId: { not: { equals: currentUser.id } } }, { archivedByBId: { equals: null } }] },
+      ],
+    }
     const items = await prisma.message.findMany({
-      ...(args as any),
       where: {
-        ...args.where,
-        // ...notArchivedByMe,
+        ...where,
+        ...notArchivedByMe,
       },
+      orderBy,
     })
     const count = await prisma.message.count({
-      ...(args as any),
       where: {
-        ...args.where,
-        // ...notArchivedByMe,
+        ...where,
+        ...notArchivedByMe,
       },
       take: undefined,
       skip: undefined,
@@ -50,7 +72,6 @@ export default class MessageResolver {
   // MY CONVERSATIONS
   @Query(() => ConversationsResponse)
   async myConversations(@CurrentUser() currentUser: User): Promise<ConversationsResponse> {
-    // TODO: filter out archived messages
     const items: Conversation[] = await prisma.$queryRaw`
       WITH UserConversations AS (
         SELECT
@@ -60,15 +81,16 @@ export default class MessageResolver {
           END AS id,
           id as "messageId",
           "senderId",
-          "receiverId",
+        "receiverId",
           text,
           "Message"."createdAt",
-          "archivedByA",
-          "archivedByB"
+          "archivedByAId",
+          "archivedByBId"
         FROM "Message"
-        WHERE "senderId" = ${currentUser.id}::uuid OR "receiverId" = ${currentUser.id}::uuid
-        -- WHERE ("archivedByA" != ${currentUser.id}::uuid AND "archivedByB" != ${currentUser.id}::uuid)
-          -- AND ("senderId" = ${currentUser.id}::uuid OR "receiverId" = ${currentUser.id}::uuid)
+        WHERE (
+            ("archivedByAId" != ${currentUser.id}::uuid OR "archivedByAId" IS NULL)
+            AND ("archivedByBId" != ${currentUser.id}::uuid OR "archivedByBId" IS NULL)
+          ) AND ("senderId" = ${currentUser.id}::uuid OR "receiverId" = ${currentUser.id}::uuid)
       )
       SELECT
         uc.id,
@@ -92,7 +114,7 @@ export default class MessageResolver {
       GROUP BY uc.id, "User".id
       ORDER BY MAX(uc."createdAt") DESC
     `
-    console.dir(items, { depth: null })
+    // console.dir(items, { depth: null })
     return { items, count: items.length }
   }
 
@@ -114,8 +136,44 @@ export default class MessageResolver {
     @CurrentUser() currentUser: User,
     @Arg("messageIds", () => [String]) messageIds: string[],
   ): Promise<Boolean> {
-    console.log(messageIds)
-    // await prisma.message.updateMany({ where: { id: { in: messageIds } }, data: {} })
+    for (const messageId of messageIds) {
+      const message = await prisma.message.findUnique({ where: { id: messageId } })
+      if (!message) continue
+      if (!message.archivedByAId && !message.archivedAtA) {
+        await prisma.message.update({
+          where: { id: messageId },
+          data: { archivedByAId: currentUser.id, archivedAtA: new Date() },
+        })
+      } else if (!message.archivedByBId && !message.archivedAtB) {
+        await prisma.message.update({
+          where: { id: messageId },
+          data: { archivedByBId: currentUser.id, archivedAtB: new Date() },
+        })
+      }
+    }
+    return true
+  }
+
+  // DELETE MESSAGE
+  @UseAuth()
+  @Mutation(() => Boolean)
+  async deleteMessage(
+    @CurrentUser() currentUser: User,
+    @Arg("messageId") messageId: string,
+  ): Promise<Boolean> {
+    const message = await prisma.message.findUnique({ where: { id: messageId } })
+    if (!message) return false
+    if (!message.archivedByAId && !message.archivedAtA) {
+      await prisma.message.update({
+        where: { id: messageId },
+        data: { archivedByAId: currentUser.id, archivedAtA: new Date() },
+      })
+    } else if (!message.archivedByBId && !message.archivedAtB) {
+      await prisma.message.update({
+        where: { id: messageId },
+        data: { archivedByBId: currentUser.id, archivedAtB: new Date() },
+      })
+    }
     return true
   }
 }

@@ -15,14 +15,14 @@ export class Message extends BaseModel implements Prisma.Message {
   @Field()
   receiverId: string
 
-  @Field({ nullable: true })
-  archivedByA: string
+  @Field(() => String, { nullable: true })
+  archivedByAId: string | null
 
   @Field(() => Date, { nullable: true })
   archivedAtA: Date | null
 
-  @Field({ nullable: true })
-  archivedByB: string
+  @Field(() => String, { nullable: true })
+  archivedByBId: string | null
 
   @Field(() => Date, { nullable: true })
   archivedAtB: Date | null

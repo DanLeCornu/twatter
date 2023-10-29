@@ -21,4 +21,7 @@ export class Report extends BaseModel implements Prisma.Report {
 
   @Field(() => String, { nullable: true })
   replyId: string | null
+
+  @Field(() => String, { nullable: true })
+  messageId: string | null
 }

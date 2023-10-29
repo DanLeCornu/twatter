@@ -39,6 +39,9 @@ export const _ = gql`
     following {
       id
     }
+    followers {
+      id
+    }
     mutedAccounts {
       ...BlockedMutedAccount
     }
@@ -51,6 +54,7 @@ export const _ = gql`
       userId
       postId
       replyId
+      messageId
     }
   }
   query Me {

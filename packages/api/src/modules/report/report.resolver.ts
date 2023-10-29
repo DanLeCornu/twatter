@@ -11,24 +11,6 @@ import { Report } from "./report.model"
 @Service()
 @Resolver(() => Report)
 export default class ReportResolver {
-  // // GET REPLY
-  // @Query(() => Reply, { nullable: true })
-  // async reply(@Args() args: FindFirstReplyArgs): Promise<Reply | null> {
-  //   return await prisma.reply.findFirst(args as any)
-  // }
-
-  // // ALL REPLIES
-  // @Query(() => RepliesResponse)
-  // async replies(@Args() args: FindManyReplyArgs): Promise<RepliesResponse> {
-  //   const items = await prisma.reply.findMany(args as any)
-  //   const count = await prisma.reply.count({
-  //     ...(args as any),
-  //     take: undefined,
-  //     skip: undefined,
-  //   })
-  //   return { items, count }
-  // }
-
   // CREATE REPORT
   @UseAuth()
   @Mutation(() => Boolean)

@@ -2,6 +2,7 @@ import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
 import { BiSearch, BiX } from "react-icons/bi"
 import { CgClose } from "react-icons/cg"
+import { gql } from "@apollo/client"
 import type { InputProps } from "@chakra-ui/react"
 import {
   Box,
@@ -22,23 +23,49 @@ import {
 import Head from "next/head"
 import { useRouter } from "next/router"
 
-import { QueryMode, useGetSearchUsersQuery, useMyConversationsQuery } from "lib/graphql"
+import { QueryMode, useGetMessageSearchUsersQuery, useGetMyConversationsQuery } from "lib/graphql"
 import { useMe } from "lib/hooks/useMe"
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { withAuth } from "components/hoc/withAuth"
 import { HEADING_CONTAINER_HEIGHT } from "components/HomeLayout"
+import { MessageUserSearchItem } from "components/MessageUserSearchItem"
 import { UserSearchItem } from "components/UserSearchItem"
+
+const _ = gql`
+  fragment MessageUserSearchItem on User {
+    id
+    name
+    avatar
+    handle
+    allowMessagesFrom
+  }
+  query GetMessageSearchUsers(
+    $orderBy: [UserOrderByWithRelationInput!]
+    $where: UserWhereInput
+    $skip: Int
+    $take: Int
+  ) {
+    users(take: $take, orderBy: $orderBy, where: $where, skip: $skip) {
+      items {
+        ...MessageUserSearchItem
+      }
+      count
+    }
+  }
+`
 
 function NewMessage() {
   const { me, loading } = useMe()
   const router = useRouter()
   const [search, setSearch] = React.useState("")
 
-  const { data, loading: conversationsLoading } = useMyConversationsQuery()
+  const { data, loading: conversationsLoading } = useGetMyConversationsQuery()
 
   const conversations = data?.myConversations.items || []
 
-  const { data: userData, loading: userLoading } = useGetSearchUsersQuery({
+  const followerIds = me?.followers.map((follower) => follower.id) || []
+
+  const { data: userData, loading: userLoading } = useGetMessageSearchUsersQuery({
     variables: {
       take: 10,
       where: {
@@ -120,9 +147,7 @@ function NewMessage() {
               <Spinner />
             </Center>
           ) : (
-            users.map((user, i) => (
-              <UserSearchItem key={i} user={user} size="small" path={`/messages/${user.id}`} />
-            ))
+            users.map((user, i) => <MessageUserSearchItem key={i} user={user} followerIds={followerIds} />)
           )
         ) : conversationsLoading ? (
           <Center>
@@ -166,6 +191,7 @@ function NewMessageSearch({ search, setSearch, ...props }: Props) {
         </Flex>
       </InputLeftElement>
       <Input
+        autoFocus
         rounded="full"
         pl="50px !important"
         px={10}

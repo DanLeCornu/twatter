@@ -92,7 +92,7 @@ function Bookmarks() {
           <Spinner />
         </Center>
       ) : !loading && posts.length === 0 ? (
-        <Center mt={HEADING_CONTAINER_HEIGHT + "px"} py={6} px={6}>
+        <Center mt={HEADING_CONTAINER_HEIGHT + "px"} p={6}>
           <Stack>
             <Heading>Save posts for later</Heading>
             <Text fontSize="sm" color="gray.400">

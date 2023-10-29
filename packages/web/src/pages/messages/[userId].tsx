@@ -1,6 +1,8 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
+import { AiOutlineInfoCircle } from "react-icons/ai"
 import { BiArrowBack, BiSend } from "react-icons/bi"
+import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import { gql } from "@apollo/client"
 import {
   Avatar,
@@ -9,18 +11,22 @@ import {
   Flex,
   Heading,
   HStack,
+  Icon,
   IconButton,
   Spinner,
   Stack,
   Text,
   Textarea,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import dayjs from "dayjs"
 import Head from "next/head"
+import NextLink from "next/link"
 import { useRouter } from "next/router"
 
 import type { MessageItemFragment } from "lib/graphql"
+import { GetMyConversationsDocument } from "lib/graphql"
 import {
   GetMyMessagesDocument,
   SortOrder,
@@ -33,6 +39,8 @@ import { useMutationHandler } from "lib/hooks/useMutationHandler"
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { withAuth } from "components/hoc/withAuth"
 import { HEADING_CONTAINER_HEIGHT } from "components/HomeLayout"
+import { MessageMenu } from "components/MessageMenu"
+import type { DisclosureProps } from "components/ProfileMenu"
 
 const _ = gql`
   fragment MessageItem on Message {
@@ -42,8 +50,8 @@ const _ = gql`
     text
     createdAt
   }
-  query GetMyMessages($orderBy: [MessageOrderByWithRelationInput!], $where: MessageWhereInput) {
-    myMessages(orderBy: $orderBy, where: $where) {
+  query GetMyMessages($orderBy: [MessageOrderByWithRelationInput!]!, $userId: String!) {
+    myMessages(orderBy: $orderBy, userId: $userId) {
       items {
         ...MessageItem
       }
@@ -54,6 +62,7 @@ const _ = gql`
     id
     name
     avatar
+    handle
   }
   query GetUserMessage($where: UserWhereInput!) {
     user(where: $where) {
@@ -68,9 +77,13 @@ const _ = gql`
 function UserMessages() {
   const { me } = useMe()
   const router = useRouter()
+  const disclosureProps = useDisclosure()
   const handler = useMutationHandler()
   const userId = router.query.userId as string
+  const newConversation = router.query.newConversation as string
+  const isNewConversation = newConversation === "true"
   const [text, setText] = React.useState("")
+  const [selectedMessage, setSelectedMessage] = React.useState<MessageItemFragment | undefined>()
 
   const { data } = useGetUserMessageQuery({ variables: { where: { id: { equals: userId } } } })
 
@@ -81,15 +94,11 @@ function UserMessages() {
       {
         query: GetMyMessagesDocument,
         variables: {
-          where: {
-            OR: [
-              { AND: [{ senderId: { equals: me?.id } }, { receiverId: { equals: userId } }] },
-              { AND: [{ senderId: { equals: userId } }, { receiverId: { equals: me?.id } }] },
-            ],
-          },
+          userId,
           orderBy: { createdAt: SortOrder.Asc },
         },
       },
+      { query: GetMyConversationsDocument },
     ],
   })
 
@@ -105,19 +114,25 @@ function UserMessages() {
     })
   }
 
-  const { data: messagesData, loading } = useGetMyMessagesQuery({
+  const {
+    data: messagesData,
+    loading,
+    refetch,
+  } = useGetMyMessagesQuery({
     variables: {
-      where: {
-        OR: [
-          { AND: [{ senderId: { equals: me?.id } }, { receiverId: { equals: userId } }] },
-          { AND: [{ senderId: { equals: userId } }, { receiverId: { equals: me?.id } }] },
-        ],
-      },
+      userId,
       orderBy: { createdAt: SortOrder.Asc },
     },
   })
 
-  const messages = messagesData?.myMessages.items || []
+  const messages = React.useMemo(() => messagesData?.myMessages.items || [], [messagesData])
+
+  React.useEffect(() => {
+    if (isNewConversation) return
+    if (!loading && messages.length === 0) {
+      router.replace("/messages")
+    }
+  }, [messages, router, loading, isNewConversation])
 
   const groupedMessages = messages.reduce((acc, message) => {
     const key = message.senderId + "_" + dayjs(message.createdAt).format("YYYY-MM-DD HH:mm")
@@ -132,7 +147,7 @@ function UserMessages() {
   const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const borderColor = useColorModeValue("gray.100", "gray.700")
 
-  // TODO: find a proper solution instead of this hack, akso doesn't seem tot work on desktop
+  // TODO: find a proper solution instead of this hack, also doesn't seem to work on desktop
   window.scrollTo(0, document.body.scrollHeight + 10000) // add 10000px more than scroll height to force it to the bottom on load
 
   const MESSAGE_INPUT_HEIGHT = 60
@@ -169,20 +184,25 @@ function UserMessages() {
             zIndex={1}
             pt={2}
             pl={2}
-            pr={8}
+            pr={3}
             w="100%"
           >
-            <HStack position="relative" spacing={3}>
-              <IconButton
-                aria-label="back"
-                icon={<Box as={BiArrowBack} boxSize="20px" />}
-                variant="ghost"
-                onClick={() => router.back()}
-              />
-              <Avatar src={user?.avatar || undefined} boxSize="28px" />
-              <Heading fontSize="md" isTruncated>
-                {user?.name}
-              </Heading>
+            <HStack justify="space-between" w="100%" align="baseline">
+              <HStack position="relative" spacing={3} w="calc(100% - 28px)">
+                <IconButton
+                  aria-label="back"
+                  icon={<Box as={BiArrowBack} boxSize="20px" />}
+                  variant="ghost"
+                  onClick={() => router.back()}
+                />
+                <Avatar src={user?.avatar || undefined} boxSize="28px" />
+                <Heading fontSize="md" isTruncated>
+                  {user?.name}
+                </Heading>
+              </HStack>
+              <NextLink href={`/${user?.handle}`}>
+                <Icon boxSize="20px" as={AiOutlineInfoCircle} />
+              </NextLink>
             </HStack>
           </Box>
         </MobileView>
@@ -200,6 +220,9 @@ function UserMessages() {
               timestamp={key.split("_")[1]}
               currentUserId={me.id}
               groupedMessages={groupedMessages}
+              selectedMessage={selectedMessage}
+              setSelectedMessage={setSelectedMessage}
+              disclosureProps={disclosureProps}
             />
           ))
         )}
@@ -224,8 +247,10 @@ function UserMessages() {
             border="none"
             variant="unstyled"
             px={3}
+            placeholder="Start a new message"
           />
-          {/* Fix the jank where you sometimes can't click the button for some reason */}
+          {/* TODO: Find a workaround for the behaviour where you can't click anything (including the submit button) 
+          until you take away focus from the input (e.g. by clicking the mobile "done" button) */}
           <IconButton
             aria-label="send message"
             icon={<Box as={BiSend} boxSize="22px" color="brand.blue" />}
@@ -238,6 +263,9 @@ function UserMessages() {
           />
         </HStack>
       </Box>
+
+      {/* MESSAGE MENU */}
+      <MessageMenu message={selectedMessage} disclosureProps={disclosureProps} refetch={refetch} />
     </Box>
   )
 }
@@ -248,15 +276,32 @@ interface GroupedMessagesProps {
   timestamp: string
   currentUserId: string
   groupedMessages: MessageItemFragment[]
+  selectedMessage?: MessageItemFragment
+  setSelectedMessage: React.Dispatch<React.SetStateAction<MessageItemFragment>>
+  disclosureProps: DisclosureProps
 }
 
-function GroupedMessages({ timestamp, currentUserId, groupedMessages }: GroupedMessagesProps) {
+function GroupedMessages({
+  timestamp,
+  currentUserId,
+  groupedMessages,
+  selectedMessage,
+  setSelectedMessage,
+  disclosureProps,
+}: GroupedMessagesProps) {
   const isFromMe = groupedMessages[0].senderId === currentUserId
   return (
     <Stack spacing={1}>
       <Stack spacing={2}>
         {groupedMessages.map((message, i) => (
-          <MessageItem key={i} isFromMe={isFromMe} message={message} />
+          <MessageItem
+            key={i}
+            isFromMe={isFromMe}
+            message={message}
+            selectedMessage={selectedMessage}
+            setSelectedMessage={setSelectedMessage}
+            disclosureProps={disclosureProps}
+          />
         ))}
       </Stack>
       <Text color="gray.400" fontSize="xs" textAlign={isFromMe ? "right" : "left"}>
@@ -269,12 +314,22 @@ function GroupedMessages({ timestamp, currentUserId, groupedMessages }: GroupedM
 interface MessageItemProps {
   isFromMe: boolean
   message: MessageItemFragment
+  selectedMessage?: MessageItemFragment
+  setSelectedMessage: React.Dispatch<React.SetStateAction<MessageItemFragment>>
+  disclosureProps: DisclosureProps
 }
 
-function MessageItem({ isFromMe, message }: MessageItemProps) {
+function MessageItem({
+  isFromMe,
+  message,
+  selectedMessage,
+  setSelectedMessage,
+  disclosureProps,
+}: MessageItemProps) {
+  const isSelected = selectedMessage?.id === message.id
   return (
     <Flex
-      justify={isFromMe ? "flex-end" : "flex-start"}
+      onClick={() => setSelectedMessage(message)}
       _last={{
         div: {
           div: {
@@ -284,11 +339,31 @@ function MessageItem({ isFromMe, message }: MessageItemProps) {
         },
       }}
     >
-      <Stack w="80%" spacing={1}>
-        <Stack px={4} py={2} rounded="3xl" bg={isFromMe ? "brand.blue" : "gray.500"}>
+      <HStack w="100%" justify={isFromMe ? "flex-end" : "flex-start"}>
+        {isSelected && isFromMe && (
+          <IconButton
+            aria-label="open menu"
+            variant="ghost"
+            boxSize="25px"
+            minW="25px" // needed otherwise Chakra default styling overrides and makes it wider
+            icon={<Box as={HiOutlineDotsHorizontal} boxSize="18px" color="gray.400" />}
+            onClick={disclosureProps.onOpen}
+          />
+        )}
+        <Stack maxW="80%" px={4} py={2} rounded="3xl" bg={isFromMe ? "brand.blue" : "gray.500"}>
           <Text fontSize="sm">{message.text}</Text>
         </Stack>
-      </Stack>
+        {isSelected && !isFromMe && (
+          <IconButton
+            aria-label="open menu"
+            variant="ghost"
+            boxSize="25px"
+            minW="25px" // needed otherwise Chakra default styling overrides and makes it wider
+            icon={<Box as={HiOutlineDotsHorizontal} boxSize="18px" color="gray.400" />}
+            onClick={disclosureProps.onOpen}
+          />
+        )}
+      </HStack>
     </Flex>
   )
 }

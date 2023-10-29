@@ -52,3 +52,14 @@ export const REPORT_ISSUE_TYPES = [
     text: "Violent extremism and terrorism, hate groups & networks",
   },
 ]
+
+export const REPORT_MESSAGE_TYPES = [
+  {
+    value: ReportType.Spam,
+    title: "It's spam",
+  },
+  {
+    value: ReportType.Abuse,
+    title: "It's abusive or harmful",
+  },
+]

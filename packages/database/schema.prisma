@@ -173,15 +173,16 @@ model Message {
   text        String
   createdAt   DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
-  archivedByA String?   @db.Uuid
   archivedAtA DateTime? @db.Timestamptz(6)
-  archivedByB String?   @db.Uuid
   archivedAtB DateTime? @db.Timestamptz(6)
 
-  sender     User   @relation(name: "MessagesSent", fields: [senderId], references: [id])
-  senderId   String @db.Uuid
-  receiver   User   @relation(name: "MessagesReceived", fields: [receiverId], references: [id])
-  receiverId String @db.Uuid
+  archivedByAId String?  @db.Uuid
+  archivedByBId String?  @db.Uuid
+  sender        User     @relation(name: "MessagesSent", fields: [senderId], references: [id])
+  senderId      String   @db.Uuid
+  receiver      User     @relation(name: "MessagesReceived", fields: [receiverId], references: [id])
+  receiverId    String   @db.Uuid
+  reports       Report[]
 }
 
 model Report {
@@ -190,14 +191,16 @@ model Report {
   createdAt DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
 
-  creator   User    @relation(name: "ReportCreator", fields: [creatorId], references: [id])
-  creatorId String  @db.Uuid
-  post      Post?   @relation(fields: [postId], references: [id])
-  postId    String? @db.Uuid
-  Reply     Reply?  @relation(fields: [replyId], references: [id])
-  replyId   String? @db.Uuid
-  user      User?   @relation(name: "UserReports", fields: [userId], references: [id])
-  userId    String? @db.Uuid
+  creator   User     @relation(name: "ReportCreator", fields: [creatorId], references: [id])
+  creatorId String   @db.Uuid
+  post      Post?    @relation(fields: [postId], references: [id])
+  postId    String?  @db.Uuid
+  reply     Reply?   @relation(fields: [replyId], references: [id])
+  replyId   String?  @db.Uuid
+  user      User?    @relation(name: "UserReports", fields: [userId], references: [id])
+  userId    String?  @db.Uuid
+  message   Message? @relation(fields: [messageId], references: [id])
+  messageId String?  @db.Uuid
 }
 
 model Verification {

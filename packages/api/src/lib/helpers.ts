@@ -1,9 +1,5 @@
 import dayjs from "dayjs"
 
-import { ResolverContext } from "../modules/shared/resolverContext"
-
-export const UNKNOWN = `unknown_${dayjs().format("YYYYMMDDHHmmssSSS")}`
-
 function toCamel(text: string) {
   return text.replace(
     /^([A-Z])|[\s-_]+(\w)/g,
@@ -31,10 +27,6 @@ export const timeUntilEndOfDay = () => {
   const date1 = dayjs().endOf("day")
   const date2 = dayjs()
   return date1.diff(date2)
-}
-
-export const getIp = (ctx: ResolverContext) => {
-  return ctx.req.socket.remoteAddress || UNKNOWN
 }
 
 export const random = (array: any[]) => {

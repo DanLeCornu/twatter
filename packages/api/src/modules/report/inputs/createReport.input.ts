@@ -22,4 +22,8 @@ export class CreateReportInput implements Partial<Report> {
   @IsNotEmpty()
   @Field(() => String, { nullable: true })
   replyId?: string | null
+
+  @IsNotEmpty()
+  @Field(() => String, { nullable: true })
+  messageId?: string | null
 }

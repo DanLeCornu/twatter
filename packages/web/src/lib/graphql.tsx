@@ -289,6 +289,7 @@ export type CreateReplyInput = {
 };
 
 export type CreateReportInput = {
+  messageId?: InputMaybe<Scalars['String']>;
   postId?: InputMaybe<Scalars['String']>;
   replyId?: InputMaybe<Scalars['String']>;
   type: Scalars['String'];
@@ -765,8 +766,8 @@ export type Message = {
   __typename?: 'Message';
   archivedAtA?: Maybe<Scalars['DateTime']>;
   archivedAtB?: Maybe<Scalars['DateTime']>;
-  archivedByA?: Maybe<Scalars['String']>;
-  archivedByB?: Maybe<Scalars['String']>;
+  archivedByAId?: Maybe<Scalars['String']>;
+  archivedByBId?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   receiverId: Scalars['String'];
@@ -778,8 +779,8 @@ export type Message = {
 export type MessageCreateManyReceiverInput = {
   archivedAtA?: InputMaybe<Scalars['DateTime']>;
   archivedAtB?: InputMaybe<Scalars['DateTime']>;
-  archivedByA?: InputMaybe<Scalars['String']>;
-  archivedByB?: InputMaybe<Scalars['String']>;
+  archivedByAId?: InputMaybe<Scalars['String']>;
+  archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   senderId: Scalars['String'];
@@ -795,8 +796,8 @@ export type MessageCreateManyReceiverInputEnvelope = {
 export type MessageCreateManySenderInput = {
   archivedAtA?: InputMaybe<Scalars['DateTime']>;
   archivedAtB?: InputMaybe<Scalars['DateTime']>;
-  archivedByA?: InputMaybe<Scalars['String']>;
-  archivedByB?: InputMaybe<Scalars['String']>;
+  archivedByAId?: InputMaybe<Scalars['String']>;
+  archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   receiverId: Scalars['String'];
@@ -823,8 +824,19 @@ export type MessageCreateNestedManyWithoutSenderInput = {
   createMany?: InputMaybe<MessageCreateManySenderInputEnvelope>;
 };
 
+export type MessageCreateNestedOneWithoutReportsInput = {
+  connect?: InputMaybe<MessageWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<MessageCreateOrConnectWithoutReportsInput>;
+  create?: InputMaybe<MessageCreateWithoutReportsInput>;
+};
+
 export type MessageCreateOrConnectWithoutReceiverInput = {
   create: MessageCreateWithoutReceiverInput;
+  where: MessageWhereUniqueInput;
+};
+
+export type MessageCreateOrConnectWithoutReportsInput = {
+  create: MessageCreateWithoutReportsInput;
   where: MessageWhereUniqueInput;
 };
 
@@ -836,10 +848,24 @@ export type MessageCreateOrConnectWithoutSenderInput = {
 export type MessageCreateWithoutReceiverInput = {
   archivedAtA?: InputMaybe<Scalars['DateTime']>;
   archivedAtB?: InputMaybe<Scalars['DateTime']>;
-  archivedByA?: InputMaybe<Scalars['String']>;
-  archivedByB?: InputMaybe<Scalars['String']>;
+  archivedByAId?: InputMaybe<Scalars['String']>;
+  archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  reports?: InputMaybe<ReportCreateNestedManyWithoutMessageInput>;
+  sender: UserCreateNestedOneWithoutMessagesSentInput;
+  text: Scalars['String'];
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type MessageCreateWithoutReportsInput = {
+  archivedAtA?: InputMaybe<Scalars['DateTime']>;
+  archivedAtB?: InputMaybe<Scalars['DateTime']>;
+  archivedByAId?: InputMaybe<Scalars['String']>;
+  archivedByBId?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  receiver: UserCreateNestedOneWithoutMessagesReceivedInput;
   sender: UserCreateNestedOneWithoutMessagesSentInput;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
@@ -848,11 +874,12 @@ export type MessageCreateWithoutReceiverInput = {
 export type MessageCreateWithoutSenderInput = {
   archivedAtA?: InputMaybe<Scalars['DateTime']>;
   archivedAtB?: InputMaybe<Scalars['DateTime']>;
-  archivedByA?: InputMaybe<Scalars['String']>;
-  archivedByB?: InputMaybe<Scalars['String']>;
+  archivedByAId?: InputMaybe<Scalars['String']>;
+  archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   receiver: UserCreateNestedOneWithoutMessagesReceivedInput;
+  reports?: InputMaybe<ReportCreateNestedManyWithoutMessageInput>;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -870,30 +897,23 @@ export type MessageOrderByRelationAggregateInput = {
 export type MessageOrderByWithRelationInput = {
   archivedAtA?: InputMaybe<SortOrderInput>;
   archivedAtB?: InputMaybe<SortOrderInput>;
-  archivedByA?: InputMaybe<SortOrderInput>;
-  archivedByB?: InputMaybe<SortOrderInput>;
+  archivedByAId?: InputMaybe<SortOrderInput>;
+  archivedByBId?: InputMaybe<SortOrderInput>;
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   receiver?: InputMaybe<UserOrderByWithRelationInput>;
   receiverId?: InputMaybe<SortOrder>;
+  reports?: InputMaybe<ReportOrderByRelationAggregateInput>;
   sender?: InputMaybe<UserOrderByWithRelationInput>;
   senderId?: InputMaybe<SortOrder>;
   text?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
 };
 
-export enum MessageScalarFieldEnum {
-  ArchivedAtA = 'archivedAtA',
-  ArchivedAtB = 'archivedAtB',
-  ArchivedByA = 'archivedByA',
-  ArchivedByB = 'archivedByB',
-  CreatedAt = 'createdAt',
-  Id = 'id',
-  ReceiverId = 'receiverId',
-  SenderId = 'senderId',
-  Text = 'text',
-  UpdatedAt = 'updatedAt'
-}
+export type MessageRelationFilter = {
+  is?: InputMaybe<MessageWhereInput>;
+  isNot?: InputMaybe<MessageWhereInput>;
+};
 
 export type MessageScalarWhereInput = {
   AND?: InputMaybe<Array<MessageScalarWhereInput>>;
@@ -901,8 +921,8 @@ export type MessageScalarWhereInput = {
   OR?: InputMaybe<Array<MessageScalarWhereInput>>;
   archivedAtA?: InputMaybe<DateTimeNullableFilter>;
   archivedAtB?: InputMaybe<DateTimeNullableFilter>;
-  archivedByA?: InputMaybe<StringNullableFilter>;
-  archivedByB?: InputMaybe<StringNullableFilter>;
+  archivedByAId?: InputMaybe<UuidNullableFilter>;
+  archivedByBId?: InputMaybe<UuidNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
   receiverId?: InputMaybe<UuidFilter>;
@@ -914,8 +934,8 @@ export type MessageScalarWhereInput = {
 export type MessageUpdateManyMutationInput = {
   archivedAtA?: InputMaybe<Scalars['DateTime']>;
   archivedAtB?: InputMaybe<Scalars['DateTime']>;
-  archivedByA?: InputMaybe<Scalars['String']>;
-  archivedByB?: InputMaybe<Scalars['String']>;
+  archivedByAId?: InputMaybe<Scalars['String']>;
+  archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
@@ -960,6 +980,16 @@ export type MessageUpdateManyWithoutSenderNestedInput = {
   upsert?: InputMaybe<Array<MessageUpsertWithWhereUniqueWithoutSenderInput>>;
 };
 
+export type MessageUpdateOneWithoutReportsNestedInput = {
+  connect?: InputMaybe<MessageWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<MessageCreateOrConnectWithoutReportsInput>;
+  create?: InputMaybe<MessageCreateWithoutReportsInput>;
+  delete?: InputMaybe<Scalars['Boolean']>;
+  disconnect?: InputMaybe<Scalars['Boolean']>;
+  update?: InputMaybe<MessageUpdateWithoutReportsInput>;
+  upsert?: InputMaybe<MessageUpsertWithoutReportsInput>;
+};
+
 export type MessageUpdateWithWhereUniqueWithoutReceiverInput = {
   data: MessageUpdateWithoutReceiverInput;
   where: MessageWhereUniqueInput;
@@ -973,10 +1003,24 @@ export type MessageUpdateWithWhereUniqueWithoutSenderInput = {
 export type MessageUpdateWithoutReceiverInput = {
   archivedAtA?: InputMaybe<Scalars['DateTime']>;
   archivedAtB?: InputMaybe<Scalars['DateTime']>;
-  archivedByA?: InputMaybe<Scalars['String']>;
-  archivedByB?: InputMaybe<Scalars['String']>;
+  archivedByAId?: InputMaybe<Scalars['String']>;
+  archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  reports?: InputMaybe<ReportUpdateManyWithoutMessageNestedInput>;
+  sender?: InputMaybe<UserUpdateOneRequiredWithoutMessagesSentNestedInput>;
+  text?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type MessageUpdateWithoutReportsInput = {
+  archivedAtA?: InputMaybe<Scalars['DateTime']>;
+  archivedAtB?: InputMaybe<Scalars['DateTime']>;
+  archivedByAId?: InputMaybe<Scalars['String']>;
+  archivedByBId?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  receiver?: InputMaybe<UserUpdateOneRequiredWithoutMessagesReceivedNestedInput>;
   sender?: InputMaybe<UserUpdateOneRequiredWithoutMessagesSentNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
@@ -985,11 +1029,12 @@ export type MessageUpdateWithoutReceiverInput = {
 export type MessageUpdateWithoutSenderInput = {
   archivedAtA?: InputMaybe<Scalars['DateTime']>;
   archivedAtB?: InputMaybe<Scalars['DateTime']>;
-  archivedByA?: InputMaybe<Scalars['String']>;
-  archivedByB?: InputMaybe<Scalars['String']>;
+  archivedByAId?: InputMaybe<Scalars['String']>;
+  archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   receiver?: InputMaybe<UserUpdateOneRequiredWithoutMessagesReceivedNestedInput>;
+  reports?: InputMaybe<ReportUpdateManyWithoutMessageNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -1006,18 +1051,24 @@ export type MessageUpsertWithWhereUniqueWithoutSenderInput = {
   where: MessageWhereUniqueInput;
 };
 
+export type MessageUpsertWithoutReportsInput = {
+  create: MessageCreateWithoutReportsInput;
+  update: MessageUpdateWithoutReportsInput;
+};
+
 export type MessageWhereInput = {
   AND?: InputMaybe<Array<MessageWhereInput>>;
   NOT?: InputMaybe<Array<MessageWhereInput>>;
   OR?: InputMaybe<Array<MessageWhereInput>>;
   archivedAtA?: InputMaybe<DateTimeNullableFilter>;
   archivedAtB?: InputMaybe<DateTimeNullableFilter>;
-  archivedByA?: InputMaybe<StringNullableFilter>;
-  archivedByB?: InputMaybe<StringNullableFilter>;
+  archivedByAId?: InputMaybe<UuidNullableFilter>;
+  archivedByBId?: InputMaybe<UuidNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
   receiver?: InputMaybe<UserRelationFilter>;
   receiverId?: InputMaybe<UuidFilter>;
+  reports?: InputMaybe<ReportListRelationFilter>;
   sender?: InputMaybe<UserRelationFilter>;
   senderId?: InputMaybe<UuidFilter>;
   text?: InputMaybe<StringFilter>;
@@ -1048,6 +1099,7 @@ export type Mutation = {
   createView: Scalars['Boolean'];
   deactivateAccount: Scalars['Boolean'];
   deleteConversation: Scalars['Boolean'];
+  deleteMessage: Scalars['Boolean'];
   destroyBookmark: Scalars['Boolean'];
   destroyLike: Scalars['Boolean'];
   followUser: Scalars['Boolean'];
@@ -1122,6 +1174,11 @@ export type MutationDeactivateAccountArgs = {
 
 export type MutationDeleteConversationArgs = {
   messageIds: Array<Scalars['String']>;
+};
+
+
+export type MutationDeleteMessageArgs = {
+  messageId: Scalars['String'];
 };
 
 
@@ -2066,6 +2123,7 @@ export type Query = {
   getSignedS3UrlForGet?: Maybe<Scalars['String']>;
   likes: LikesResponse;
   me?: Maybe<User>;
+  message?: Maybe<Message>;
   myConversations: ConversationsResponse;
   myMessages: MessagesResponse;
   post?: Maybe<Post>;
@@ -2104,13 +2162,14 @@ export type QueryLikesArgs = {
 };
 
 
+export type QueryMessageArgs = {
+  messageId: Scalars['String'];
+};
+
+
 export type QueryMyMessagesArgs = {
-  cursor?: InputMaybe<MessageWhereUniqueInput>;
-  distinct?: InputMaybe<Array<MessageScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<MessageOrderByWithRelationInput>>;
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<MessageWhereInput>;
+  orderBy: Array<MessageOrderByWithRelationInput>;
+  userId: Scalars['String'];
 };
 
 
@@ -2531,6 +2590,7 @@ export type Report = {
   createdAt: Scalars['DateTime'];
   creatorId: Scalars['String'];
   id: Scalars['String'];
+  messageId?: Maybe<Scalars['String']>;
   postId?: Maybe<Scalars['String']>;
   replyId?: Maybe<Scalars['String']>;
   type: ReportType;
@@ -2541,6 +2601,7 @@ export type Report = {
 export type ReportCreateManyCreatorInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  messageId?: InputMaybe<Scalars['String']>;
   postId?: InputMaybe<Scalars['String']>;
   replyId?: InputMaybe<Scalars['String']>;
   type: ReportType;
@@ -2553,10 +2614,27 @@ export type ReportCreateManyCreatorInputEnvelope = {
   skipDuplicates?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ReportCreateManyMessageInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  creatorId: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
+  postId?: InputMaybe<Scalars['String']>;
+  replyId?: InputMaybe<Scalars['String']>;
+  type: ReportType;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
+export type ReportCreateManyMessageInputEnvelope = {
+  data: Array<ReportCreateManyMessageInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type ReportCreateManyPostInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   creatorId: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
+  messageId?: InputMaybe<Scalars['String']>;
   replyId?: InputMaybe<Scalars['String']>;
   type: ReportType;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
@@ -2572,6 +2650,7 @@ export type ReportCreateManyReplyInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   creatorId: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
+  messageId?: InputMaybe<Scalars['String']>;
   postId?: InputMaybe<Scalars['String']>;
   type: ReportType;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
@@ -2587,6 +2666,7 @@ export type ReportCreateManyUserInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   creatorId: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
+  messageId?: InputMaybe<Scalars['String']>;
   postId?: InputMaybe<Scalars['String']>;
   replyId?: InputMaybe<Scalars['String']>;
   type: ReportType;
@@ -2603,6 +2683,13 @@ export type ReportCreateNestedManyWithoutCreatorInput = {
   connectOrCreate?: InputMaybe<Array<ReportCreateOrConnectWithoutCreatorInput>>;
   create?: InputMaybe<Array<ReportCreateWithoutCreatorInput>>;
   createMany?: InputMaybe<ReportCreateManyCreatorInputEnvelope>;
+};
+
+export type ReportCreateNestedManyWithoutMessageInput = {
+  connect?: InputMaybe<Array<ReportWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<ReportCreateOrConnectWithoutMessageInput>>;
+  create?: InputMaybe<Array<ReportCreateWithoutMessageInput>>;
+  createMany?: InputMaybe<ReportCreateManyMessageInputEnvelope>;
 };
 
 export type ReportCreateNestedManyWithoutPostInput = {
@@ -2631,6 +2718,11 @@ export type ReportCreateOrConnectWithoutCreatorInput = {
   where: ReportWhereUniqueInput;
 };
 
+export type ReportCreateOrConnectWithoutMessageInput = {
+  create: ReportCreateWithoutMessageInput;
+  where: ReportWhereUniqueInput;
+};
+
 export type ReportCreateOrConnectWithoutPostInput = {
   create: ReportCreateWithoutPostInput;
   where: ReportWhereUniqueInput;
@@ -2647,20 +2739,33 @@ export type ReportCreateOrConnectWithoutUserInput = {
 };
 
 export type ReportCreateWithoutCreatorInput = {
-  Reply?: InputMaybe<ReplyCreateNestedOneWithoutReportsInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<MessageCreateNestedOneWithoutReportsInput>;
   post?: InputMaybe<PostCreateNestedOneWithoutReportsInput>;
+  reply?: InputMaybe<ReplyCreateNestedOneWithoutReportsInput>;
+  type: ReportType;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user?: InputMaybe<UserCreateNestedOneWithoutReportsInput>;
+};
+
+export type ReportCreateWithoutMessageInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  creator: UserCreateNestedOneWithoutCreatedReportsInput;
+  id?: InputMaybe<Scalars['String']>;
+  post?: InputMaybe<PostCreateNestedOneWithoutReportsInput>;
+  reply?: InputMaybe<ReplyCreateNestedOneWithoutReportsInput>;
   type: ReportType;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserCreateNestedOneWithoutReportsInput>;
 };
 
 export type ReportCreateWithoutPostInput = {
-  Reply?: InputMaybe<ReplyCreateNestedOneWithoutReportsInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   creator: UserCreateNestedOneWithoutCreatedReportsInput;
   id?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<MessageCreateNestedOneWithoutReportsInput>;
+  reply?: InputMaybe<ReplyCreateNestedOneWithoutReportsInput>;
   type: ReportType;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserCreateNestedOneWithoutReportsInput>;
@@ -2670,6 +2775,7 @@ export type ReportCreateWithoutReplyInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   creator: UserCreateNestedOneWithoutCreatedReportsInput;
   id?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<MessageCreateNestedOneWithoutReportsInput>;
   post?: InputMaybe<PostCreateNestedOneWithoutReportsInput>;
   type: ReportType;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
@@ -2677,11 +2783,12 @@ export type ReportCreateWithoutReplyInput = {
 };
 
 export type ReportCreateWithoutUserInput = {
-  Reply?: InputMaybe<ReplyCreateNestedOneWithoutReportsInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   creator: UserCreateNestedOneWithoutCreatedReportsInput;
   id?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<MessageCreateNestedOneWithoutReportsInput>;
   post?: InputMaybe<PostCreateNestedOneWithoutReportsInput>;
+  reply?: InputMaybe<ReplyCreateNestedOneWithoutReportsInput>;
   type: ReportType;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -2703,6 +2810,7 @@ export type ReportScalarWhereInput = {
   createdAt?: InputMaybe<DateTimeFilter>;
   creatorId?: InputMaybe<UuidFilter>;
   id?: InputMaybe<UuidFilter>;
+  messageId?: InputMaybe<UuidNullableFilter>;
   postId?: InputMaybe<UuidNullableFilter>;
   replyId?: InputMaybe<UuidNullableFilter>;
   type?: InputMaybe<EnumReportTypeFilter>;
@@ -2735,6 +2843,11 @@ export type ReportUpdateManyWithWhereWithoutCreatorInput = {
   where: ReportScalarWhereInput;
 };
 
+export type ReportUpdateManyWithWhereWithoutMessageInput = {
+  data: ReportUpdateManyMutationInput;
+  where: ReportScalarWhereInput;
+};
+
 export type ReportUpdateManyWithWhereWithoutPostInput = {
   data: ReportUpdateManyMutationInput;
   where: ReportScalarWhereInput;
@@ -2762,6 +2875,20 @@ export type ReportUpdateManyWithoutCreatorNestedInput = {
   update?: InputMaybe<Array<ReportUpdateWithWhereUniqueWithoutCreatorInput>>;
   updateMany?: InputMaybe<Array<ReportUpdateManyWithWhereWithoutCreatorInput>>;
   upsert?: InputMaybe<Array<ReportUpsertWithWhereUniqueWithoutCreatorInput>>;
+};
+
+export type ReportUpdateManyWithoutMessageNestedInput = {
+  connect?: InputMaybe<Array<ReportWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<ReportCreateOrConnectWithoutMessageInput>>;
+  create?: InputMaybe<Array<ReportCreateWithoutMessageInput>>;
+  createMany?: InputMaybe<ReportCreateManyMessageInputEnvelope>;
+  delete?: InputMaybe<Array<ReportWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<ReportScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<ReportWhereUniqueInput>>;
+  set?: InputMaybe<Array<ReportWhereUniqueInput>>;
+  update?: InputMaybe<Array<ReportUpdateWithWhereUniqueWithoutMessageInput>>;
+  updateMany?: InputMaybe<Array<ReportUpdateManyWithWhereWithoutMessageInput>>;
+  upsert?: InputMaybe<Array<ReportUpsertWithWhereUniqueWithoutMessageInput>>;
 };
 
 export type ReportUpdateManyWithoutPostNestedInput = {
@@ -2811,6 +2938,11 @@ export type ReportUpdateWithWhereUniqueWithoutCreatorInput = {
   where: ReportWhereUniqueInput;
 };
 
+export type ReportUpdateWithWhereUniqueWithoutMessageInput = {
+  data: ReportUpdateWithoutMessageInput;
+  where: ReportWhereUniqueInput;
+};
+
 export type ReportUpdateWithWhereUniqueWithoutPostInput = {
   data: ReportUpdateWithoutPostInput;
   where: ReportWhereUniqueInput;
@@ -2827,20 +2959,33 @@ export type ReportUpdateWithWhereUniqueWithoutUserInput = {
 };
 
 export type ReportUpdateWithoutCreatorInput = {
-  Reply?: InputMaybe<ReplyUpdateOneWithoutReportsNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<MessageUpdateOneWithoutReportsNestedInput>;
   post?: InputMaybe<PostUpdateOneWithoutReportsNestedInput>;
+  reply?: InputMaybe<ReplyUpdateOneWithoutReportsNestedInput>;
+  type?: InputMaybe<ReportType>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user?: InputMaybe<UserUpdateOneWithoutReportsNestedInput>;
+};
+
+export type ReportUpdateWithoutMessageInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  creator?: InputMaybe<UserUpdateOneRequiredWithoutCreatedReportsNestedInput>;
+  id?: InputMaybe<Scalars['String']>;
+  post?: InputMaybe<PostUpdateOneWithoutReportsNestedInput>;
+  reply?: InputMaybe<ReplyUpdateOneWithoutReportsNestedInput>;
   type?: InputMaybe<ReportType>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserUpdateOneWithoutReportsNestedInput>;
 };
 
 export type ReportUpdateWithoutPostInput = {
-  Reply?: InputMaybe<ReplyUpdateOneWithoutReportsNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   creator?: InputMaybe<UserUpdateOneRequiredWithoutCreatedReportsNestedInput>;
   id?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<MessageUpdateOneWithoutReportsNestedInput>;
+  reply?: InputMaybe<ReplyUpdateOneWithoutReportsNestedInput>;
   type?: InputMaybe<ReportType>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserUpdateOneWithoutReportsNestedInput>;
@@ -2850,6 +2995,7 @@ export type ReportUpdateWithoutReplyInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   creator?: InputMaybe<UserUpdateOneRequiredWithoutCreatedReportsNestedInput>;
   id?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<MessageUpdateOneWithoutReportsNestedInput>;
   post?: InputMaybe<PostUpdateOneWithoutReportsNestedInput>;
   type?: InputMaybe<ReportType>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
@@ -2857,11 +3003,12 @@ export type ReportUpdateWithoutReplyInput = {
 };
 
 export type ReportUpdateWithoutUserInput = {
-  Reply?: InputMaybe<ReplyUpdateOneWithoutReportsNestedInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   creator?: InputMaybe<UserUpdateOneRequiredWithoutCreatedReportsNestedInput>;
   id?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<MessageUpdateOneWithoutReportsNestedInput>;
   post?: InputMaybe<PostUpdateOneWithoutReportsNestedInput>;
+  reply?: InputMaybe<ReplyUpdateOneWithoutReportsNestedInput>;
   type?: InputMaybe<ReportType>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -2869,6 +3016,12 @@ export type ReportUpdateWithoutUserInput = {
 export type ReportUpsertWithWhereUniqueWithoutCreatorInput = {
   create: ReportCreateWithoutCreatorInput;
   update: ReportUpdateWithoutCreatorInput;
+  where: ReportWhereUniqueInput;
+};
+
+export type ReportUpsertWithWhereUniqueWithoutMessageInput = {
+  create: ReportCreateWithoutMessageInput;
+  update: ReportUpdateWithoutMessageInput;
   where: ReportWhereUniqueInput;
 };
 
@@ -2894,13 +3047,15 @@ export type ReportWhereInput = {
   AND?: InputMaybe<Array<ReportWhereInput>>;
   NOT?: InputMaybe<Array<ReportWhereInput>>;
   OR?: InputMaybe<Array<ReportWhereInput>>;
-  Reply?: InputMaybe<ReplyRelationFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   creator?: InputMaybe<UserRelationFilter>;
   creatorId?: InputMaybe<UuidFilter>;
   id?: InputMaybe<UuidFilter>;
+  message?: InputMaybe<MessageRelationFilter>;
+  messageId?: InputMaybe<UuidNullableFilter>;
   post?: InputMaybe<PostRelationFilter>;
   postId?: InputMaybe<UuidNullableFilter>;
+  reply?: InputMaybe<ReplyRelationFilter>;
   replyId?: InputMaybe<UuidNullableFilter>;
   type?: InputMaybe<EnumReportTypeFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -5483,6 +5638,13 @@ export type UnlikePostMutationVariables = Exact<{
 
 export type UnlikePostMutation = { __typename?: 'Mutation', destroyLike: boolean };
 
+export type DeleteMessageMutationVariables = Exact<{
+  messageId: Scalars['String'];
+}>;
+
+
+export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage: boolean };
+
 export type UpdateHandleMutationVariables = Exact<{
   data: UpdateUserInput;
 }>;
@@ -5579,7 +5741,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -5588,12 +5750,12 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
 export type BlockedMutedAccountFragment = { __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null };
 
-export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> };
+export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } | null };
 
 export type GetSignedUrlForPutMutationVariables = Exact<{
   data: S3SignedUrlInput;
@@ -5683,26 +5845,26 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null }> } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } } };
 
 export type MessageItemFragment = { __typename?: 'Message', id: string, senderId: string, receiverId: string, text: string, createdAt: string };
 
 export type GetMyMessagesQueryVariables = Exact<{
-  orderBy?: InputMaybe<Array<MessageOrderByWithRelationInput> | MessageOrderByWithRelationInput>;
-  where?: InputMaybe<MessageWhereInput>;
+  orderBy: Array<MessageOrderByWithRelationInput> | MessageOrderByWithRelationInput;
+  userId: Scalars['String'];
 }>;
 
 
 export type GetMyMessagesQuery = { __typename?: 'Query', myMessages: { __typename?: 'MessagesResponse', count: number, items: Array<{ __typename?: 'Message', id: string, senderId: string, receiverId: string, text: string, createdAt: string }> } };
 
-export type UserMessageFragment = { __typename?: 'User', id: string, name: string, avatar?: string | null };
+export type UserMessageFragment = { __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null };
 
 export type GetUserMessageQueryVariables = Exact<{
   where: UserWhereInput;
 }>;
 
 
-export type GetUserMessageQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, avatar?: string | null } | null };
+export type GetUserMessageQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null } | null };
 
 export type SendMessageMutationVariables = Exact<{
   data: CreateMessageInput;
@@ -5721,6 +5883,27 @@ export type GetMyConversationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetMyConversationsQuery = { __typename?: 'Query', myConversations: { __typename?: 'ConversationsResponse', count: number, items: Array<{ __typename?: 'Conversation', id: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null }, messages: Array<{ __typename?: 'ConversationMessage', id: string, senderId: string, receiverId: string, text: string, createdAt: string }> }> } };
+
+export type MessageUserSearchItemFragment = { __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null, allowMessagesFrom: AllowMessagesFrom };
+
+export type GetMessageSearchUsersQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<UserOrderByWithRelationInput> | UserOrderByWithRelationInput>;
+  where?: InputMaybe<UserWhereInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetMessageSearchUsersQuery = { __typename?: 'Query', users: { __typename?: 'UsersResponse', count: number, items: Array<{ __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null, allowMessagesFrom: AllowMessagesFrom }> } };
+
+export type MessageReportFragment = { __typename?: 'Message', id: string, text: string };
+
+export type GetMessageQueryVariables = Exact<{
+  messageId: Scalars['String'];
+}>;
+
+
+export type GetMessageQuery = { __typename?: 'Query', message?: { __typename?: 'Message', id: string, text: string } | null };
 
 export type ReplyItemFragment = { __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
 
@@ -5911,6 +6094,9 @@ export const MeFragmentDoc = gql`
   following {
     id
   }
+  followers {
+    id
+  }
   mutedAccounts {
     ...BlockedMutedAccount
   }
@@ -5923,6 +6109,7 @@ export const MeFragmentDoc = gql`
     userId
     postId
     replyId
+    messageId
   }
 }
     ${PostItemFragmentDoc}
@@ -5976,6 +6163,7 @@ export const UserMessageFragmentDoc = gql`
   id
   name
   avatar
+  handle
 }
     `;
 export const ConversationUserItemFragmentDoc = gql`
@@ -6007,6 +6195,21 @@ export const ConversationItemFragmentDoc = gql`
 }
     ${ConversationUserItemFragmentDoc}
 ${ConversationMessageItemFragmentDoc}`;
+export const MessageUserSearchItemFragmentDoc = gql`
+    fragment MessageUserSearchItem on User {
+  id
+  name
+  avatar
+  handle
+  allowMessagesFrom
+}
+    `;
+export const MessageReportFragmentDoc = gql`
+    fragment MessageReport on Message {
+  id
+  text
+}
+    `;
 export const ReplyItemFragmentDoc = gql`
     fragment ReplyItem on Reply {
   id
@@ -6240,6 +6443,18 @@ export function useUnlikePostMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UnlikePostMutationHookResult = ReturnType<typeof useUnlikePostMutation>;
 export type UnlikePostMutationResult = Apollo.MutationResult<UnlikePostMutation>;
 export type UnlikePostMutationOptions = Apollo.BaseMutationOptions<UnlikePostMutation, UnlikePostMutationVariables>;
+export const DeleteMessageDocument = gql`
+    mutation DeleteMessage($messageId: String!) {
+  deleteMessage(messageId: $messageId)
+}
+    `;
+export function useDeleteMessageMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMessageMutation, DeleteMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMessageMutation, DeleteMessageMutationVariables>(DeleteMessageDocument, options);
+      }
+export type DeleteMessageMutationHookResult = ReturnType<typeof useDeleteMessageMutation>;
+export type DeleteMessageMutationResult = Apollo.MutationResult<DeleteMessageMutation>;
+export type DeleteMessageMutationOptions = Apollo.BaseMutationOptions<DeleteMessageMutation, DeleteMessageMutationVariables>;
 export const UpdateHandleDocument = gql`
     mutation UpdateHandle($data: UpdateUserInput!) {
   updateMe(data: $data) {
@@ -6649,8 +6864,8 @@ export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const GetMyMessagesDocument = gql`
-    query GetMyMessages($orderBy: [MessageOrderByWithRelationInput!], $where: MessageWhereInput) {
-  myMessages(orderBy: $orderBy, where: $where) {
+    query GetMyMessages($orderBy: [MessageOrderByWithRelationInput!]!, $userId: String!) {
+  myMessages(orderBy: $orderBy, userId: $userId) {
     items {
       ...MessageItem
     }
@@ -6658,7 +6873,7 @@ export const GetMyMessagesDocument = gql`
   }
 }
     ${MessageItemFragmentDoc}`;
-export function useGetMyMessagesQuery(baseOptions?: Apollo.QueryHookOptions<GetMyMessagesQuery, GetMyMessagesQueryVariables>) {
+export function useGetMyMessagesQuery(baseOptions: Apollo.QueryHookOptions<GetMyMessagesQuery, GetMyMessagesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetMyMessagesQuery, GetMyMessagesQueryVariables>(GetMyMessagesDocument, options);
       }
@@ -6720,6 +6935,45 @@ export function useGetMyConversationsLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetMyConversationsQueryHookResult = ReturnType<typeof useGetMyConversationsQuery>;
 export type GetMyConversationsLazyQueryHookResult = ReturnType<typeof useGetMyConversationsLazyQuery>;
 export type GetMyConversationsQueryResult = Apollo.QueryResult<GetMyConversationsQuery, GetMyConversationsQueryVariables>;
+export const GetMessageSearchUsersDocument = gql`
+    query GetMessageSearchUsers($orderBy: [UserOrderByWithRelationInput!], $where: UserWhereInput, $skip: Int, $take: Int) {
+  users(take: $take, orderBy: $orderBy, where: $where, skip: $skip) {
+    items {
+      ...MessageUserSearchItem
+    }
+    count
+  }
+}
+    ${MessageUserSearchItemFragmentDoc}`;
+export function useGetMessageSearchUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetMessageSearchUsersQuery, GetMessageSearchUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMessageSearchUsersQuery, GetMessageSearchUsersQueryVariables>(GetMessageSearchUsersDocument, options);
+      }
+export function useGetMessageSearchUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMessageSearchUsersQuery, GetMessageSearchUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMessageSearchUsersQuery, GetMessageSearchUsersQueryVariables>(GetMessageSearchUsersDocument, options);
+        }
+export type GetMessageSearchUsersQueryHookResult = ReturnType<typeof useGetMessageSearchUsersQuery>;
+export type GetMessageSearchUsersLazyQueryHookResult = ReturnType<typeof useGetMessageSearchUsersLazyQuery>;
+export type GetMessageSearchUsersQueryResult = Apollo.QueryResult<GetMessageSearchUsersQuery, GetMessageSearchUsersQueryVariables>;
+export const GetMessageDocument = gql`
+    query GetMessage($messageId: String!) {
+  message(messageId: $messageId) {
+    ...MessageReport
+  }
+}
+    ${MessageReportFragmentDoc}`;
+export function useGetMessageQuery(baseOptions: Apollo.QueryHookOptions<GetMessageQuery, GetMessageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMessageQuery, GetMessageQueryVariables>(GetMessageDocument, options);
+      }
+export function useGetMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMessageQuery, GetMessageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMessageQuery, GetMessageQueryVariables>(GetMessageDocument, options);
+        }
+export type GetMessageQueryHookResult = ReturnType<typeof useGetMessageQuery>;
+export type GetMessageLazyQueryHookResult = ReturnType<typeof useGetMessageLazyQuery>;
+export type GetMessageQueryResult = Apollo.QueryResult<GetMessageQuery, GetMessageQueryVariables>;
 export const GetPostDocument = gql`
     query GetPost($where: PostWhereInput!) {
   post(where: $where) {
