@@ -46,22 +46,20 @@ export const DateInput = ({ name, minDate, maxDate, ...props }: DateInputProps) 
         onChange={(date) => {
           handleChange(date ? dayjs(date as Date).format("YYYY-MM-DD") : "")
         }}
-        customInput={<CustomInput name={name} {...props} />}
+        customInput={<CustomInput {...props} name={name} inputName={name} />}
       />
     </Box>
   )
 }
 
-interface CustomInputProps extends DateInputProps {
-  ref: React.Ref<HTMLInputElement>
-}
-
-function _CustomInput({ ref, name, label, ...props }: CustomInputProps) {
+function _CustomInput(
+  { label, subLabel, inputName, ...props }: DateInputProps & { inputName: string },
+  ref: React.Ref<HTMLInputElement>,
+) {
   const {
-    register,
     formState: { errors },
   } = useFormContext()
-  const fieldError = errors?.[name]
+  const fieldError = errors?.[inputName]
 
   return (
     <FormControl isInvalid={!!fieldError} isRequired={props.isRequired}>
@@ -86,10 +84,15 @@ function _CustomInput({ ref, name, label, ...props }: CustomInputProps) {
           }}
         >
           {label && (
-            <InputLabel label={label} name={name} color={!!fieldError ? "red.500" : "gray.400"} w="100%" />
+            <InputLabel
+              label={label}
+              name={inputName}
+              color={!!fieldError ? "red.500" : "gray.400"}
+              w="100%"
+            />
           )}
         </Flex>
-        <CInput id={name} {...register(name)} ref={ref} {...props} variant="unstyled" />
+        <CInput ref={ref} {...props} variant="unstyled" />
       </Box>
       <InputError error={fieldError} />
     </FormControl>
