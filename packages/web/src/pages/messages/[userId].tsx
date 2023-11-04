@@ -249,8 +249,6 @@ function UserMessages() {
             px={3}
             placeholder="Start a new message"
           />
-          {/* TODO: Find a workaround for the behaviour where you can't click anything (including the submit button) 
-          until you take away focus from the input (e.g. by clicking the mobile "done" button) */}
           <IconButton
             aria-label="send message"
             icon={<Box as={BiSend} boxSize="22px" color="brand.blue" />}

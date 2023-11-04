@@ -158,11 +158,11 @@ function ReportMessage() {
         </Box>
       </Box>
 
-      <Stack mt={HEADING_CONTAINER_HEIGHT + "px"} py={2} px={4} spacing={4}>
+      <Stack mt={HEADING_CONTAINER_HEIGHT + "px"} py={2} px={4} spacing={6}>
         <Text fontSize="lg" color="gray.400">
           Help us understand the issue. What's the problem with this message?
         </Text>
-        <Text fontStyle="italic" color="gray.500" fontSize="sm" m={4} noOfLines={3}>
+        <Text fontStyle="italic" color="gray.500" fontSize="sm" mx={4} noOfLines={3}>
           {message.text}
         </Text>
         <RadioGroup onChange={(e) => setType(e as ReportType)}>

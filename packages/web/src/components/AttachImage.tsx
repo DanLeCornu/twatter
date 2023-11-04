@@ -35,7 +35,6 @@ export function AttachImage({ children, isDisabled, image, setImage, dropzoneOpt
           }`
           toast({ status: "error", title: "Invalid file", description })
         } else {
-          // TODO: add remaining error handlers
           toast({ status: "error", description: "Invalid file, please try another" })
         }
         return
