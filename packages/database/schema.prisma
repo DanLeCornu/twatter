@@ -45,6 +45,19 @@ enum ReportType {
   EXTREMISM
 }
 
+enum NotificationType {
+  NEW_MESSAGE
+  NEW_FOLLOW
+  NEW_LIKE
+  NEW_REPLY
+  NEW_MENTION
+}
+
+enum NotificationStatus {
+  READ
+  UNREAD
+}
+
 model User {
   id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email              String            @unique
@@ -66,25 +79,26 @@ model User {
   updatedAt          DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
   archivedAt         DateTime?         @db.Timestamptz(6)
 
-  pinnedPost       Post?          @relation(name: "PinnedPost", fields: [pinnedPostId], references: [id])
-  pinnedPostId     String?        @unique @db.Uuid
-  posts            Post[]
-  createdReports   Report[]       @relation(name: "ReportCreator")
-  reports          Report[]       @relation(name: "UserReports")
-  replies          Reply[]
-  views            View[]
-  likes            Like[]
-  bookmarks        Bookmark[]
-  notifications    Notification[]
-  followers        User[]         @relation("UserFollowers")
-  following        User[]         @relation("UserFollowers")
-  mutedAccounts    User[]         @relation("MutedAccounts")
-  mutedBy          User[]         @relation("MutedAccounts")
-  blockedAccounts  User[]         @relation("BlockedAccounts")
-  blockedBy        User[]         @relation("BlockedAccounts")
-  messagesSent     Message[]      @relation("MessagesSent")
-  messagesReceived Message[]      @relation("MessagesReceived")
-  mentions         Mention[]
+  pinnedPost             Post?          @relation(name: "PinnedPost", fields: [pinnedPostId], references: [id])
+  pinnedPostId           String?        @unique @db.Uuid
+  posts                  Post[]
+  createdReports         Report[]       @relation(name: "ReportCreator")
+  reports                Report[]       @relation(name: "UserReports")
+  replies                Reply[]
+  views                  View[]
+  likes                  Like[]
+  bookmarks              Bookmark[]
+  notifications          Notification[] @relation("NotificationUser")
+  notificationInitiators Notification[] @relation("NotificationInitiator")
+  followers              User[]         @relation("UserFollowers")
+  following              User[]         @relation("UserFollowers")
+  mutedAccounts          User[]         @relation("MutedAccounts")
+  mutedBy                User[]         @relation("MutedAccounts")
+  blockedAccounts        User[]         @relation("BlockedAccounts")
+  blockedBy              User[]         @relation("BlockedAccounts")
+  messagesSent           Message[]      @relation("MessagesSent")
+  messagesReceived       Message[]      @relation("MessagesReceived")
+  mentions               Mention[]
 }
 
 model Post {
@@ -95,16 +109,17 @@ model Post {
   updatedAt  DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
   archivedAt DateTime? @db.Timestamptz(6)
 
-  user       User       @relation(fields: [userId], references: [id])
-  userId     String     @db.Uuid
-  pinnedUser User?      @relation(name: "PinnedPost")
-  reports    Report[]
-  replies    Reply[]
-  views      View[]
-  likes      Like[]
-  bookmark   Bookmark[]
-  tags       Tag[]
-  mentions   Mention[]
+  user          User           @relation(fields: [userId], references: [id])
+  userId        String         @db.Uuid
+  pinnedUser    User?          @relation(name: "PinnedPost")
+  reports       Report[]
+  replies       Reply[]
+  views         View[]
+  likes         Like[]
+  bookmark      Bookmark[]
+  tags          Tag[]
+  mentions      Mention[]
+  notifications Notification[]
 }
 
 model Reply {
@@ -115,11 +130,12 @@ model Reply {
   updatedAt  DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
   archivedAt DateTime? @db.Timestamptz(6)
 
-  reports Report[]
-  post    Post     @relation(fields: [postId], references: [id])
-  postId  String   @db.Uuid
-  user    User     @relation(fields: [userId], references: [id])
-  userId  String   @db.Uuid
+  reports       Report[]
+  notifications Notification[]
+  post          Post           @relation(fields: [postId], references: [id])
+  postId        String         @db.Uuid
+  user          User           @relation(fields: [userId], references: [id])
+  userId        String         @db.Uuid
 }
 
 model View {
@@ -160,12 +176,23 @@ model Bookmark {
 }
 
 model Notification {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id     String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type   NotificationType
+  status NotificationStatus @default(UNREAD)
+
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @db.Uuid
+  initiator   User     @relation(name: "NotificationInitiator", fields: [initiatorId], references: [id])
+  initiatorId String   @db.Uuid
+  user        User     @relation(name: "NotificationUser", fields: [userId], references: [id])
+  userId      String   @db.Uuid
+  message     Message? @relation(fields: [messageId], references: [id])
+  messageId   String?  @db.Uuid
+  post        Post?    @relation(fields: [postId], references: [id])
+  postId      String?  @db.Uuid
+  reply       Reply?   @relation(fields: [replyId], references: [id])
+  replyId     String?  @db.Uuid
 }
 
 model Message {
@@ -176,13 +203,14 @@ model Message {
   archivedAtA DateTime? @db.Timestamptz(6)
   archivedAtB DateTime? @db.Timestamptz(6)
 
-  archivedByAId String?  @db.Uuid
-  archivedByBId String?  @db.Uuid
-  sender        User     @relation(name: "MessagesSent", fields: [senderId], references: [id])
-  senderId      String   @db.Uuid
-  receiver      User     @relation(name: "MessagesReceived", fields: [receiverId], references: [id])
-  receiverId    String   @db.Uuid
+  archivedByAId String?        @db.Uuid
+  archivedByBId String?        @db.Uuid
+  sender        User           @relation(name: "MessagesSent", fields: [senderId], references: [id])
+  senderId      String         @db.Uuid
+  receiver      User           @relation(name: "MessagesReceived", fields: [receiverId], references: [id])
+  receiverId    String         @db.Uuid
   reports       Report[]
+  notifications Notification[]
 }
 
 model Report {

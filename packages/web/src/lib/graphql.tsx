@@ -344,6 +344,20 @@ export type EnumDobPrivacyFilter = {
   notIn?: InputMaybe<Array<DobPrivacy>>;
 };
 
+export type EnumNotificationStatusFilter = {
+  equals?: InputMaybe<NotificationStatus>;
+  in?: InputMaybe<Array<NotificationStatus>>;
+  not?: InputMaybe<NestedEnumNotificationStatusFilter>;
+  notIn?: InputMaybe<Array<NotificationStatus>>;
+};
+
+export type EnumNotificationTypeFilter = {
+  equals?: InputMaybe<NotificationType>;
+  in?: InputMaybe<Array<NotificationType>>;
+  not?: InputMaybe<NestedEnumNotificationTypeFilter>;
+  notIn?: InputMaybe<Array<NotificationType>>;
+};
+
 export type EnumReportTypeFilter = {
   equals?: InputMaybe<ReportType>;
   in?: InputMaybe<Array<ReportType>>;
@@ -770,7 +784,9 @@ export type Message = {
   archivedByBId?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
+  receiver: User;
   receiverId: Scalars['String'];
+  sender: User;
   senderId: Scalars['String'];
   text: Scalars['String'];
   updatedAt: Scalars['DateTime'];
@@ -824,10 +840,21 @@ export type MessageCreateNestedManyWithoutSenderInput = {
   createMany?: InputMaybe<MessageCreateManySenderInputEnvelope>;
 };
 
+export type MessageCreateNestedOneWithoutNotificationsInput = {
+  connect?: InputMaybe<MessageWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<MessageCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<MessageCreateWithoutNotificationsInput>;
+};
+
 export type MessageCreateNestedOneWithoutReportsInput = {
   connect?: InputMaybe<MessageWhereUniqueInput>;
   connectOrCreate?: InputMaybe<MessageCreateOrConnectWithoutReportsInput>;
   create?: InputMaybe<MessageCreateWithoutReportsInput>;
+};
+
+export type MessageCreateOrConnectWithoutNotificationsInput = {
+  create: MessageCreateWithoutNotificationsInput;
+  where: MessageWhereUniqueInput;
 };
 
 export type MessageCreateOrConnectWithoutReceiverInput = {
@@ -845,6 +872,20 @@ export type MessageCreateOrConnectWithoutSenderInput = {
   where: MessageWhereUniqueInput;
 };
 
+export type MessageCreateWithoutNotificationsInput = {
+  archivedAtA?: InputMaybe<Scalars['DateTime']>;
+  archivedAtB?: InputMaybe<Scalars['DateTime']>;
+  archivedByAId?: InputMaybe<Scalars['String']>;
+  archivedByBId?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  receiver: UserCreateNestedOneWithoutMessagesReceivedInput;
+  reports?: InputMaybe<ReportCreateNestedManyWithoutMessageInput>;
+  sender: UserCreateNestedOneWithoutMessagesSentInput;
+  text: Scalars['String'];
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
 export type MessageCreateWithoutReceiverInput = {
   archivedAtA?: InputMaybe<Scalars['DateTime']>;
   archivedAtB?: InputMaybe<Scalars['DateTime']>;
@@ -852,6 +893,7 @@ export type MessageCreateWithoutReceiverInput = {
   archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutMessageInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutMessageInput>;
   sender: UserCreateNestedOneWithoutMessagesSentInput;
   text: Scalars['String'];
@@ -865,6 +907,7 @@ export type MessageCreateWithoutReportsInput = {
   archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutMessageInput>;
   receiver: UserCreateNestedOneWithoutMessagesReceivedInput;
   sender: UserCreateNestedOneWithoutMessagesSentInput;
   text: Scalars['String'];
@@ -878,6 +921,7 @@ export type MessageCreateWithoutSenderInput = {
   archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutMessageInput>;
   receiver: UserCreateNestedOneWithoutMessagesReceivedInput;
   reports?: InputMaybe<ReportCreateNestedManyWithoutMessageInput>;
   text: Scalars['String'];
@@ -901,6 +945,7 @@ export type MessageOrderByWithRelationInput = {
   archivedByBId?: InputMaybe<SortOrderInput>;
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
+  notifications?: InputMaybe<NotificationOrderByRelationAggregateInput>;
   receiver?: InputMaybe<UserOrderByWithRelationInput>;
   receiverId?: InputMaybe<SortOrder>;
   reports?: InputMaybe<ReportOrderByRelationAggregateInput>;
@@ -980,6 +1025,16 @@ export type MessageUpdateManyWithoutSenderNestedInput = {
   upsert?: InputMaybe<Array<MessageUpsertWithWhereUniqueWithoutSenderInput>>;
 };
 
+export type MessageUpdateOneWithoutNotificationsNestedInput = {
+  connect?: InputMaybe<MessageWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<MessageCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<MessageCreateWithoutNotificationsInput>;
+  delete?: InputMaybe<Scalars['Boolean']>;
+  disconnect?: InputMaybe<Scalars['Boolean']>;
+  update?: InputMaybe<MessageUpdateWithoutNotificationsInput>;
+  upsert?: InputMaybe<MessageUpsertWithoutNotificationsInput>;
+};
+
 export type MessageUpdateOneWithoutReportsNestedInput = {
   connect?: InputMaybe<MessageWhereUniqueInput>;
   connectOrCreate?: InputMaybe<MessageCreateOrConnectWithoutReportsInput>;
@@ -1000,6 +1055,20 @@ export type MessageUpdateWithWhereUniqueWithoutSenderInput = {
   where: MessageWhereUniqueInput;
 };
 
+export type MessageUpdateWithoutNotificationsInput = {
+  archivedAtA?: InputMaybe<Scalars['DateTime']>;
+  archivedAtB?: InputMaybe<Scalars['DateTime']>;
+  archivedByAId?: InputMaybe<Scalars['String']>;
+  archivedByBId?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  receiver?: InputMaybe<UserUpdateOneRequiredWithoutMessagesReceivedNestedInput>;
+  reports?: InputMaybe<ReportUpdateManyWithoutMessageNestedInput>;
+  sender?: InputMaybe<UserUpdateOneRequiredWithoutMessagesSentNestedInput>;
+  text?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
 export type MessageUpdateWithoutReceiverInput = {
   archivedAtA?: InputMaybe<Scalars['DateTime']>;
   archivedAtB?: InputMaybe<Scalars['DateTime']>;
@@ -1007,6 +1076,7 @@ export type MessageUpdateWithoutReceiverInput = {
   archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutMessageNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutMessageNestedInput>;
   sender?: InputMaybe<UserUpdateOneRequiredWithoutMessagesSentNestedInput>;
   text?: InputMaybe<Scalars['String']>;
@@ -1020,6 +1090,7 @@ export type MessageUpdateWithoutReportsInput = {
   archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutMessageNestedInput>;
   receiver?: InputMaybe<UserUpdateOneRequiredWithoutMessagesReceivedNestedInput>;
   sender?: InputMaybe<UserUpdateOneRequiredWithoutMessagesSentNestedInput>;
   text?: InputMaybe<Scalars['String']>;
@@ -1033,6 +1104,7 @@ export type MessageUpdateWithoutSenderInput = {
   archivedByBId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutMessageNestedInput>;
   receiver?: InputMaybe<UserUpdateOneRequiredWithoutMessagesReceivedNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutMessageNestedInput>;
   text?: InputMaybe<Scalars['String']>;
@@ -1051,6 +1123,11 @@ export type MessageUpsertWithWhereUniqueWithoutSenderInput = {
   where: MessageWhereUniqueInput;
 };
 
+export type MessageUpsertWithoutNotificationsInput = {
+  create: MessageCreateWithoutNotificationsInput;
+  update: MessageUpdateWithoutNotificationsInput;
+};
+
 export type MessageUpsertWithoutReportsInput = {
   create: MessageCreateWithoutReportsInput;
   update: MessageUpdateWithoutReportsInput;
@@ -1066,6 +1143,7 @@ export type MessageWhereInput = {
   archivedByBId?: InputMaybe<UuidNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
+  notifications?: InputMaybe<NotificationListRelationFilter>;
   receiver?: InputMaybe<UserRelationFilter>;
   receiverId?: InputMaybe<UuidFilter>;
   reports?: InputMaybe<ReportListRelationFilter>;
@@ -1108,6 +1186,7 @@ export type Mutation = {
   getSignedS3UrlForPut?: Maybe<SignedResponse>;
   login: AuthResponse;
   logout: Scalars['Boolean'];
+  markAsRead: Scalars['Boolean'];
   muteUser: Scalars['Boolean'];
   register: AuthResponse;
   resetPassword: Scalars['Boolean'];
@@ -1217,6 +1296,11 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationMarkAsReadArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationMuteUserArgs = {
   userId: Scalars['String'];
 };
@@ -1309,6 +1393,20 @@ export type NestedEnumDobPrivacyFilter = {
   notIn?: InputMaybe<Array<DobPrivacy>>;
 };
 
+export type NestedEnumNotificationStatusFilter = {
+  equals?: InputMaybe<NotificationStatus>;
+  in?: InputMaybe<Array<NotificationStatus>>;
+  not?: InputMaybe<NestedEnumNotificationStatusFilter>;
+  notIn?: InputMaybe<Array<NotificationStatus>>;
+};
+
+export type NestedEnumNotificationTypeFilter = {
+  equals?: InputMaybe<NotificationType>;
+  in?: InputMaybe<Array<NotificationType>>;
+  not?: InputMaybe<NestedEnumNotificationTypeFilter>;
+  notIn?: InputMaybe<Array<NotificationType>>;
+};
+
 export type NestedEnumReportTypeFilter = {
   equals?: InputMaybe<ReportType>;
   in?: InputMaybe<Array<ReportType>>;
@@ -1373,15 +1471,136 @@ export type NestedUuidNullableFilter = {
   notIn?: InputMaybe<Array<Scalars['String']>>;
 };
 
+export type Notification = {
+  __typename?: 'Notification';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  initiator: User;
+  initiatorId: Scalars['String'];
+  message?: Maybe<Message>;
+  messageId?: Maybe<Scalars['String']>;
+  post?: Maybe<Post>;
+  postId?: Maybe<Scalars['String']>;
+  reply?: Maybe<Reply>;
+  replyId?: Maybe<Scalars['String']>;
+  status: NotificationStatus;
+  type: NotificationType;
+  updatedAt: Scalars['DateTime'];
+  user: User;
+  userId: Scalars['String'];
+};
+
+export type NotificationCreateManyInitiatorInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  messageId?: InputMaybe<Scalars['String']>;
+  postId?: InputMaybe<Scalars['String']>;
+  replyId?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<NotificationStatus>;
+  type: NotificationType;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  userId: Scalars['String'];
+};
+
+export type NotificationCreateManyInitiatorInputEnvelope = {
+  data: Array<NotificationCreateManyInitiatorInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type NotificationCreateManyMessageInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  initiatorId: Scalars['String'];
+  postId?: InputMaybe<Scalars['String']>;
+  replyId?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<NotificationStatus>;
+  type: NotificationType;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  userId: Scalars['String'];
+};
+
+export type NotificationCreateManyMessageInputEnvelope = {
+  data: Array<NotificationCreateManyMessageInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type NotificationCreateManyPostInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  initiatorId: Scalars['String'];
+  messageId?: InputMaybe<Scalars['String']>;
+  replyId?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<NotificationStatus>;
+  type: NotificationType;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  userId: Scalars['String'];
+};
+
+export type NotificationCreateManyPostInputEnvelope = {
+  data: Array<NotificationCreateManyPostInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type NotificationCreateManyReplyInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  initiatorId: Scalars['String'];
+  messageId?: InputMaybe<Scalars['String']>;
+  postId?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<NotificationStatus>;
+  type: NotificationType;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  userId: Scalars['String'];
+};
+
+export type NotificationCreateManyReplyInputEnvelope = {
+  data: Array<NotificationCreateManyReplyInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type NotificationCreateManyUserInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  initiatorId: Scalars['String'];
+  messageId?: InputMaybe<Scalars['String']>;
+  postId?: InputMaybe<Scalars['String']>;
+  replyId?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<NotificationStatus>;
+  type: NotificationType;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
 export type NotificationCreateManyUserInputEnvelope = {
   data: Array<NotificationCreateManyUserInput>;
   skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type NotificationCreateNestedManyWithoutInitiatorInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutInitiatorInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutInitiatorInput>>;
+  createMany?: InputMaybe<NotificationCreateManyInitiatorInputEnvelope>;
+};
+
+export type NotificationCreateNestedManyWithoutMessageInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutMessageInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutMessageInput>>;
+  createMany?: InputMaybe<NotificationCreateManyMessageInputEnvelope>;
+};
+
+export type NotificationCreateNestedManyWithoutPostInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutPostInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutPostInput>>;
+  createMany?: InputMaybe<NotificationCreateManyPostInputEnvelope>;
+};
+
+export type NotificationCreateNestedManyWithoutReplyInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutReplyInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutReplyInput>>;
+  createMany?: InputMaybe<NotificationCreateManyReplyInputEnvelope>;
 };
 
 export type NotificationCreateNestedManyWithoutUserInput = {
@@ -1391,14 +1610,88 @@ export type NotificationCreateNestedManyWithoutUserInput = {
   createMany?: InputMaybe<NotificationCreateManyUserInputEnvelope>;
 };
 
+export type NotificationCreateOrConnectWithoutInitiatorInput = {
+  create: NotificationCreateWithoutInitiatorInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationCreateOrConnectWithoutMessageInput = {
+  create: NotificationCreateWithoutMessageInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationCreateOrConnectWithoutPostInput = {
+  create: NotificationCreateWithoutPostInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationCreateOrConnectWithoutReplyInput = {
+  create: NotificationCreateWithoutReplyInput;
+  where: NotificationWhereUniqueInput;
+};
+
 export type NotificationCreateOrConnectWithoutUserInput = {
   create: NotificationCreateWithoutUserInput;
   where: NotificationWhereUniqueInput;
 };
 
+export type NotificationCreateWithoutInitiatorInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<MessageCreateNestedOneWithoutNotificationsInput>;
+  post?: InputMaybe<PostCreateNestedOneWithoutNotificationsInput>;
+  reply?: InputMaybe<ReplyCreateNestedOneWithoutNotificationsInput>;
+  status?: InputMaybe<NotificationStatus>;
+  type: NotificationType;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user: UserCreateNestedOneWithoutNotificationsInput;
+};
+
+export type NotificationCreateWithoutMessageInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  initiator: UserCreateNestedOneWithoutNotificationInitiatorsInput;
+  post?: InputMaybe<PostCreateNestedOneWithoutNotificationsInput>;
+  reply?: InputMaybe<ReplyCreateNestedOneWithoutNotificationsInput>;
+  status?: InputMaybe<NotificationStatus>;
+  type: NotificationType;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user: UserCreateNestedOneWithoutNotificationsInput;
+};
+
+export type NotificationCreateWithoutPostInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  initiator: UserCreateNestedOneWithoutNotificationInitiatorsInput;
+  message?: InputMaybe<MessageCreateNestedOneWithoutNotificationsInput>;
+  reply?: InputMaybe<ReplyCreateNestedOneWithoutNotificationsInput>;
+  status?: InputMaybe<NotificationStatus>;
+  type: NotificationType;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user: UserCreateNestedOneWithoutNotificationsInput;
+};
+
+export type NotificationCreateWithoutReplyInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  initiator: UserCreateNestedOneWithoutNotificationInitiatorsInput;
+  message?: InputMaybe<MessageCreateNestedOneWithoutNotificationsInput>;
+  post?: InputMaybe<PostCreateNestedOneWithoutNotificationsInput>;
+  status?: InputMaybe<NotificationStatus>;
+  type: NotificationType;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user: UserCreateNestedOneWithoutNotificationsInput;
+};
+
 export type NotificationCreateWithoutUserInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  initiator: UserCreateNestedOneWithoutNotificationInitiatorsInput;
+  message?: InputMaybe<MessageCreateNestedOneWithoutNotificationsInput>;
+  post?: InputMaybe<PostCreateNestedOneWithoutNotificationsInput>;
+  reply?: InputMaybe<ReplyCreateNestedOneWithoutNotificationsInput>;
+  status?: InputMaybe<NotificationStatus>;
+  type: NotificationType;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -1412,25 +1705,153 @@ export type NotificationOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
 
+export type NotificationOrderByWithRelationInput = {
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  initiator?: InputMaybe<UserOrderByWithRelationInput>;
+  initiatorId?: InputMaybe<SortOrder>;
+  message?: InputMaybe<MessageOrderByWithRelationInput>;
+  messageId?: InputMaybe<SortOrderInput>;
+  post?: InputMaybe<PostOrderByWithRelationInput>;
+  postId?: InputMaybe<SortOrderInput>;
+  reply?: InputMaybe<ReplyOrderByWithRelationInput>;
+  replyId?: InputMaybe<SortOrderInput>;
+  status?: InputMaybe<SortOrder>;
+  type?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  user?: InputMaybe<UserOrderByWithRelationInput>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export enum NotificationScalarFieldEnum {
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  InitiatorId = 'initiatorId',
+  MessageId = 'messageId',
+  PostId = 'postId',
+  ReplyId = 'replyId',
+  Status = 'status',
+  Type = 'type',
+  UpdatedAt = 'updatedAt',
+  UserId = 'userId'
+}
+
 export type NotificationScalarWhereInput = {
   AND?: InputMaybe<Array<NotificationScalarWhereInput>>;
   NOT?: InputMaybe<Array<NotificationScalarWhereInput>>;
   OR?: InputMaybe<Array<NotificationScalarWhereInput>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
+  initiatorId?: InputMaybe<UuidFilter>;
+  messageId?: InputMaybe<UuidNullableFilter>;
+  postId?: InputMaybe<UuidNullableFilter>;
+  replyId?: InputMaybe<UuidNullableFilter>;
+  status?: InputMaybe<EnumNotificationStatusFilter>;
+  type?: InputMaybe<EnumNotificationTypeFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   userId?: InputMaybe<UuidFilter>;
 };
 
+export enum NotificationStatus {
+  Read = 'READ',
+  Unread = 'UNREAD'
+}
+
+export enum NotificationType {
+  NewFollow = 'NEW_FOLLOW',
+  NewLike = 'NEW_LIKE',
+  NewMention = 'NEW_MENTION',
+  NewMessage = 'NEW_MESSAGE',
+  NewReply = 'NEW_REPLY'
+}
+
 export type NotificationUpdateManyMutationInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<NotificationStatus>;
+  type?: InputMaybe<NotificationType>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type NotificationUpdateManyWithWhereWithoutInitiatorInput = {
+  data: NotificationUpdateManyMutationInput;
+  where: NotificationScalarWhereInput;
+};
+
+export type NotificationUpdateManyWithWhereWithoutMessageInput = {
+  data: NotificationUpdateManyMutationInput;
+  where: NotificationScalarWhereInput;
+};
+
+export type NotificationUpdateManyWithWhereWithoutPostInput = {
+  data: NotificationUpdateManyMutationInput;
+  where: NotificationScalarWhereInput;
+};
+
+export type NotificationUpdateManyWithWhereWithoutReplyInput = {
+  data: NotificationUpdateManyMutationInput;
+  where: NotificationScalarWhereInput;
 };
 
 export type NotificationUpdateManyWithWhereWithoutUserInput = {
   data: NotificationUpdateManyMutationInput;
   where: NotificationScalarWhereInput;
+};
+
+export type NotificationUpdateManyWithoutInitiatorNestedInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutInitiatorInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutInitiatorInput>>;
+  createMany?: InputMaybe<NotificationCreateManyInitiatorInputEnvelope>;
+  delete?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<NotificationScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  set?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  update?: InputMaybe<Array<NotificationUpdateWithWhereUniqueWithoutInitiatorInput>>;
+  updateMany?: InputMaybe<Array<NotificationUpdateManyWithWhereWithoutInitiatorInput>>;
+  upsert?: InputMaybe<Array<NotificationUpsertWithWhereUniqueWithoutInitiatorInput>>;
+};
+
+export type NotificationUpdateManyWithoutMessageNestedInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutMessageInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutMessageInput>>;
+  createMany?: InputMaybe<NotificationCreateManyMessageInputEnvelope>;
+  delete?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<NotificationScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  set?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  update?: InputMaybe<Array<NotificationUpdateWithWhereUniqueWithoutMessageInput>>;
+  updateMany?: InputMaybe<Array<NotificationUpdateManyWithWhereWithoutMessageInput>>;
+  upsert?: InputMaybe<Array<NotificationUpsertWithWhereUniqueWithoutMessageInput>>;
+};
+
+export type NotificationUpdateManyWithoutPostNestedInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutPostInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutPostInput>>;
+  createMany?: InputMaybe<NotificationCreateManyPostInputEnvelope>;
+  delete?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<NotificationScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  set?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  update?: InputMaybe<Array<NotificationUpdateWithWhereUniqueWithoutPostInput>>;
+  updateMany?: InputMaybe<Array<NotificationUpdateManyWithWhereWithoutPostInput>>;
+  upsert?: InputMaybe<Array<NotificationUpsertWithWhereUniqueWithoutPostInput>>;
+};
+
+export type NotificationUpdateManyWithoutReplyNestedInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutReplyInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutReplyInput>>;
+  createMany?: InputMaybe<NotificationCreateManyReplyInputEnvelope>;
+  delete?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<NotificationScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  set?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  update?: InputMaybe<Array<NotificationUpdateWithWhereUniqueWithoutReplyInput>>;
+  updateMany?: InputMaybe<Array<NotificationUpdateManyWithWhereWithoutReplyInput>>;
+  upsert?: InputMaybe<Array<NotificationUpsertWithWhereUniqueWithoutReplyInput>>;
 };
 
 export type NotificationUpdateManyWithoutUserNestedInput = {
@@ -1447,15 +1868,113 @@ export type NotificationUpdateManyWithoutUserNestedInput = {
   upsert?: InputMaybe<Array<NotificationUpsertWithWhereUniqueWithoutUserInput>>;
 };
 
+export type NotificationUpdateWithWhereUniqueWithoutInitiatorInput = {
+  data: NotificationUpdateWithoutInitiatorInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpdateWithWhereUniqueWithoutMessageInput = {
+  data: NotificationUpdateWithoutMessageInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpdateWithWhereUniqueWithoutPostInput = {
+  data: NotificationUpdateWithoutPostInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpdateWithWhereUniqueWithoutReplyInput = {
+  data: NotificationUpdateWithoutReplyInput;
+  where: NotificationWhereUniqueInput;
+};
+
 export type NotificationUpdateWithWhereUniqueWithoutUserInput = {
   data: NotificationUpdateWithoutUserInput;
   where: NotificationWhereUniqueInput;
 };
 
+export type NotificationUpdateWithoutInitiatorInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<MessageUpdateOneWithoutNotificationsNestedInput>;
+  post?: InputMaybe<PostUpdateOneWithoutNotificationsNestedInput>;
+  reply?: InputMaybe<ReplyUpdateOneWithoutNotificationsNestedInput>;
+  status?: InputMaybe<NotificationStatus>;
+  type?: InputMaybe<NotificationType>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutNotificationsNestedInput>;
+};
+
+export type NotificationUpdateWithoutMessageInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  initiator?: InputMaybe<UserUpdateOneRequiredWithoutNotificationInitiatorsNestedInput>;
+  post?: InputMaybe<PostUpdateOneWithoutNotificationsNestedInput>;
+  reply?: InputMaybe<ReplyUpdateOneWithoutNotificationsNestedInput>;
+  status?: InputMaybe<NotificationStatus>;
+  type?: InputMaybe<NotificationType>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutNotificationsNestedInput>;
+};
+
+export type NotificationUpdateWithoutPostInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  initiator?: InputMaybe<UserUpdateOneRequiredWithoutNotificationInitiatorsNestedInput>;
+  message?: InputMaybe<MessageUpdateOneWithoutNotificationsNestedInput>;
+  reply?: InputMaybe<ReplyUpdateOneWithoutNotificationsNestedInput>;
+  status?: InputMaybe<NotificationStatus>;
+  type?: InputMaybe<NotificationType>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutNotificationsNestedInput>;
+};
+
+export type NotificationUpdateWithoutReplyInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  initiator?: InputMaybe<UserUpdateOneRequiredWithoutNotificationInitiatorsNestedInput>;
+  message?: InputMaybe<MessageUpdateOneWithoutNotificationsNestedInput>;
+  post?: InputMaybe<PostUpdateOneWithoutNotificationsNestedInput>;
+  status?: InputMaybe<NotificationStatus>;
+  type?: InputMaybe<NotificationType>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutNotificationsNestedInput>;
+};
+
 export type NotificationUpdateWithoutUserInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
+  initiator?: InputMaybe<UserUpdateOneRequiredWithoutNotificationInitiatorsNestedInput>;
+  message?: InputMaybe<MessageUpdateOneWithoutNotificationsNestedInput>;
+  post?: InputMaybe<PostUpdateOneWithoutNotificationsNestedInput>;
+  reply?: InputMaybe<ReplyUpdateOneWithoutNotificationsNestedInput>;
+  status?: InputMaybe<NotificationStatus>;
+  type?: InputMaybe<NotificationType>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type NotificationUpsertWithWhereUniqueWithoutInitiatorInput = {
+  create: NotificationCreateWithoutInitiatorInput;
+  update: NotificationUpdateWithoutInitiatorInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpsertWithWhereUniqueWithoutMessageInput = {
+  create: NotificationCreateWithoutMessageInput;
+  update: NotificationUpdateWithoutMessageInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpsertWithWhereUniqueWithoutPostInput = {
+  create: NotificationCreateWithoutPostInput;
+  update: NotificationUpdateWithoutPostInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpsertWithWhereUniqueWithoutReplyInput = {
+  create: NotificationCreateWithoutReplyInput;
+  update: NotificationUpdateWithoutReplyInput;
+  where: NotificationWhereUniqueInput;
 };
 
 export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
@@ -1470,6 +1989,16 @@ export type NotificationWhereInput = {
   OR?: InputMaybe<Array<NotificationWhereInput>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
+  initiator?: InputMaybe<UserRelationFilter>;
+  initiatorId?: InputMaybe<UuidFilter>;
+  message?: InputMaybe<MessageRelationFilter>;
+  messageId?: InputMaybe<UuidNullableFilter>;
+  post?: InputMaybe<PostRelationFilter>;
+  postId?: InputMaybe<UuidNullableFilter>;
+  reply?: InputMaybe<ReplyRelationFilter>;
+  replyId?: InputMaybe<UuidNullableFilter>;
+  status?: InputMaybe<EnumNotificationStatusFilter>;
+  type?: InputMaybe<EnumNotificationTypeFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   user?: InputMaybe<UserRelationFilter>;
   userId?: InputMaybe<UuidFilter>;
@@ -1477,6 +2006,12 @@ export type NotificationWhereInput = {
 
 export type NotificationWhereUniqueInput = {
   id?: InputMaybe<Scalars['String']>;
+};
+
+export type NotificationsResponse = {
+  __typename?: 'NotificationsResponse';
+  count: Scalars['Int'];
+  items: Array<Notification>;
 };
 
 export enum NullsOrder {
@@ -1540,6 +2075,12 @@ export type PostCreateNestedOneWithoutMentionsInput = {
   create?: InputMaybe<PostCreateWithoutMentionsInput>;
 };
 
+export type PostCreateNestedOneWithoutNotificationsInput = {
+  connect?: InputMaybe<PostWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PostCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<PostCreateWithoutNotificationsInput>;
+};
+
 export type PostCreateNestedOneWithoutPinnedUserInput = {
   connect?: InputMaybe<PostWhereUniqueInput>;
   connectOrCreate?: InputMaybe<PostCreateOrConnectWithoutPinnedUserInput>;
@@ -1579,6 +2120,11 @@ export type PostCreateOrConnectWithoutMentionsInput = {
   where: PostWhereUniqueInput;
 };
 
+export type PostCreateOrConnectWithoutNotificationsInput = {
+  create: PostCreateWithoutNotificationsInput;
+  where: PostWhereUniqueInput;
+};
+
 export type PostCreateOrConnectWithoutPinnedUserInput = {
   create: PostCreateWithoutPinnedUserInput;
   where: PostWhereUniqueInput;
@@ -1611,6 +2157,7 @@ export type PostCreateWithoutBookmarkInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutPostInput>;
   mentions?: InputMaybe<MentionCreateNestedManyWithoutPostInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
@@ -1628,6 +2175,7 @@ export type PostCreateWithoutLikesInput = {
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
   mentions?: InputMaybe<MentionCreateNestedManyWithoutPostInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
@@ -1645,6 +2193,25 @@ export type PostCreateWithoutMentionsInput = {
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutPostInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
+  pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
+  replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
+  reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
+  tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
+  text: Scalars['String'];
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user: UserCreateNestedOneWithoutPostsInput;
+  views?: InputMaybe<ViewCreateNestedManyWithoutPostInput>;
+};
+
+export type PostCreateWithoutNotificationsInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  bookmark?: InputMaybe<BookmarkCreateNestedManyWithoutPostInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
+  likes?: InputMaybe<LikeCreateNestedManyWithoutPostInput>;
+  mentions?: InputMaybe<MentionCreateNestedManyWithoutPostInput>;
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
@@ -1663,6 +2230,7 @@ export type PostCreateWithoutPinnedUserInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutPostInput>;
   mentions?: InputMaybe<MentionCreateNestedManyWithoutPostInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
   tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
@@ -1680,6 +2248,7 @@ export type PostCreateWithoutRepliesInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutPostInput>;
   mentions?: InputMaybe<MentionCreateNestedManyWithoutPostInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
   tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
@@ -1697,6 +2266,7 @@ export type PostCreateWithoutReportsInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutPostInput>;
   mentions?: InputMaybe<MentionCreateNestedManyWithoutPostInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
@@ -1714,6 +2284,7 @@ export type PostCreateWithoutUserInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutPostInput>;
   mentions?: InputMaybe<MentionCreateNestedManyWithoutPostInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
@@ -1731,6 +2302,7 @@ export type PostCreateWithoutViewsInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeCreateNestedManyWithoutPostInput>;
   mentions?: InputMaybe<MentionCreateNestedManyWithoutPostInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   pinnedUser?: InputMaybe<UserCreateNestedOneWithoutPinnedPostInput>;
   replies?: InputMaybe<ReplyCreateNestedManyWithoutPostInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutPostInput>;
@@ -1758,6 +2330,7 @@ export type PostOrderByWithRelationInput = {
   image?: InputMaybe<SortOrderInput>;
   likes?: InputMaybe<LikeOrderByRelationAggregateInput>;
   mentions?: InputMaybe<MentionOrderByRelationAggregateInput>;
+  notifications?: InputMaybe<NotificationOrderByRelationAggregateInput>;
   pinnedUser?: InputMaybe<UserOrderByWithRelationInput>;
   replies?: InputMaybe<ReplyOrderByRelationAggregateInput>;
   reports?: InputMaybe<ReportOrderByRelationAggregateInput>;
@@ -1805,6 +2378,7 @@ export type PostUpdateInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
   mentions?: InputMaybe<MentionUpdateManyWithoutPostNestedInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
@@ -1883,6 +2457,16 @@ export type PostUpdateOneRequiredWithoutViewsNestedInput = {
   upsert?: InputMaybe<PostUpsertWithoutViewsInput>;
 };
 
+export type PostUpdateOneWithoutNotificationsNestedInput = {
+  connect?: InputMaybe<PostWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PostCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<PostCreateWithoutNotificationsInput>;
+  delete?: InputMaybe<Scalars['Boolean']>;
+  disconnect?: InputMaybe<Scalars['Boolean']>;
+  update?: InputMaybe<PostUpdateWithoutNotificationsInput>;
+  upsert?: InputMaybe<PostUpsertWithoutNotificationsInput>;
+};
+
 export type PostUpdateOneWithoutPinnedUserNestedInput = {
   connect?: InputMaybe<PostWhereUniqueInput>;
   connectOrCreate?: InputMaybe<PostCreateOrConnectWithoutPinnedUserInput>;
@@ -1915,6 +2499,7 @@ export type PostUpdateWithoutBookmarkInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
   mentions?: InputMaybe<MentionUpdateManyWithoutPostNestedInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
@@ -1932,6 +2517,7 @@ export type PostUpdateWithoutLikesInput = {
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
   mentions?: InputMaybe<MentionUpdateManyWithoutPostNestedInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
@@ -1949,6 +2535,25 @@ export type PostUpdateWithoutMentionsInput = {
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
+  pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
+  replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
+  reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
+  tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
+  text?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
+  views?: InputMaybe<ViewUpdateManyWithoutPostNestedInput>;
+};
+
+export type PostUpdateWithoutNotificationsInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  bookmark?: InputMaybe<BookmarkUpdateManyWithoutPostNestedInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
+  likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
+  mentions?: InputMaybe<MentionUpdateManyWithoutPostNestedInput>;
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
@@ -1967,6 +2572,7 @@ export type PostUpdateWithoutPinnedUserInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
   mentions?: InputMaybe<MentionUpdateManyWithoutPostNestedInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
   tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
@@ -1984,6 +2590,7 @@ export type PostUpdateWithoutRepliesInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
   mentions?: InputMaybe<MentionUpdateManyWithoutPostNestedInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
   tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
@@ -2001,6 +2608,7 @@ export type PostUpdateWithoutReportsInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
   mentions?: InputMaybe<MentionUpdateManyWithoutPostNestedInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   tags?: InputMaybe<TagUpdateManyWithoutPostsNestedInput>;
@@ -2018,6 +2626,7 @@ export type PostUpdateWithoutUserInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
   mentions?: InputMaybe<MentionUpdateManyWithoutPostNestedInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
@@ -2035,6 +2644,7 @@ export type PostUpdateWithoutViewsInput = {
   image?: InputMaybe<Scalars['String']>;
   likes?: InputMaybe<LikeUpdateManyWithoutPostNestedInput>;
   mentions?: InputMaybe<MentionUpdateManyWithoutPostNestedInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   pinnedUser?: InputMaybe<UserUpdateOneWithoutPinnedPostNestedInput>;
   replies?: InputMaybe<ReplyUpdateManyWithoutPostNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutPostNestedInput>;
@@ -2063,6 +2673,11 @@ export type PostUpsertWithoutLikesInput = {
 export type PostUpsertWithoutMentionsInput = {
   create: PostCreateWithoutMentionsInput;
   update: PostUpdateWithoutMentionsInput;
+};
+
+export type PostUpsertWithoutNotificationsInput = {
+  create: PostCreateWithoutNotificationsInput;
+  update: PostUpdateWithoutNotificationsInput;
 };
 
 export type PostUpsertWithoutPinnedUserInput = {
@@ -2096,6 +2711,7 @@ export type PostWhereInput = {
   image?: InputMaybe<StringNullableFilter>;
   likes?: InputMaybe<LikeListRelationFilter>;
   mentions?: InputMaybe<MentionListRelationFilter>;
+  notifications?: InputMaybe<NotificationListRelationFilter>;
   pinnedUser?: InputMaybe<UserRelationFilter>;
   replies?: InputMaybe<ReplyListRelationFilter>;
   reports?: InputMaybe<ReportListRelationFilter>;
@@ -2126,6 +2742,7 @@ export type Query = {
   message?: Maybe<Message>;
   myConversations: ConversationsResponse;
   myMessages: MessagesResponse;
+  notifications: NotificationsResponse;
   post?: Maybe<Post>;
   posts: PostsResponse;
   refreshToken?: Maybe<RefreshTokenResponse>;
@@ -2170,6 +2787,16 @@ export type QueryMessageArgs = {
 export type QueryMyMessagesArgs = {
   orderBy: Array<MessageOrderByWithRelationInput>;
   userId: Scalars['String'];
+};
+
+
+export type QueryNotificationsArgs = {
+  cursor?: InputMaybe<NotificationWhereUniqueInput>;
+  distinct?: InputMaybe<Array<NotificationScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<NotificationOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<NotificationWhereInput>;
 };
 
 
@@ -2327,10 +2954,21 @@ export type ReplyCreateNestedManyWithoutUserInput = {
   createMany?: InputMaybe<ReplyCreateManyUserInputEnvelope>;
 };
 
+export type ReplyCreateNestedOneWithoutNotificationsInput = {
+  connect?: InputMaybe<ReplyWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<ReplyCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<ReplyCreateWithoutNotificationsInput>;
+};
+
 export type ReplyCreateNestedOneWithoutReportsInput = {
   connect?: InputMaybe<ReplyWhereUniqueInput>;
   connectOrCreate?: InputMaybe<ReplyCreateOrConnectWithoutReportsInput>;
   create?: InputMaybe<ReplyCreateWithoutReportsInput>;
+};
+
+export type ReplyCreateOrConnectWithoutNotificationsInput = {
+  create: ReplyCreateWithoutNotificationsInput;
+  where: ReplyWhereUniqueInput;
 };
 
 export type ReplyCreateOrConnectWithoutPostInput = {
@@ -2348,11 +2986,24 @@ export type ReplyCreateOrConnectWithoutUserInput = {
   where: ReplyWhereUniqueInput;
 };
 
+export type ReplyCreateWithoutNotificationsInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
+  post: PostCreateNestedOneWithoutRepliesInput;
+  reports?: InputMaybe<ReportCreateNestedManyWithoutReplyInput>;
+  text: Scalars['String'];
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user: UserCreateNestedOneWithoutRepliesInput;
+};
+
 export type ReplyCreateWithoutPostInput = {
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutReplyInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutReplyInput>;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
@@ -2364,6 +3015,7 @@ export type ReplyCreateWithoutReportsInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutReplyInput>;
   post: PostCreateNestedOneWithoutRepliesInput;
   text: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
@@ -2375,6 +3027,7 @@ export type ReplyCreateWithoutUserInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutReplyInput>;
   post: PostCreateNestedOneWithoutRepliesInput;
   reports?: InputMaybe<ReportCreateNestedManyWithoutReplyInput>;
   text: Scalars['String'];
@@ -2396,6 +3049,7 @@ export type ReplyOrderByWithRelationInput = {
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   image?: InputMaybe<SortOrderInput>;
+  notifications?: InputMaybe<NotificationOrderByRelationAggregateInput>;
   post?: InputMaybe<PostOrderByWithRelationInput>;
   postId?: InputMaybe<SortOrder>;
   reports?: InputMaybe<ReportOrderByRelationAggregateInput>;
@@ -2440,6 +3094,7 @@ export type ReplyUpdateInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutReplyNestedInput>;
   post?: InputMaybe<PostUpdateOneRequiredWithoutRepliesNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutReplyNestedInput>;
   text?: InputMaybe<Scalars['String']>;
@@ -2494,6 +3149,16 @@ export type ReplyUpdateManyWithoutUserNestedInput = {
   upsert?: InputMaybe<Array<ReplyUpsertWithWhereUniqueWithoutUserInput>>;
 };
 
+export type ReplyUpdateOneWithoutNotificationsNestedInput = {
+  connect?: InputMaybe<ReplyWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<ReplyCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<ReplyCreateWithoutNotificationsInput>;
+  delete?: InputMaybe<Scalars['Boolean']>;
+  disconnect?: InputMaybe<Scalars['Boolean']>;
+  update?: InputMaybe<ReplyUpdateWithoutNotificationsInput>;
+  upsert?: InputMaybe<ReplyUpsertWithoutNotificationsInput>;
+};
+
 export type ReplyUpdateOneWithoutReportsNestedInput = {
   connect?: InputMaybe<ReplyWhereUniqueInput>;
   connectOrCreate?: InputMaybe<ReplyCreateOrConnectWithoutReportsInput>;
@@ -2514,11 +3179,24 @@ export type ReplyUpdateWithWhereUniqueWithoutUserInput = {
   where: ReplyWhereUniqueInput;
 };
 
+export type ReplyUpdateWithoutNotificationsInput = {
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  id?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
+  post?: InputMaybe<PostUpdateOneRequiredWithoutRepliesNestedInput>;
+  reports?: InputMaybe<ReportUpdateManyWithoutReplyNestedInput>;
+  text?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutRepliesNestedInput>;
+};
+
 export type ReplyUpdateWithoutPostInput = {
   archivedAt?: InputMaybe<Scalars['DateTime']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutReplyNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutReplyNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
@@ -2530,6 +3208,7 @@ export type ReplyUpdateWithoutReportsInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutReplyNestedInput>;
   post?: InputMaybe<PostUpdateOneRequiredWithoutRepliesNestedInput>;
   text?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
@@ -2541,6 +3220,7 @@ export type ReplyUpdateWithoutUserInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   id?: InputMaybe<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutReplyNestedInput>;
   post?: InputMaybe<PostUpdateOneRequiredWithoutRepliesNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutReplyNestedInput>;
   text?: InputMaybe<Scalars['String']>;
@@ -2559,6 +3239,11 @@ export type ReplyUpsertWithWhereUniqueWithoutUserInput = {
   where: ReplyWhereUniqueInput;
 };
 
+export type ReplyUpsertWithoutNotificationsInput = {
+  create: ReplyCreateWithoutNotificationsInput;
+  update: ReplyUpdateWithoutNotificationsInput;
+};
+
 export type ReplyUpsertWithoutReportsInput = {
   create: ReplyCreateWithoutReportsInput;
   update: ReplyUpdateWithoutReportsInput;
@@ -2572,6 +3257,7 @@ export type ReplyWhereInput = {
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<UuidFilter>;
   image?: InputMaybe<StringNullableFilter>;
+  notifications?: InputMaybe<NotificationListRelationFilter>;
   post?: InputMaybe<PostRelationFilter>;
   postId?: InputMaybe<UuidFilter>;
   reports?: InputMaybe<ReportListRelationFilter>;
@@ -3311,6 +3997,7 @@ export type User = {
   postCount: Scalars['Float'];
   posts: Array<Post>;
   role: Role;
+  unreadNotificationCount: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
   website?: Maybe<Scalars['String']>;
 };
@@ -3342,6 +4029,7 @@ export type UserCreateInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3424,6 +4112,18 @@ export type UserCreateNestedOneWithoutMessagesSentInput = {
   connect?: InputMaybe<UserWhereUniqueInput>;
   connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutMessagesSentInput>;
   create?: InputMaybe<UserCreateWithoutMessagesSentInput>;
+};
+
+export type UserCreateNestedOneWithoutNotificationInitiatorsInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutNotificationInitiatorsInput>;
+  create?: InputMaybe<UserCreateWithoutNotificationInitiatorsInput>;
+};
+
+export type UserCreateNestedOneWithoutNotificationsInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<UserCreateWithoutNotificationsInput>;
 };
 
 export type UserCreateNestedOneWithoutPinnedPostInput = {
@@ -3516,6 +4216,16 @@ export type UserCreateOrConnectWithoutMutedByInput = {
   where: UserWhereUniqueInput;
 };
 
+export type UserCreateOrConnectWithoutNotificationInitiatorsInput = {
+  create: UserCreateWithoutNotificationInitiatorsInput;
+  where: UserWhereUniqueInput;
+};
+
+export type UserCreateOrConnectWithoutNotificationsInput = {
+  create: UserCreateWithoutNotificationsInput;
+  where: UserWhereUniqueInput;
+};
+
 export type UserCreateOrConnectWithoutPinnedPostInput = {
   create: UserCreateWithoutPinnedPostInput;
   where: UserWhereUniqueInput;
@@ -3567,6 +4277,7 @@ export type UserCreateWithoutBlockedAccountsInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3605,6 +4316,7 @@ export type UserCreateWithoutBlockedByInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3643,6 +4355,7 @@ export type UserCreateWithoutBookmarksInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3681,6 +4394,7 @@ export type UserCreateWithoutCreatedReportsInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3719,6 +4433,7 @@ export type UserCreateWithoutFollowersInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3757,6 +4472,7 @@ export type UserCreateWithoutFollowingInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3795,6 +4511,7 @@ export type UserCreateWithoutLikesInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3833,6 +4550,7 @@ export type UserCreateWithoutMentionsInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3871,6 +4589,7 @@ export type UserCreateWithoutMessagesReceivedInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3909,6 +4628,7 @@ export type UserCreateWithoutMessagesSentInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3947,6 +4667,7 @@ export type UserCreateWithoutMutedAccountsInput = {
   messagesSent?: InputMaybe<MessageCreateNestedManyWithoutSenderInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -3985,7 +4706,86 @@ export type UserCreateWithoutMutedByInput = {
   messagesSent?: InputMaybe<MessageCreateNestedManyWithoutSenderInput>;
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
+  password?: InputMaybe<Scalars['String']>;
+  pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
+  posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
+  replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
+  reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
+  role?: InputMaybe<Role>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
+  website?: InputMaybe<Scalars['String']>;
+};
+
+export type UserCreateWithoutNotificationInitiatorsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  avatar?: InputMaybe<Scalars['String']>;
+  bio?: InputMaybe<Scalars['String']>;
+  blockedAccounts?: InputMaybe<UserCreateNestedManyWithoutBlockedByInput>;
+  blockedBy?: InputMaybe<UserCreateNestedManyWithoutBlockedAccountsInput>;
+  bookmarks?: InputMaybe<BookmarkCreateNestedManyWithoutUserInput>;
+  cover?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  createdReports?: InputMaybe<ReportCreateNestedManyWithoutCreatorInput>;
+  dob?: InputMaybe<Scalars['String']>;
+  dobDayMonthPrivacy?: InputMaybe<DobPrivacy>;
+  dobYearPrivacy?: InputMaybe<DobPrivacy>;
+  email: Scalars['String'];
+  followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
+  following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
+  handle?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
+  location?: InputMaybe<Scalars['String']>;
+  mentions?: InputMaybe<MentionCreateNestedManyWithoutUserInput>;
+  messagesReceived?: InputMaybe<MessageCreateNestedManyWithoutReceiverInput>;
+  messagesSent?: InputMaybe<MessageCreateNestedManyWithoutSenderInput>;
+  mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
+  mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
+  name: Scalars['String'];
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
+  password?: InputMaybe<Scalars['String']>;
+  pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
+  posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
+  replies?: InputMaybe<ReplyCreateNestedManyWithoutUserInput>;
+  reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
+  role?: InputMaybe<Role>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
+  website?: InputMaybe<Scalars['String']>;
+};
+
+export type UserCreateWithoutNotificationsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  avatar?: InputMaybe<Scalars['String']>;
+  bio?: InputMaybe<Scalars['String']>;
+  blockedAccounts?: InputMaybe<UserCreateNestedManyWithoutBlockedByInput>;
+  blockedBy?: InputMaybe<UserCreateNestedManyWithoutBlockedAccountsInput>;
+  bookmarks?: InputMaybe<BookmarkCreateNestedManyWithoutUserInput>;
+  cover?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  createdReports?: InputMaybe<ReportCreateNestedManyWithoutCreatorInput>;
+  dob?: InputMaybe<Scalars['String']>;
+  dobDayMonthPrivacy?: InputMaybe<DobPrivacy>;
+  dobYearPrivacy?: InputMaybe<DobPrivacy>;
+  email: Scalars['String'];
+  followers?: InputMaybe<UserCreateNestedManyWithoutFollowingInput>;
+  following?: InputMaybe<UserCreateNestedManyWithoutFollowersInput>;
+  handle?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  likes?: InputMaybe<LikeCreateNestedManyWithoutUserInput>;
+  location?: InputMaybe<Scalars['String']>;
+  mentions?: InputMaybe<MentionCreateNestedManyWithoutUserInput>;
+  messagesReceived?: InputMaybe<MessageCreateNestedManyWithoutReceiverInput>;
+  messagesSent?: InputMaybe<MessageCreateNestedManyWithoutSenderInput>;
+  mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
+  mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
+  name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
@@ -4024,6 +4824,7 @@ export type UserCreateWithoutPinnedPostInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
@@ -4062,6 +4863,7 @@ export type UserCreateWithoutPostsInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -4100,6 +4902,7 @@ export type UserCreateWithoutRepliesInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -4138,6 +4941,7 @@ export type UserCreateWithoutReportsInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -4176,6 +4980,7 @@ export type UserCreateWithoutViewsInput = {
   mutedAccounts?: InputMaybe<UserCreateNestedManyWithoutMutedByInput>;
   mutedBy?: InputMaybe<UserCreateNestedManyWithoutMutedAccountsInput>;
   name: Scalars['String'];
+  notificationInitiators?: InputMaybe<NotificationCreateNestedManyWithoutInitiatorInput>;
   notifications?: InputMaybe<NotificationCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
@@ -4224,6 +5029,7 @@ export type UserOrderByWithRelationInput = {
   mutedAccounts?: InputMaybe<UserOrderByRelationAggregateInput>;
   mutedBy?: InputMaybe<UserOrderByRelationAggregateInput>;
   name?: InputMaybe<SortOrder>;
+  notificationInitiators?: InputMaybe<NotificationOrderByRelationAggregateInput>;
   notifications?: InputMaybe<NotificationOrderByRelationAggregateInput>;
   password?: InputMaybe<SortOrderInput>;
   pinnedPost?: InputMaybe<PostOrderByWithRelationInput>;
@@ -4466,6 +5272,22 @@ export type UserUpdateOneRequiredWithoutMessagesSentNestedInput = {
   upsert?: InputMaybe<UserUpsertWithoutMessagesSentInput>;
 };
 
+export type UserUpdateOneRequiredWithoutNotificationInitiatorsNestedInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutNotificationInitiatorsInput>;
+  create?: InputMaybe<UserCreateWithoutNotificationInitiatorsInput>;
+  update?: InputMaybe<UserUpdateWithoutNotificationInitiatorsInput>;
+  upsert?: InputMaybe<UserUpsertWithoutNotificationInitiatorsInput>;
+};
+
+export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<UserCreateWithoutNotificationsInput>;
+  update?: InputMaybe<UserUpdateWithoutNotificationsInput>;
+  upsert?: InputMaybe<UserUpsertWithoutNotificationsInput>;
+};
+
 export type UserUpdateOneRequiredWithoutPostsNestedInput = {
   connect?: InputMaybe<UserWhereUniqueInput>;
   connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutPostsInput>;
@@ -4566,6 +5388,7 @@ export type UserUpdateWithoutBlockedAccountsInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -4604,6 +5427,7 @@ export type UserUpdateWithoutBlockedByInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -4642,6 +5466,7 @@ export type UserUpdateWithoutBookmarksInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -4680,6 +5505,7 @@ export type UserUpdateWithoutCreatedReportsInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -4718,6 +5544,7 @@ export type UserUpdateWithoutFollowersInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -4756,6 +5583,7 @@ export type UserUpdateWithoutFollowingInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -4794,6 +5622,7 @@ export type UserUpdateWithoutLikesInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -4832,6 +5661,7 @@ export type UserUpdateWithoutMentionsInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -4870,6 +5700,7 @@ export type UserUpdateWithoutMessagesReceivedInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -4908,6 +5739,7 @@ export type UserUpdateWithoutMessagesSentInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -4946,6 +5778,7 @@ export type UserUpdateWithoutMutedAccountsInput = {
   messagesSent?: InputMaybe<MessageUpdateManyWithoutSenderNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -4984,7 +5817,86 @@ export type UserUpdateWithoutMutedByInput = {
   messagesSent?: InputMaybe<MessageUpdateManyWithoutSenderNestedInput>;
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
+  password?: InputMaybe<Scalars['String']>;
+  pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
+  posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
+  replies?: InputMaybe<ReplyUpdateManyWithoutUserNestedInput>;
+  reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
+  role?: InputMaybe<Role>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
+  website?: InputMaybe<Scalars['String']>;
+};
+
+export type UserUpdateWithoutNotificationInitiatorsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  avatar?: InputMaybe<Scalars['String']>;
+  bio?: InputMaybe<Scalars['String']>;
+  blockedAccounts?: InputMaybe<UserUpdateManyWithoutBlockedByNestedInput>;
+  blockedBy?: InputMaybe<UserUpdateManyWithoutBlockedAccountsNestedInput>;
+  bookmarks?: InputMaybe<BookmarkUpdateManyWithoutUserNestedInput>;
+  cover?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  createdReports?: InputMaybe<ReportUpdateManyWithoutCreatorNestedInput>;
+  dob?: InputMaybe<Scalars['String']>;
+  dobDayMonthPrivacy?: InputMaybe<DobPrivacy>;
+  dobYearPrivacy?: InputMaybe<DobPrivacy>;
+  email?: InputMaybe<Scalars['String']>;
+  followers?: InputMaybe<UserUpdateManyWithoutFollowingNestedInput>;
+  following?: InputMaybe<UserUpdateManyWithoutFollowersNestedInput>;
+  handle?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  likes?: InputMaybe<LikeUpdateManyWithoutUserNestedInput>;
+  location?: InputMaybe<Scalars['String']>;
+  mentions?: InputMaybe<MentionUpdateManyWithoutUserNestedInput>;
+  messagesReceived?: InputMaybe<MessageUpdateManyWithoutReceiverNestedInput>;
+  messagesSent?: InputMaybe<MessageUpdateManyWithoutSenderNestedInput>;
+  mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
+  mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
+  name?: InputMaybe<Scalars['String']>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
+  password?: InputMaybe<Scalars['String']>;
+  pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
+  posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
+  replies?: InputMaybe<ReplyUpdateManyWithoutUserNestedInput>;
+  reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
+  role?: InputMaybe<Role>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
+  website?: InputMaybe<Scalars['String']>;
+};
+
+export type UserUpdateWithoutNotificationsInput = {
+  allowMessagesFrom?: InputMaybe<AllowMessagesFrom>;
+  archivedAt?: InputMaybe<Scalars['DateTime']>;
+  avatar?: InputMaybe<Scalars['String']>;
+  bio?: InputMaybe<Scalars['String']>;
+  blockedAccounts?: InputMaybe<UserUpdateManyWithoutBlockedByNestedInput>;
+  blockedBy?: InputMaybe<UserUpdateManyWithoutBlockedAccountsNestedInput>;
+  bookmarks?: InputMaybe<BookmarkUpdateManyWithoutUserNestedInput>;
+  cover?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  createdReports?: InputMaybe<ReportUpdateManyWithoutCreatorNestedInput>;
+  dob?: InputMaybe<Scalars['String']>;
+  dobDayMonthPrivacy?: InputMaybe<DobPrivacy>;
+  dobYearPrivacy?: InputMaybe<DobPrivacy>;
+  email?: InputMaybe<Scalars['String']>;
+  followers?: InputMaybe<UserUpdateManyWithoutFollowingNestedInput>;
+  following?: InputMaybe<UserUpdateManyWithoutFollowersNestedInput>;
+  handle?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  likes?: InputMaybe<LikeUpdateManyWithoutUserNestedInput>;
+  location?: InputMaybe<Scalars['String']>;
+  mentions?: InputMaybe<MentionUpdateManyWithoutUserNestedInput>;
+  messagesReceived?: InputMaybe<MessageUpdateManyWithoutReceiverNestedInput>;
+  messagesSent?: InputMaybe<MessageUpdateManyWithoutSenderNestedInput>;
+  mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
+  mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
+  name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
@@ -5023,6 +5935,7 @@ export type UserUpdateWithoutPinnedPostInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
@@ -5061,6 +5974,7 @@ export type UserUpdateWithoutPostsInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -5099,6 +6013,7 @@ export type UserUpdateWithoutRepliesInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -5137,6 +6052,7 @@ export type UserUpdateWithoutReportsInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -5175,6 +6091,7 @@ export type UserUpdateWithoutViewsInput = {
   mutedAccounts?: InputMaybe<UserUpdateManyWithoutMutedByNestedInput>;
   mutedBy?: InputMaybe<UserUpdateManyWithoutMutedAccountsNestedInput>;
   name?: InputMaybe<Scalars['String']>;
+  notificationInitiators?: InputMaybe<NotificationUpdateManyWithoutInitiatorNestedInput>;
   notifications?: InputMaybe<NotificationUpdateManyWithoutUserNestedInput>;
   password?: InputMaybe<Scalars['String']>;
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
@@ -5252,6 +6169,16 @@ export type UserUpsertWithoutMessagesSentInput = {
   update: UserUpdateWithoutMessagesSentInput;
 };
 
+export type UserUpsertWithoutNotificationInitiatorsInput = {
+  create: UserCreateWithoutNotificationInitiatorsInput;
+  update: UserUpdateWithoutNotificationInitiatorsInput;
+};
+
+export type UserUpsertWithoutNotificationsInput = {
+  create: UserCreateWithoutNotificationsInput;
+  update: UserUpdateWithoutNotificationsInput;
+};
+
 export type UserUpsertWithoutPinnedPostInput = {
   create: UserCreateWithoutPinnedPostInput;
   update: UserUpdateWithoutPinnedPostInput;
@@ -5307,6 +6234,7 @@ export type UserWhereInput = {
   mutedAccounts?: InputMaybe<UserListRelationFilter>;
   mutedBy?: InputMaybe<UserListRelationFilter>;
   name?: InputMaybe<StringFilter>;
+  notificationInitiators?: InputMaybe<NotificationListRelationFilter>;
   notifications?: InputMaybe<NotificationListRelationFilter>;
   password?: InputMaybe<StringNullableFilter>;
   pinnedPost?: InputMaybe<PostRelationFilter>;
@@ -5741,7 +6669,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -5750,12 +6678,12 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
 export type BlockedMutedAccountFragment = { __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null };
 
-export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> };
+export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } | null };
 
 export type GetSignedUrlForPutMutationVariables = Exact<{
   data: S3SignedUrlInput;
@@ -5845,7 +6773,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } } };
 
 export type MessageItemFragment = { __typename?: 'Message', id: string, senderId: string, receiverId: string, text: string, createdAt: string };
 
@@ -5904,6 +6832,23 @@ export type GetMessageQueryVariables = Exact<{
 
 
 export type GetMessageQuery = { __typename?: 'Query', message?: { __typename?: 'Message', id: string, text: string } | null };
+
+export type NotificationItemFragment = { __typename?: 'Notification', id: string, type: NotificationType, status: NotificationStatus, initiator: { __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }, message?: { __typename?: 'Message', id: string, text: string, sender: { __typename?: 'User', id: string, avatar?: string | null, name: string } } | null, post?: { __typename?: 'Post', id: string, text: string } | null, reply?: { __typename?: 'Reply', id: string, text: string } | null };
+
+export type GetNotificationsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<NotificationOrderByWithRelationInput> | NotificationOrderByWithRelationInput>;
+  where?: InputMaybe<NotificationWhereInput>;
+}>;
+
+
+export type GetNotificationsQuery = { __typename?: 'Query', notifications: { __typename?: 'NotificationsResponse', count: number, items: Array<{ __typename?: 'Notification', id: string, type: NotificationType, status: NotificationStatus, initiator: { __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }, message?: { __typename?: 'Message', id: string, text: string, sender: { __typename?: 'User', id: string, avatar?: string | null, name: string } } | null, post?: { __typename?: 'Post', id: string, text: string } | null, reply?: { __typename?: 'Reply', id: string, text: string } | null }> } };
+
+export type MarkNotificationAsReadMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type MarkNotificationAsReadMutation = { __typename?: 'Mutation', markAsRead: boolean };
 
 export type ReplyItemFragment = { __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
 
@@ -6084,6 +7029,7 @@ export const MeFragmentDoc = gql`
   allowMessagesFrom
   followingCount
   followerCount
+  unreadNotificationCount
   createdAt
   pinnedPost {
     ...PostItem
@@ -6208,6 +7154,36 @@ export const MessageReportFragmentDoc = gql`
     fragment MessageReport on Message {
   id
   text
+}
+    `;
+export const NotificationItemFragmentDoc = gql`
+    fragment NotificationItem on Notification {
+  id
+  type
+  status
+  initiator {
+    id
+    avatar
+    name
+    handle
+  }
+  message {
+    id
+    text
+    sender {
+      id
+      avatar
+      name
+    }
+  }
+  post {
+    id
+    text
+  }
+  reply {
+    id
+    text
+  }
 }
     `;
 export const ReplyItemFragmentDoc = gql`
@@ -6974,6 +7950,39 @@ export function useGetMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type GetMessageQueryHookResult = ReturnType<typeof useGetMessageQuery>;
 export type GetMessageLazyQueryHookResult = ReturnType<typeof useGetMessageLazyQuery>;
 export type GetMessageQueryResult = Apollo.QueryResult<GetMessageQuery, GetMessageQueryVariables>;
+export const GetNotificationsDocument = gql`
+    query GetNotifications($orderBy: [NotificationOrderByWithRelationInput!], $where: NotificationWhereInput) {
+  notifications(orderBy: $orderBy, where: $where) {
+    items {
+      ...NotificationItem
+    }
+    count
+  }
+}
+    ${NotificationItemFragmentDoc}`;
+export function useGetNotificationsQuery(baseOptions?: Apollo.QueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, options);
+      }
+export function useGetNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, options);
+        }
+export type GetNotificationsQueryHookResult = ReturnType<typeof useGetNotificationsQuery>;
+export type GetNotificationsLazyQueryHookResult = ReturnType<typeof useGetNotificationsLazyQuery>;
+export type GetNotificationsQueryResult = Apollo.QueryResult<GetNotificationsQuery, GetNotificationsQueryVariables>;
+export const MarkNotificationAsReadDocument = gql`
+    mutation MarkNotificationAsRead($id: String!) {
+  markAsRead(id: $id)
+}
+    `;
+export function useMarkNotificationAsReadMutation(baseOptions?: Apollo.MutationHookOptions<MarkNotificationAsReadMutation, MarkNotificationAsReadMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MarkNotificationAsReadMutation, MarkNotificationAsReadMutationVariables>(MarkNotificationAsReadDocument, options);
+      }
+export type MarkNotificationAsReadMutationHookResult = ReturnType<typeof useMarkNotificationAsReadMutation>;
+export type MarkNotificationAsReadMutationResult = Apollo.MutationResult<MarkNotificationAsReadMutation>;
+export type MarkNotificationAsReadMutationOptions = Apollo.BaseMutationOptions<MarkNotificationAsReadMutation, MarkNotificationAsReadMutationVariables>;
 export const GetPostDocument = gql`
     query GetPost($where: PostWhereInput!) {
   post(where: $where) {

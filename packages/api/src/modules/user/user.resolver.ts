@@ -6,6 +6,7 @@ import {
   CreateOneUserArgs,
   FindFirstUserArgs,
   FindManyUserArgs,
+  NotificationType,
   Role,
 } from "@twatter/database/dist/generated"
 
@@ -203,6 +204,13 @@ export default class UserResolver {
     await prisma.user.update({
       where: { id: currentUser.id },
       data: { following: { connect: { id: userId } } },
+    })
+    await prisma.notification.create({
+      data: {
+        initiatorId: currentUser.id,
+        userId,
+        type: NotificationType.NEW_FOLLOW,
+      },
     })
     return true
   }

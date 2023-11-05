@@ -1,6 +1,8 @@
 import { FieldResolver, Resolver, Root } from "type-graphql"
 import { Service } from "typedi"
 
+import { NotificationStatus } from "@twatter/database/dist/generated"
+
 import { S3_URL } from "../../lib/config"
 import { prisma } from "../../lib/prisma"
 import { Bookmark } from "../bookmark/bookmark.model"
@@ -111,5 +113,10 @@ export default class UserFieldResolver {
   @FieldResolver(() => [Report])
   createdReports(@Root() user: User) {
     return prisma.user.findUnique({ where: { id: user.id } }).createdReports()
+  }
+
+  @FieldResolver(() => Number)
+  unreadNotificationCount(@Root() user: User) {
+    return prisma.notification.count({ where: { userId: user.id, status: NotificationStatus.UNREAD } })
   }
 }

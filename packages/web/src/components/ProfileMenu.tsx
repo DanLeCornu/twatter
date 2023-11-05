@@ -1,3 +1,4 @@
+import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
 import { AiOutlineLink } from "react-icons/ai"
 import { BiBlock, BiFlag, BiVolumeFull, BiVolumeMute } from "react-icons/bi"
@@ -24,7 +25,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import NextLink from "next/link"
-import * as React from "React"
 
 import { WEB_URL } from "lib/config"
 import { useToast } from "lib/hooks/useToast"

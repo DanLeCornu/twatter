@@ -69,6 +69,7 @@ export default class PostResolver {
   @Mutation(() => Post)
   async createPost(@CurrentUser() currentUser: User, @Arg("data") data: CreatePostInput): Promise<Post> {
     return await prisma.post.create({ data: { ...data, user: { connect: { id: currentUser.id } } } })
+    // TODO check if mentioning someone, if so, send them a notification
   }
 
   // UPDATE POST

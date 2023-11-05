@@ -1,7 +1,7 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql"
 import { Service } from "typedi"
 
-import { MessageOrderByWithRelationInput } from "@twatter/database/dist/generated"
+import { MessageOrderByWithRelationInput, NotificationType } from "@twatter/database/dist/generated"
 
 import { prisma } from "../../lib/prisma"
 import { CurrentUser } from "../shared/currentUser"
@@ -125,7 +125,15 @@ export default class MessageResolver {
     @CurrentUser() currentUser: User,
     @Arg("data") data: CreateMessageInput,
   ): Promise<Boolean> {
-    await prisma.message.create({ data: { senderId: currentUser.id, ...data } })
+    const message = await prisma.message.create({ data: { senderId: currentUser.id, ...data } })
+    await prisma.notification.create({
+      data: {
+        initiatorId: currentUser.id,
+        userId: data.receiverId,
+        type: NotificationType.NEW_MESSAGE,
+        messageId: message.id,
+      },
+    })
     return true
   }
 

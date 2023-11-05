@@ -79,6 +79,7 @@ export function DesktopHomeCreatePostForm() {
 
   const textAreaHeight = isActive && !image ? "105px" : isActive ? "auto" : "50px"
   const containerHeight = isActive && !image ? "190px" : isActive ? "auto" : "125px"
+  const borderColor = useColorModeValue("gray.100", "gray.700")
 
   return (
     <Form {...form} onSubmit={handleSubmit}>
@@ -87,7 +88,7 @@ export function DesktopHomeCreatePostForm() {
         h={containerHeight}
         transition="200ms height"
         borderBottom="1px solid"
-        borderColor={useColorModeValue("gray.100", "gray.700")}
+        borderColor={borderColor}
       >
         <Box h="100%" pt={4}>
           <Avatar src={me?.avatar || undefined} boxSize="40px" />

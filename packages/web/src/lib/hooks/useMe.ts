@@ -29,6 +29,7 @@ export const _ = gql`
     allowMessagesFrom
     followingCount
     followerCount
+    unreadNotificationCount
     createdAt
     pinnedPost {
       ...PostItem

@@ -1,7 +1,12 @@
 import { Arg, Args, Mutation, Query, Resolver } from "type-graphql"
 import { Service } from "typedi"
 
-import { FindFirstReplyArgs, FindManyReplyArgs, ReplyUpdateInput } from "@twatter/database/dist/generated"
+import {
+  FindFirstReplyArgs,
+  FindManyReplyArgs,
+  NotificationType,
+  ReplyUpdateInput,
+} from "@twatter/database/dist/generated"
 
 import { prisma } from "../../lib/prisma"
 import { CurrentUser } from "../shared/currentUser"
@@ -36,7 +41,21 @@ export default class ReplyResolver {
   @UseAuth()
   @Mutation(() => Reply)
   async createReply(@CurrentUser() currentUser: User, @Arg("data") data: CreateReplyInput): Promise<Reply> {
-    return await prisma.reply.create({ data: { userId: currentUser.id, ...data } })
+    const reply = await prisma.reply.create({ data: { userId: currentUser.id, ...data } })
+    const user = await prisma.post.findUnique({ where: { id: data.postId } }).user()
+    // TODO check if mentioning someone, if so, send them a notification
+    if (user && user.id !== currentUser.id) {
+      await prisma.notification.create({
+        data: {
+          initiatorId: currentUser.id,
+          userId: user.id,
+          type: NotificationType.NEW_REPLY,
+          postId: data.postId,
+          replyId: reply.id,
+        },
+      })
+    }
+    return reply
   }
 
   // UPDATE REPLY
