@@ -1,7 +1,16 @@
 import * as React from "react"
 import { BiBell, BiHomeCircle, BiSearch } from "react-icons/bi"
 import { FiMail } from "react-icons/fi"
-import { Box, HStack, Icon, IconButton, useColorModeValue } from "@chakra-ui/react"
+import {
+  Box,
+  Center,
+  HStack,
+  Icon,
+  IconButton,
+  Text,
+  useColorMode,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
@@ -13,11 +22,13 @@ export const MOBILE_BOTTOM_TAB_HEIGHT = 50
 export function MobileBottomTabs() {
   const { me } = useMe()
   const { asPath } = useRouter()
+  const { colorMode } = useColorMode()
 
   const notificationCount = me?.unreadNotificationCount || 0
 
   const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const borderColor = useColorModeValue("gray.100", "gray.700")
+  const isDark = colorMode === "dark"
 
   return (
     <HStack
@@ -61,19 +72,37 @@ export function MobileBottomTabs() {
           icon={
             <Box position="relative">
               {notificationCount ? (
-                <Box
+                <Center
                   position="absolute"
                   top={-1}
-                  left={0}
-                  px={1}
-                  py={0.5}
+                  right={
+                    notificationCount > 99
+                      ? -4
+                      : notificationCount > 19
+                      ? -3
+                      : notificationCount > 9
+                      ? -2
+                      : -1
+                  }
                   bg="brand.blue"
-                  color="white"
-                  fontSize="10px"
-                  rounded="xl"
+                  rounded="full"
+                  border="1px"
+                  borderColor={isDark ? "brand.bgDark" : "white"}
+                  h="18px"
+                  w={
+                    notificationCount > 99
+                      ? "30px"
+                      : notificationCount > 19
+                      ? "22px"
+                      : notificationCount > 9
+                      ? "20px"
+                      : "18px"
+                  }
                 >
-                  {notificationCount > 99 ? "99+" : notificationCount}
-                </Box>
+                  <Text color="white" fontWeight="light" fontSize="11px">
+                    {notificationCount > 99 ? "99+" : notificationCount}
+                  </Text>
+                </Center>
               ) : null}
               <Icon
                 as={BiBell}

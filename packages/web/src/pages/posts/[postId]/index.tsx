@@ -38,6 +38,7 @@ import { useUpdateReplyMutation } from "lib/graphql"
 import { MeDocument, useUnblockUserMutation } from "lib/graphql"
 import { GetPostDocument, useCreateReplyMutation, useGetPostQuery } from "lib/graphql"
 import { useForm } from "lib/hooks/useForm"
+import { useHighlightedText } from "lib/hooks/useHighlightText"
 import { useMe } from "lib/hooks/useMe"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
 import { useS3Upload } from "lib/hooks/useS3"
@@ -133,6 +134,8 @@ function Post() {
       },
     })
   }
+
+  const postContent = useHighlightedText(post?.text || "")
 
   if (loading && !post)
     return (
@@ -277,7 +280,7 @@ function Post() {
           </HStack>
         </Box>
         <Text px={4} fontSize="lg">
-          {post.text}
+          {postContent}
         </Text>
         <HStack px={4} color={handleColor} spacing={1}>
           <Text fontSize="sm">{dayjs(post.createdAt).format("h:mm A")}</Text>

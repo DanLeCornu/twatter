@@ -318,9 +318,9 @@ function NotificationItem({ notification }: Props) {
   return (
     <Box borderBottom="1px" borderColor={borderColor} onClick={handleClick} _hover={{ bg: bgHover }}>
       <NextLink href={href}>
-        <HStack justify="space-between" align="flex-start" pl={10} pr={4} py={2}>
+        <HStack justify="space-between" align="flex-start" pl={10} pr={4} py={3}>
           <HStack align="flex-start" spacing={3}>
-            <Icon as={icon} boxSize="22px" mt="2px" color="gray.400" />
+            <Icon as={icon} boxSize="22px" mt={1} color="gray.400" />
             <Stack spacing={1}>
               <Avatar src={notification.initiator.avatar || undefined} boxSize="30px" />
               <Text fontSize="sm">

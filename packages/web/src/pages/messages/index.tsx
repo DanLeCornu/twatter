@@ -1,22 +1,32 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
+import { BiSearch, BiX } from "react-icons/bi"
 import { FiSettings } from "react-icons/fi"
 import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import { gql } from "@apollo/client"
+import type {
+  InputProps} from "@chakra-ui/react";
 import {
   Avatar,
   Box,
+  Button,
   Center,
+  Flex,
   Heading,
   HStack,
   Icon,
   IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
   Spinner,
   Stack,
   Text,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { matchSorter } from "match-sorter"
 import Head from "next/head"
 import NextLink from "next/link"
 
@@ -67,6 +77,7 @@ function Messages() {
   const { me, loading } = useMe()
   const drawerProps = useDisclosure()
   const menuProps = useDisclosure()
+  const [search, setSearch] = React.useState("")
   const [selectedConversation, setSelectedConversation] = React.useState<
     ConversationItemFragment | undefined
   >()
@@ -74,6 +85,8 @@ function Messages() {
   const { data, loading: conversationsLoading } = useGetMyConversationsQuery()
 
   const conversations = data?.myConversations.items || []
+
+  const matchedConversations = matchSorter(conversations, search, { keys: ["user.name"] })
 
   const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const borderColor = useColorModeValue("gray.100", "gray.700")
@@ -140,24 +153,45 @@ function Messages() {
       </Box>
 
       <Stack mt={HEADING_CONTAINER_HEIGHT + "px"} py={2} px={4}>
-        {conversationsLoading ? (
-          <Center>
-            <Spinner />
-          </Center>
-        ) : conversations.length === 0 ? (
-          <Center p={6}>
+        <Stack spacing={4}>
+          <MessagesSearch search={search} setSearch={setSearch} />
+          {conversationsLoading ? (
+            <Center>
+              <Spinner />
+            </Center>
+          ) : conversations.length === 0 ? (
+            <Center p={6}>
+              <Stack>
+                <Heading>Send a message, get a message</Heading>
+                <Text fontSize="sm" color="gray.400">
+                  Direct messages are private conversations between you and other people on Twatter
+                </Text>
+              </Stack>
+            </Center>
+          ) : matchedConversations.length === 0 ? (
+            <Center p={6}>
+              <Stack spacing={6}>
+                <Stack>
+                  <Heading>No results for "{search}"</Heading>
+                  <Text fontSize="sm" color="gray.400">
+                    The term you entered did not bring up any results
+                  </Text>
+                </Stack>
+                <NextLink href="messages/new">
+                  <Button px={9} py={7} size="lg">
+                    Start new message
+                  </Button>
+                </NextLink>
+              </Stack>
+            </Center>
+          ) : (
             <Stack>
-              <Heading>Send a message, get a message</Heading>
-              <Text fontSize="sm" color="gray.400">
-                Direct messages are private conversations between you and other people on Twatter
-              </Text>
+              {matchedConversations.map((conversation, i) => (
+                <ConversationItem key={i} conversation={conversation} handleOpenMenu={handleOpenMenu} />
+              ))}
             </Stack>
-          </Center>
-        ) : (
-          conversations.map((conversation, i) => (
-            <ConversationItem key={i} conversation={conversation} handleOpenMenu={handleOpenMenu} />
-          ))
-        )}
+          )}
+        </Stack>
       </Stack>
 
       <ConversationMenu drawerProps={drawerProps} menuProps={menuProps} conversation={selectedConversation} />
@@ -169,12 +203,12 @@ Messages.getLayout = (page: React.ReactNode) => <HomeLayout>{page}</HomeLayout>
 
 export default withAuth(Messages)
 
-interface Props {
+interface ConversationItemProps {
   conversation: ConversationItemFragment
   handleOpenMenu: (conversation: ConversationItemFragment) => void
 }
 
-function ConversationItem({ conversation, handleOpenMenu }: Props) {
+function ConversationItem({ conversation, handleOpenMenu }: ConversationItemProps) {
   const bgHover = useColorModeValue("gray.50", "#182234")
   const latestMessage = conversation.messages[conversation.messages.length - 1]
   return (
@@ -224,5 +258,56 @@ function ConversationItem({ conversation, handleOpenMenu }: Props) {
         </HStack>
       </HStack>
     </NextLink>
+  )
+}
+
+interface SearchProps extends InputProps {
+  search: string
+  setSearch: React.Dispatch<React.SetStateAction<string>>
+}
+
+function MessagesSearch({ search, setSearch, ...props }: SearchProps) {
+  const borderColor = useColorModeValue("gray.100", "gray.600")
+  return (
+    <InputGroup>
+      <InputLeftElement h="100%" pl={2}>
+        <Flex align="center">
+          <IconButton
+            rounded="full"
+            size="sm"
+            aria-label="search"
+            variant="ghost"
+            color="gray.500"
+            icon={<Box as={BiSearch} boxSize="20px" />}
+          />
+        </Flex>
+      </InputLeftElement>
+      <Input
+        rounded="full"
+        pl="40px !important"
+        py={2}
+        size="sm"
+        value={search}
+        {...props}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search Direct Messages"
+        fontSize="15px"
+        border="1px"
+        borderColor={borderColor}
+        variant="unstyled"
+        _placeholder={{ color: "gray.500" }}
+      />
+      <InputRightElement h="100%" pr={2}>
+        {!!search && (
+          <IconButton
+            rounded="full"
+            onClick={() => setSearch("")}
+            size="xs"
+            aria-label="clear search"
+            icon={<Box as={BiX} boxSize="20px" color="black.500" />}
+          />
+        )}
+      </InputRightElement>
+    </InputGroup>
   )
 }
