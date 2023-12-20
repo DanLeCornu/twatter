@@ -116,7 +116,7 @@ export function useMutationHandler() {
       console.log(e)
       toast({
         title: "Something went wrong, we have been notified!",
-        description: "Do you have an internet connection?",
+        description: "Network error: Do you have an internet connection?",
         status: "error",
       })
       return

@@ -33,6 +33,7 @@ import { Modal } from "./Modal"
 import { PostAnalytics } from "./PostAnalytics"
 import { PostItemShareMenu } from "./PostItemShareMenu"
 import { UserPopover } from "./UserPopover"
+import { stringsOnly } from "lib/helpers/utils"
 
 interface Props {
   post: PostItemFragment
@@ -41,11 +42,13 @@ interface Props {
 
 export function PostItem({ post, isPinned = false }: Props) {
   const { me } = useMe()
-
   const modalProps = useDisclosure()
+
   const borderColor = useColorModeValue("gray.100", "gray.700")
   const bgHover = useColorModeValue("gray.50", "#182234")
   const popoverBg = useColorModeValue("white", "#1A202C")
+
+  const mentions = stringsOnly(post.mentions.map((mention) => "@" + mention.user.handle))
 
   return (
     <>
@@ -100,7 +103,7 @@ export function PostItem({ post, isPinned = false }: Props) {
               </HStack>
               {/* CONTENT */}
               <Text pl={2} pb={3} pr={2} fontSize="sm">
-                {useHighlightedText(post.text)}
+                {useHighlightedText(post.text, mentions)}
               </Text>
               {post.image && (
                 <Box pl={2} pr={2} pb={2}>

@@ -61,6 +61,7 @@ import { PostDetailShareMenu } from "components/PostDetailShareMenu"
 import { ReplyItem } from "components/ReplyItem"
 import { Textarea } from "components/Textarea"
 import { UserPopover } from "components/UserPopover"
+import { stringsOnly } from "lib/helpers/utils"
 
 export const _ = gql`
   fragment ReplyItem on Reply {
@@ -86,6 +87,13 @@ export const _ = gql`
     }
     replies {
       ...ReplyItem
+    }
+    mentions {
+      id
+      user {
+        id
+        handle
+      }
     }
   }
   query GetPost($where: PostWhereInput!) {
@@ -135,7 +143,8 @@ function Post() {
     })
   }
 
-  const postContent = useHighlightedText(post?.text || "")
+  const mentions = post ? stringsOnly(post.mentions.map((mention) => "@" + mention.user.handle)) : []
+  const postContent = useHighlightedText(post?.text || "", mentions)
 
   if (loading && !post)
     return (

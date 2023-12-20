@@ -32,3 +32,11 @@ export const timeUntilEndOfDay = () => {
 export const random = (array: any[]) => {
   return array[Math.floor(Math.random() * array.length)]
 }
+
+export function uniq(a: any[]) {
+  return Array.from(new Set(a))
+}
+
+export function stringsOnly(a: (string | null | undefined)[]) {
+  return a.flatMap((e) => e || [])
+}

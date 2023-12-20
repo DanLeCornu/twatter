@@ -29,6 +29,13 @@ export const _ = gql`
     user {
       ...UserDetail
     }
+    mentions {
+      id
+      user {
+        id
+        handle
+      }
+    }
   }
   query GetPosts($orderBy: [PostOrderByWithRelationInput!], $where: PostWhereInput, $skip: Int) {
     posts(take: 30, orderBy: $orderBy, where: $where, skip: $skip) {

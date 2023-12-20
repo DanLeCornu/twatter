@@ -277,8 +277,8 @@ export type CreateMessageInput = {
 };
 
 export type CreatePostInput = {
+  handles: Array<Scalars['String']>;
   image?: InputMaybe<Scalars['String']>;
-  mentions?: InputMaybe<MentionCreateNestedManyWithoutPostInput>;
   tags?: InputMaybe<TagCreateNestedManyWithoutPostsInput>;
   text: Scalars['String'];
 };
@@ -594,6 +594,16 @@ export type LikesResponse = {
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type Mention = {
+  __typename?: 'Mention';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  postId: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  user: User;
+  userId: Scalars['String'];
 };
 
 export type MentionCreateManyPostInput = {
@@ -2027,6 +2037,7 @@ export type Post = {
   id: Scalars['String'];
   image?: Maybe<Scalars['String']>;
   likeCount: Scalars['Float'];
+  mentions: Array<Mention>;
   replies: Array<Reply>;
   replyCount: Scalars['Float'];
   text: Scalars['String'];
@@ -6543,7 +6554,7 @@ export type UpdatePostMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
+export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> } };
 
 export type PinPostMutationVariables = Exact<{
   data: UpdateUserInput;
@@ -6596,7 +6607,7 @@ export type UpdateAvatarMutation = { __typename?: 'Mutation', updateMe: { __type
 
 export type UserDetailFragment = { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null };
 
-export type PostItemFragment = { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
+export type PostItemFragment = { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> };
 
 export type GetPostsQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<PostOrderByWithRelationInput> | PostOrderByWithRelationInput>;
@@ -6605,7 +6616,7 @@ export type GetPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', count: number, items: Array<{ __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostsResponse', count: number, items: Array<{ __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> }> } };
 
 export type TagItemFragment = { __typename?: 'Tag', id: string, name: string };
 
@@ -6669,7 +6680,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -6678,12 +6689,12 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
 export type BlockedMutedAccountFragment = { __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null };
 
-export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> };
+export type MeFragment = { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } | null };
 
 export type GetSignedUrlForPutMutationVariables = Exact<{
   data: S3SignedUrlInput;
@@ -6742,12 +6753,12 @@ export type RefreshTokenQueryVariables = Exact<{
 
 export type RefreshTokenQuery = { __typename?: 'Query', refreshToken?: { __typename?: 'RefreshTokenResponse', token: string, refreshToken: string } | null };
 
-export type BookmarkItemFragment = { __typename?: 'Bookmark', id: string, post: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
+export type BookmarkItemFragment = { __typename?: 'Bookmark', id: string, post: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> } };
 
 export type GetMyBookmarksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMyBookmarksQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, bookmarks: Array<{ __typename?: 'Bookmark', id: string, post: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } }> } | null };
+export type GetMyBookmarksQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, bookmarks: Array<{ __typename?: 'Bookmark', id: string, post: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> } }> } | null };
 
 export type UserSearchItemFragment = { __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null };
 
@@ -6773,7 +6784,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, refreshToken: string, user: { __typename?: 'User', id: string, email: string, role: Role, avatar?: string | null, cover?: string | null, handle?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy, allowMessagesFrom: AllowMessagesFrom, followingCount: number, followerCount: number, unreadNotificationCount: number, createdAt: string, pinnedPost?: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> } | null, likes: Array<{ __typename?: 'Like', postId: string }>, following: Array<{ __typename?: 'User', id: string }>, followers: Array<{ __typename?: 'User', id: string }>, mutedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, blockedAccounts: Array<{ __typename?: 'User', id: string, avatar?: string | null, name: string, handle?: string | null }>, createdReports: Array<{ __typename?: 'Report', id: string, type: ReportType, userId?: string | null, postId?: string | null, replyId?: string | null, messageId?: string | null }> } } };
 
 export type MessageItemFragment = { __typename?: 'Message', id: string, senderId: string, receiverId: string, text: string, createdAt: string };
 
@@ -6852,21 +6863,21 @@ export type MarkNotificationAsReadMutation = { __typename?: 'Mutation', markAsRe
 
 export type ReplyItemFragment = { __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } };
 
-export type PostDetailFragment = { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, bookmarkCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> };
+export type PostDetailFragment = { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, bookmarkCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }>, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> };
 
 export type GetPostQueryVariables = Exact<{
   where: PostWhereInput;
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, bookmarkCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }> } | null };
+export type GetPostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, text: string, createdAt: string, replyCount: number, likeCount: number, bookmarkCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, replies: Array<{ __typename?: 'Reply', id: string, postId: string, text: string, image?: string | null, createdAt: string, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } }>, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> } | null };
 
 export type CreatePostMutationVariables = Exact<{
   data: CreatePostInput;
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null } } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> } };
 
 export type ReplyReportFragment = { __typename?: 'Reply', id: string };
 
@@ -7000,6 +7011,13 @@ export const PostItemFragmentDoc = gql`
   viewCount
   user {
     ...UserDetail
+  }
+  mentions {
+    id
+    user {
+      id
+      handle
+    }
   }
 }
     ${UserDetailFragmentDoc}`;
@@ -7212,6 +7230,13 @@ export const PostDetailFragmentDoc = gql`
   }
   replies {
     ...ReplyItem
+  }
+  mentions {
+    id
+    user {
+      id
+      handle
+    }
   }
 }
     ${UserDetailFragmentDoc}

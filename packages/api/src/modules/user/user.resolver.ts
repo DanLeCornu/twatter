@@ -119,6 +119,7 @@ export default class UserResolver {
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
     if (IS_DEV) console.log("CODE:", verificationCode)
     await prisma.verification.create({ data: { ...data, verificationCode } })
+    // TODO send email with verification code
     return true
   }
 

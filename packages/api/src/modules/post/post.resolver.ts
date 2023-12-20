@@ -1,7 +1,12 @@
 import { Arg, Args, Mutation, Query, Resolver } from "type-graphql"
 import { Service } from "typedi"
 
-import { FindFirstPostArgs, FindManyPostArgs, PostUpdateInput } from "@twatter/database/dist/generated"
+import {
+  FindFirstPostArgs,
+  FindManyPostArgs,
+  NotificationType,
+  PostUpdateInput,
+} from "@twatter/database/dist/generated"
 
 import { prisma } from "../../lib/prisma"
 import { CurrentUser } from "../shared/currentUser"
@@ -10,6 +15,7 @@ import { User } from "../user/user.model"
 import { CreatePostInput } from "./inputs/createPost.input"
 import { Post } from "./post.model"
 import { PostsResponse } from "./responses/posts.response"
+import { stringsOnly, uniq } from "../../lib/helpers"
 
 @Service()
 @Resolver(() => Post)
@@ -68,8 +74,35 @@ export default class PostResolver {
   @UseAuth()
   @Mutation(() => Post)
   async createPost(@CurrentUser() currentUser: User, @Arg("data") data: CreatePostInput): Promise<Post> {
-    return await prisma.post.create({ data: { ...data, user: { connect: { id: currentUser.id } } } })
-    // TODO check if mentioning someone, if so, send them a notification
+    const { handles, ...values } = data
+    const mentionedUsers = await prisma.user.findMany({
+      where: { handle: { in: uniq(handles) } },
+      select: { id: true, handle: true },
+    })
+    const validHandles = mentionedUsers.map((user) => user.handle)
+    const post = await prisma.post.create({
+      data: {
+        ...values,
+        mentions: {
+          create: stringsOnly(validHandles).map((handle) => ({ user: { connect: { handle } } })),
+        },
+        user: { connect: { id: currentUser.id } },
+      },
+    })
+    if (mentionedUsers.length > 0) {
+      mentionedUsers.forEach(async (user) => {
+        await prisma.notification.create({
+          data: {
+            initiatorId: currentUser.id,
+            userId: user.id,
+            type: NotificationType.NEW_MENTION,
+            postId: post.id,
+          },
+        })
+      })
+    }
+    // TODO check if mentioning someone, if so, send them an email, depending on email settings
+    return post
   }
 
   // UPDATE POST

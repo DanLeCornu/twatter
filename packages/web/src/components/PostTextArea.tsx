@@ -11,6 +11,7 @@ import {
   Spinner,
   Stack,
   Text,
+  TextareaProps,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { matchSorter } from "match-sorter"
@@ -39,24 +40,23 @@ const _ = gql`
   }
 `
 
-interface Props {
-  hasImage: boolean
+interface Props extends TextareaProps {
   setSubmitDisabled: React.Dispatch<React.SetStateAction<boolean>>
   tags: string[]
   setTags: React.Dispatch<React.SetStateAction<string[]>>
   handles: string[]
   setHandles: React.Dispatch<React.SetStateAction<string[]>>
-  form: any // TODO types
+  form: any // TODO form types
 }
 
 export function PostTextArea({
-  hasImage,
   setSubmitDisabled,
   tags,
   setTags,
   handles,
   setHandles,
   form,
+  ...props
 }: Props) {
   const [tagSearch, setTagSearch] = React.useState("")
   const [handleSearch, setHandleSearch] = React.useState("")
@@ -64,6 +64,8 @@ export function PostTextArea({
   const [text, setText] = React.useState("")
 
   const { data: tagData, loading: tagsLoading } = useGetTagsQuery({
+    // Eventually will need to filter the query instead of getting all users and filtering onthe front end, but there
+    // were some funky loading states to sort out so that's a problem for future dan
     // variables: {
     //   where: {
     //     name: tagSearch ? { contains: tagSearch, mode: QueryMode.Insensitive } : undefined,
@@ -76,6 +78,8 @@ export function PostTextArea({
     variables: {
       where: {
         handle: { not: { equals: null } },
+        // Eventually will need to filter the query instead of getting all users and filtering onthe front end, but
+        // there were some funky loading states to sort out so that's a problem for future dan
         // OR: [
         //   { name: handleSearch ? { contains: handleSearch, mode: QueryMode.Insensitive } : undefined },
         //   { handle: handleSearch ? { contains: handleSearch, mode: QueryMode.Insensitive } : undefined },
@@ -86,41 +90,41 @@ export function PostTextArea({
   const allUserOptions = React.useMemo(() => userData?.users.items || [], [userData])
 
   const matchedTags = React.useCallback(() => {
-    return matchSorter(allTagOptions, tagSearch, { threshold: matchSorter.rankings.STARTS_WITH })
+    return matchSorter(allTagOptions, tagSearch, { threshold: matchSorter.rankings.CONTAINS })
   }, [allTagOptions, tagSearch])
 
   const matchedUsers = React.useCallback(() => {
     return matchSorter(allUserOptions, handleSearch, {
       keys: ["name", "handle"],
-      threshold: matchSorter.rankings.STARTS_WITH,
+      threshold: matchSorter.rankings.CONTAINS,
     })
   }, [allUserOptions, handleSearch])
 
   const handleAddTag = React.useCallback(
     (tag: string) => {
-      setTagSearch("")
       setTags(uniq([...tags, tag]))
       // need to use a state for "text" here because form.getValue("text") was "" because reasons
-      const newValue = replaceWithSelectedTag(text, tag)
+      const newValue = replaceWithSelectedTag(text, tag, tagSearch)
+      setTagSearch("")
       if (newValue === undefined) return
       form.setValue("text", newValue)
       form.setFocus("text") // focus is lost after setting value, so need to refocus the input
     },
-    [form, tags, text, setTags],
+    [form, tags, text, setTags, tagSearch],
   )
 
   const handleAddHandle = React.useCallback(
     (handle?: string | null) => {
       if (!handle) return
-      setHandleSearch("")
       setHandles(uniq([...handles, handle]))
-      // need to use a state for "text" here because form.getValue("text") was "" because reasons
-      const newValue = replaceWithSelectedMention(text, handle)
+      // need to use a state for "text" here because form.getValue("text") was "" because ... reasons
+      const newValue = replaceWithSelectedMention(text, handle, handleSearch)
+      setHandleSearch("")
       if (newValue === undefined) return
       form.setValue("text", newValue)
       form.setFocus("text") // focus is lost after setting value, so need to refocus the input
     },
-    [form, handles, text, setHandles],
+    [form, handles, text, setHandles, handleSearch],
   )
 
   const onKeyDown = React.useCallback(
@@ -180,7 +184,6 @@ export function PostTextArea({
     >
       <Textarea
         name="text"
-        h={hasImage ? "40px" : "150px"}
         pl={1}
         variant="unstyled"
         placeholder="What is happening?!"
@@ -195,6 +198,7 @@ export function PostTextArea({
           checkForMentions(e.target.value, setHandles, setHandleSearch)
           !!e.target.value ? setSubmitDisabled(false) : setSubmitDisabled(true)
         }}
+        {...props}
       />
       <PopoverAnchor>
         {/* Anchoring around the textArea wasn't working so doing this little hack instead */}

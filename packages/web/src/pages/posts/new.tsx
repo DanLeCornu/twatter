@@ -72,9 +72,6 @@ function NewPost() {
 
   const handleSubmit = (data: yup.InferType<typeof PostSchema>) => {
     // TODO check if there is one last tag without a space at the end, and add it to the tags list
-    const mentionCreates = handles.map((handle) => ({
-      user: { connect: { handle } },
-    }))
     const tagConnectOrCreate = tags.map((tag) => ({
       where: { name: tag },
       create: { name: tag },
@@ -86,7 +83,7 @@ function NewPost() {
             data: {
               text: data.text,
               tags: { connectOrCreate: tagConnectOrCreate },
-              mentions: { create: mentionCreates },
+              handles,
             },
           },
         }),
@@ -104,6 +101,8 @@ function NewPost() {
       },
     )
   }
+
+  const textAreaHeight = !!image ? "40px" : "150px"
 
   return (
     <Form {...form} onSubmit={handleSubmit}>
@@ -134,7 +133,7 @@ function NewPost() {
         <Stack pt={3} justify="space-between">
           {/* INPUT */}
           <PostTextArea
-            hasImage={!!image}
+            h={textAreaHeight}
             setSubmitDisabled={setSubmitDisabled}
             tags={tags}
             setTags={setTags}

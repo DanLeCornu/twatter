@@ -3,6 +3,7 @@ import { Service } from "typedi"
 
 import { S3_URL } from "../../lib/config"
 import { prisma } from "../../lib/prisma"
+import { Mention } from "../mention/mention.model"
 import { Reply } from "../reply/reply.model"
 import { UseCacheControl } from "../shared/middleware/UseCacheControl"
 import { User } from "../user/user.model"
@@ -28,6 +29,11 @@ export default class PostFieldResolver {
     return prisma.post
       .findUnique({ where: { id: post.id } })
       .replies({ orderBy: { createdAt: "desc" }, where: { archivedAt: null } })
+  }
+
+  @FieldResolver(() => [Mention])
+  mentions(@Root() post: Post) {
+    return prisma.post.findUnique({ where: { id: post.id } }).mentions()
   }
 
   @FieldResolver(() => Number)

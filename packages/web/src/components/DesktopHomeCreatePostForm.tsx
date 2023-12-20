@@ -25,15 +25,17 @@ import type yup from "lib/yup"
 import type { AttachedImage } from "./AttachImage"
 import { AttachImage } from "./AttachImage"
 import { Form } from "./Form"
-import { Textarea } from "./Textarea"
+import { PostTextArea } from "./PostTextArea"
+import { useToast } from "lib/hooks/useToast"
 
 export function DesktopHomeCreatePostForm() {
   const { me } = useMe()
+  const toast = useToast()
   const [submitDisabled, setSubmitDisabled] = React.useState(true)
   const [isActive, setIsActive] = React.useState(false)
   const [image, setImage] = React.useState<AttachedImage | null>(null)
-  // const [tags, setTags] = React.useState<string[]>([])
-  // const [tagSearch, setTagSearch] = React.useState("")
+  const [tags, setTags] = React.useState<string[]>([])
+  const [handles, setHandles] = React.useState<string[]>([])
 
   const [create, { loading }] = useCreatePostMutation({
     refetchQueries: [
@@ -50,16 +52,19 @@ export function DesktopHomeCreatePostForm() {
   const form = useForm({ schema: PostSchema, shouldResetAfterSubmit: true })
 
   const handleSubmit = (data: yup.InferType<typeof PostSchema>) => {
-    // const connectOrCreate = tags.map((tag) => ({
-    //   where: { name: tag },
-    //   create: { name: tag },
-    // }))
+    // TODO check if there is one last tag without a space at the end, and add it to the tags list
+    const tagConnectOrCreate = tags.map((tag) => ({
+      where: { name: tag },
+      create: { name: tag },
+    }))
     return form.handler(
       () =>
         create({
           variables: {
             data: {
               text: data.text,
+              tags: { connectOrCreate: tagConnectOrCreate },
+              handles,
             },
           },
         }),
@@ -72,13 +77,14 @@ export function DesktopHomeCreatePostForm() {
             const imageKey = (await upload(image.file, { path: UPLOAD_PATHS.postImage(postId) })).fileKey
             return form.handler(() => update({ variables: { postId, data: { image: imageKey } } }))
           }
+          toast({ description: "Your post was sent", link: `/posts/${data.createPost.id}`, linkText: "View" })
         },
       },
     )
   }
 
-  const textAreaHeight = isActive && !image ? "105px" : isActive ? "auto" : "50px"
-  const containerHeight = isActive && !image ? "190px" : isActive ? "auto" : "125px"
+  const textAreaHeight = isActive && !image ? "105px" : isActive ? "auto" : "40px"
+  const containerHeight = isActive && !image ? "198px" : isActive ? "auto" : "125px"
   const borderColor = useColorModeValue("gray.100", "gray.700")
 
   return (
@@ -93,23 +99,17 @@ export function DesktopHomeCreatePostForm() {
         <Box h="100%" pt={4}>
           <Avatar src={me?.avatar || undefined} boxSize="40px" />
         </Box>
-        <Stack pt={3} justify="space-between" h="100%">
-          <Textarea
+        <Stack pt={3} justify="space-between">
+          <PostTextArea
             h={textAreaHeight}
+            minH={textAreaHeight}
             transition="200ms height"
-            name="text"
-            pl={1}
-            variant="unstyled"
-            placeholder="What is happening?!"
-            size="lg"
-            autoFocus
-            resize="none"
-            bordered={false}
-            validations={false}
-            onChange={(e) => {
-              // checkForTags(e.target.value, setTags, setTagSearch)
-              e.target.value ? setSubmitDisabled(false) : setSubmitDisabled(true)
-            }}
+            setSubmitDisabled={setSubmitDisabled}
+            tags={tags}
+            setTags={setTags}
+            handles={handles}
+            setHandles={setHandles}
+            form={form}
             onClick={() => setIsActive(true)}
           />
           {image && (

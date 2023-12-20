@@ -35,7 +35,7 @@ export const createAuthToken = (payload: Payload): string => {
     const token = jwt.sign(payload, APP_AUTH_SECRET, {
       issuer: "@twatter/api",
       audience: ["@twatter/web"],
-      expiresIn: "20 mins",
+      expiresIn: "1h",
     })
     return token
   } catch (error) {

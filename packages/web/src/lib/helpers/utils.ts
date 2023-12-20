@@ -32,3 +32,7 @@ export const randomNumber = (length: number) => {
 export function uniq(a: any[]) {
   return Array.from(new Set(a))
 }
+
+export function stringsOnly(a: (string | null | undefined)[]) {
+  return a.flatMap((e) => e || [])
+}

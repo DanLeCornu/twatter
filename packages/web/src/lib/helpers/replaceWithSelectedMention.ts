@@ -1,4 +1,4 @@
-export const replaceWithSelectedMention = (value: string, handle: string) => {
+export const replaceWithSelectedMention = (value: string, handle: string, handleSearch: string) => {
   const words = value
     .replace(/\n/g, " ") // replace all linebreaks with spaces
     .replace(/[.,\/!?$%\^&\*;:{}=\-_`~()]/g, "") // remove all punctuation (excluding @)
@@ -6,14 +6,14 @@ export const replaceWithSelectedMention = (value: string, handle: string) => {
   // .split(/\s+/) // split by space or linebreak
 
   // find the last word that is a subtring of the selected handle, and return the (reversed) index of that substring
-  let index: number | undefined = undefined
-  const fig = words.reverse().find((word, i) => {
-    if (("@" + handle).includes(word)) {
+  let index: number | undefined
+  const onions = words.reverse().find((word, i) => {
+    if (("@" + handleSearch).includes(word)) {
       index = i
       return true
     }
   })
-  if (!fig) return undefined
+  if (!onions) return undefined
 
   if (index !== undefined) {
     words.splice(index, 1, "@" + handle) // replace the partial searched handle with the full handle
