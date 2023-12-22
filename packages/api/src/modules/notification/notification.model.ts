@@ -24,7 +24,4 @@ export class Notification extends BaseModel implements Prisma.Notification {
 
   @Field(() => String, { nullable: true })
   postId: string | null
-
-  @Field(() => String, { nullable: true })
-  replyId: string | null
 }

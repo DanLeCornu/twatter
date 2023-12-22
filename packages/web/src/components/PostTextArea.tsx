@@ -186,7 +186,7 @@ export function PostTextArea({
         name="text"
         pl={1}
         variant="unstyled"
-        placeholder="What is happening?!"
+        placeholder={props.placeholder || "What is happening?!"}
         size="lg"
         autoFocus
         resize="none"

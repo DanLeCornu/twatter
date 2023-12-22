@@ -74,15 +74,17 @@ export default class PostResolver {
   @UseAuth()
   @Mutation(() => Post)
   async createPost(@CurrentUser() currentUser: User, @Arg("data") data: CreatePostInput): Promise<Post> {
-    const { handles, ...values } = data
+    const { handles, parentId, ...values } = data
     const mentionedUsers = await prisma.user.findMany({
       where: { handle: { in: uniq(handles) } },
       select: { id: true, handle: true },
     })
     const validHandles = mentionedUsers.map((user) => user.handle)
+
     const post = await prisma.post.create({
       data: {
         ...values,
+        parent: parentId ? { connect: { id: parentId } } : undefined,
         mentions: {
           create: stringsOnly(validHandles).map((handle) => ({ user: { connect: { handle } } })),
         },
@@ -100,6 +102,19 @@ export default class PostResolver {
           },
         })
       })
+    }
+    if (parentId) {
+      const parentPost = await prisma.post.findUnique({ where: { id: parentId } })
+      if (parentPost && parentPost.userId !== currentUser.id) {
+        await prisma.notification.create({
+          data: {
+            initiatorId: currentUser.id,
+            userId: parentPost.userId,
+            type: NotificationType.NEW_REPLY,
+            postId: parentPost.id,
+          },
+        })
+      }
     }
     // TODO check if mentioning someone, if so, send them an email, depending on email settings
     return post

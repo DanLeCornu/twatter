@@ -20,4 +20,7 @@ export class CreatePostInput implements Partial<Post> {
 
   @Field(() => [String])
   handles: string[]
+
+  @Field(() => String, { nullable: true })
+  parentId?: string
 }

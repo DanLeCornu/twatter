@@ -30,8 +30,7 @@ import {
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
-import type { PostItemFragment, ReplyItemFragment } from "lib/graphql"
-import { GetPostDocument, useUpdateReplyMutation } from "lib/graphql"
+import type { PostItemFragment } from "lib/graphql"
 import { useUnblockUserMutation } from "lib/graphql"
 import {
   GetPostsDocument,
@@ -72,10 +71,10 @@ export const _ = gql`
 `
 
 interface Props {
-  item: PostItemFragment | ReplyItemFragment
+  post: PostItemFragment
 }
 
-export function ItemMenu({ item }: Props) {
+export function PostMenu({ post }: Props) {
   const { me } = useMe()
   const router = useRouter()
   const menuProps = useDisclosure()
@@ -85,10 +84,10 @@ export function ItemMenu({ item }: Props) {
   const handler = useMutationHandler()
   const analyticsModalProps = useDisclosure()
 
-  const isPost = item.__typename === "Post"
-  const hasFollowed = me?.following.map((following) => following.id).includes(item.user.id)
-  const hasMuted = me?.mutedAccounts.map((mutedAccount) => mutedAccount.id).includes(item.user.id)
-  const hasBlocked = me?.blockedAccounts.map((blockedAccount) => blockedAccount.id).includes(item.user.id)
+  // const isPost = item.__typename === "Post"
+  const hasFollowed = me?.following.map((following) => following.id).includes(post.user.id)
+  const hasMuted = me?.mutedAccounts.map((mutedAccount) => mutedAccount.id).includes(post.user.id)
+  const hasBlocked = me?.blockedAccounts.map((blockedAccount) => blockedAccount.id).includes(post.user.id)
 
   const [follow, { loading: followLoading }] = useFollowUserMutation({
     refetchQueries: [{ query: MeDocument }],
@@ -133,19 +132,19 @@ export function ItemMenu({ item }: Props) {
         query: GetPostsDocument,
         variables: {
           orderBy: { createdAt: SortOrder.Desc },
-          where: { user: { is: { handle: { equals: item.user.handle } } } },
+          where: { user: { is: { handle: { equals: post.user.handle } } } },
         },
       },
     ],
   })
-  const [updateReply, { loading: updateReplyLoading }] = useUpdateReplyMutation({
-    refetchQueries: [
-      {
-        query: GetPostDocument,
-        variables: { where: { id: { equals: (item as ReplyItemFragment).postId } } },
-      },
-    ],
-  })
+  // const [updateReply, { loading: updateReplyLoading }] = useUpdateReplyMutation({
+  //   refetchQueries: [
+  //     {
+  //       query: GetPostDocument,
+  //       variables: { where: { id: { equals: (post as ReplyItemFragment).postId } } },
+  //     },
+  //   ],
+  // })
   const [pinPost, { loading: pinPostLoading }] = usePinPostMutation({
     refetchQueries: [
       { query: MeDocument },
@@ -161,28 +160,28 @@ export function ItemMenu({ item }: Props) {
 
   const handleFollow = () => {
     if (followLoading) return
-    return handler(() => follow({ variables: { userId: item.user.id } }), {
+    return handler(() => follow({ variables: { userId: post.user.id } }), {
       onSuccess: (_, toast) => {
         drawerProps.onClose()
-        toast({ description: `You followed @${item.user.handle}` })
+        toast({ description: `You followed @${post.user.handle}` })
       },
     })
   }
   const handleUnfollow = () => {
     if (unfollowLoading) return
-    return handler(() => unfollow({ variables: { userId: item.user.id } }), {
+    return handler(() => unfollow({ variables: { userId: post.user.id } }), {
       onSuccess: (_, toast) => {
         drawerProps.onClose()
-        toast({ description: `You unfollowed @${item.user.handle}` })
+        toast({ description: `You unfollowed @${post.user.handle}` })
       },
     })
   }
   const handleMute = () => {
     if (muteLoading) return
-    return handler(() => mute({ variables: { userId: item.user.id } }), {
+    return handler(() => mute({ variables: { userId: post.user.id } }), {
       onSuccess: (_, toast) => {
         toast({
-          description: `@${item.user.handle} has been muted`,
+          description: `@${post.user.handle} has been muted`,
           action: (
             <Link fontWeight="medium" color="white" fontSize="sm" onClick={handleUnmute}>
               Undo
@@ -195,15 +194,15 @@ export function ItemMenu({ item }: Props) {
   }
   const handleUnmute = () => {
     if (unmuteLoading) return
-    return handler(() => unmute({ variables: { userId: item.user.id } }), {
+    return handler(() => unmute({ variables: { userId: post.user.id } }), {
       onSuccess: (_, toast) => {
-        toast({ description: `@${item.user.handle} has been unmuted` })
+        toast({ description: `@${post.user.handle} has been unmuted` })
       },
     })
   }
   const handleBlock = () => {
     if (blockLoading) return
-    return handler(() => block({ variables: { userId: item.user.id } }), {
+    return handler(() => block({ variables: { userId: post.user.id } }), {
       onSuccess: (_, toast) => {
         toast({
           description: "Successfully blocked",
@@ -220,38 +219,38 @@ export function ItemMenu({ item }: Props) {
   }
   const handleUnblock = () => {
     if (unblockLoading) return
-    return handler(() => unblock({ variables: { userId: item.user.id } }), {
+    return handler(() => unblock({ variables: { userId: post.user.id } }), {
       onSuccess: () => {
         blockModalProps.onClose()
       },
     })
   }
   const handleDeleteItem = () => {
-    if (isPost) {
-      if (updatePostLoading) return
-      return handler(
-        () => updatePost({ variables: { postId: item.id, data: { archivedAt: new Date().toString() } } }),
-        {
-          onSuccess: () => {
-            modalProps.onClose()
-          },
+    // if (isPost) {
+    if (updatePostLoading) return
+    return handler(
+      () => updatePost({ variables: { postId: post.id, data: { archivedAt: new Date().toString() } } }),
+      {
+        onSuccess: () => {
+          modalProps.onClose()
         },
-      )
-    } else {
-      if (updateReplyLoading) return
-      return handler(
-        () => updateReply({ variables: { replyId: item.id, data: { archivedAt: new Date().toString() } } }),
-        {
-          onSuccess: () => {
-            modalProps.onClose()
-          },
-        },
-      )
-    }
+      },
+    )
+    // } else {
+    //   if (updateReplyLoading) return
+    //   return handler(
+    //     () => updateReply({ variables: { replyId: item.id, data: { archivedAt: new Date().toString() } } }),
+    //     {
+    //       onSuccess: () => {
+    //         modalProps.onClose()
+    //       },
+    //     },
+    //   )
+    // }
   }
   const handlePinPost = () => {
     if (pinPostLoading) return
-    return handler(() => pinPost({ variables: { data: { pinnedPostId: item.id } } }))
+    return handler(() => pinPost({ variables: { data: { pinnedPostId: post.id } } }))
   }
   const handleUnpinPost = () => {
     if (pinPostLoading) return
@@ -259,6 +258,8 @@ export function ItemMenu({ item }: Props) {
   }
 
   const drawerBg = useColorModeValue("white", "brand.bgDark")
+
+  if (!me) return null
 
   return (
     <>
@@ -279,7 +280,7 @@ export function ItemMenu({ item }: Props) {
           <DrawerContent bg={drawerBg}>
             <DrawerBody p={4}>
               <Stack spacing={5}>
-                {me?.id === item.user.id ? (
+                {me?.id === post.user.id ? (
                   <>
                     {/* DELETE */}
                     <HStack
@@ -295,17 +296,17 @@ export function ItemMenu({ item }: Props) {
                       </Text>
                     </HStack>
                     {/* PIN */}
-                    {isPost && (
-                      <HStack
-                        spacing={3}
-                        onClick={me.pinnedPost?.id === item.id ? handleUnpinPost : handlePinPost}
-                      >
-                        <Icon as={BsPin} boxSize="18px" />
-                        <Text fontWeight="bold">
-                          {me.pinnedPost?.id === item.id ? "Unpin from profile" : "Pin to your profile"}
-                        </Text>
-                      </HStack>
-                    )}
+                    {/* {isPost && ( */}
+                    <HStack
+                      spacing={3}
+                      onClick={me.pinnedPost?.id === post.id ? handleUnpinPost : handlePinPost}
+                    >
+                      <Icon as={BsPin} boxSize="18px" />
+                      <Text fontWeight="bold">
+                        {me.pinnedPost?.id === post.id ? "Unpin from profile" : "Pin to your profile"}
+                      </Text>
+                    </HStack>
+                    {/* )} */}
                     {/* POST ANALYTICS */}
                     <HStack
                       spacing={3}
@@ -324,13 +325,13 @@ export function ItemMenu({ item }: Props) {
                     <HStack spacing={3} onClick={hasFollowed ? handleUnfollow : handleFollow}>
                       <Icon as={hasFollowed ? RiUserUnfollowLine : RiUserFollowLine} boxSize="18px" />
                       <Text fontWeight="bold">
-                        {`${hasFollowed ? "Unfollow" : "Follow"} @${item.user.handle}`}
+                        {`${hasFollowed ? "Unfollow" : "Follow"} @${post.user.handle}`}
                       </Text>
                     </HStack>
                     {/* MUTE */}
                     <HStack spacing={3} onClick={hasMuted ? handleUnmute : handleMute}>
                       <Icon as={hasMuted ? BiVolumeFull : BiVolumeMute} boxSize="18px" />
-                      <Text fontWeight="bold">{`${hasMuted ? "Unmute" : "Mute"} @${item.user.handle}`}</Text>
+                      <Text fontWeight="bold">{`${hasMuted ? "Unmute" : "Mute"} @${post.user.handle}`}</Text>
                     </HStack>
                     {/* BLOCK */}
                     <HStack
@@ -342,11 +343,12 @@ export function ItemMenu({ item }: Props) {
                     >
                       <Icon as={BiBlock} boxSize="18px" />
                       <Text fontWeight="bold">
-                        {hasBlocked ? "Unblock" : "Block"} @{item.user.handle}
+                        {hasBlocked ? "Unblock" : "Block"} @{post.user.handle}
                       </Text>
                     </HStack>
                     {/* REPORT */}
-                    <NextLink href={`/${isPost ? "posts" : "replies"}/${item.id}/report`}>
+                    {/* <NextLink href={`/${isPost ? "posts" : "replies"}/${item.id}/report`}> */}
+                    <NextLink href={`/posts/${post.id}/report`}>
                       <HStack spacing={3}>
                         <Icon as={BiFlag} boxSize="18px" />
                         <Text fontWeight="bold">Report post</Text>
@@ -378,7 +380,7 @@ export function ItemMenu({ item }: Props) {
           />
           <Portal>
             <MenuList onClick={(e) => e.stopPropagation()}>
-              {me?.id === item.user.id ? (
+              {me?.id === post.user.id ? (
                 <>
                   {/* DELETE */}
                   <MenuItem
@@ -390,16 +392,16 @@ export function ItemMenu({ item }: Props) {
                     Delete
                   </MenuItem>
                   {/* PIN */}
-                  {isPost && (
-                    // TODO ability to pin a reply
-                    <MenuItem
-                      icon={<Box as={BsPin} boxSize="18px" />}
-                      fontWeight="medium"
-                      onClick={me.pinnedPost?.id === item.id ? handleUnpinPost : handlePinPost}
-                    >
-                      {me.pinnedPost?.id === item.id ? "Unpin from profile" : "Pin to your profile"}
-                    </MenuItem>
-                  )}
+                  {/* {isPost && ( */}
+                  {/* // TODO ability to pin a reply */}
+                  <MenuItem
+                    icon={<Box as={BsPin} boxSize="18px" />}
+                    fontWeight="medium"
+                    onClick={me.pinnedPost?.id === post.id ? handleUnpinPost : handlePinPost}
+                  >
+                    {me.pinnedPost?.id === post.id ? "Unpin from profile" : "Pin to your profile"}
+                  </MenuItem>
+                  {/* )} */}
                   {/* POST ANALYTICS */}
                   <MenuItem
                     icon={<Box as={IoIosStats} boxSize="18px" />}
@@ -418,7 +420,7 @@ export function ItemMenu({ item }: Props) {
                     fontWeight="medium"
                     onClick={hasFollowed ? handleUnfollow : handleFollow}
                   >
-                    {`${hasFollowed ? "Unfollow" : "Follow"} @${item.user.handle}`}
+                    {`${hasFollowed ? "Unfollow" : "Follow"} @${post.user.handle}`}
                   </MenuItem>
                   {/* MUTE */}
                   <MenuItem
@@ -426,7 +428,7 @@ export function ItemMenu({ item }: Props) {
                     fontWeight="medium"
                     onClick={hasMuted ? handleUnmute : handleMute}
                   >
-                    {`${hasMuted ? "Unmute" : "Mute"} @${item.user.handle}`}
+                    {`${hasMuted ? "Unmute" : "Mute"} @${post.user.handle}`}
                   </MenuItem>
                   {/* BLOCK */}
                   <MenuItem
@@ -434,10 +436,10 @@ export function ItemMenu({ item }: Props) {
                     fontWeight="medium"
                     onClick={blockModalProps.onOpen}
                   >
-                    {hasBlocked ? "Unblock" : "Block"} @{item.user.handle}
+                    {hasBlocked ? "Unblock" : "Block"} @{post.user.handle}
                   </MenuItem>
                   {/* REPORT */}
-                  <NextLink href={`/${isPost ? "posts" : "replies"}/${item.id}/report`}>
+                  <NextLink href={`/posts/${post.id}/report`}>
                     <MenuItem icon={<Box as={BiFlag} boxSize="18px" />} fontWeight="medium">
                       Report post
                     </MenuItem>
@@ -450,11 +452,11 @@ export function ItemMenu({ item }: Props) {
       </BrowserView>
 
       {/* BLOCK/UNBLOCK MODAL */}
-      <Modal {...blockModalProps} title={`${hasBlocked ? "Unblock" : "Block"} @${item.user.handle}?`}>
+      <Modal {...blockModalProps} title={`${hasBlocked ? "Unblock" : "Block"} @${post.user.handle}?`}>
         <Text mb={6} fontSize="sm" color="gray.400">
           {hasBlocked
             ? "They will be able to follow you and view your posts."
-            : `They will not be able to follow you or view your posts, and you will not see posts or notifications from @${item.user.handle}.`}
+            : `They will not be able to follow you or view your posts, and you will not see posts or notifications from @${post.user.handle}.`}
         </Text>
         <Stack>
           {hasBlocked ? (
@@ -491,11 +493,11 @@ export function ItemMenu({ item }: Props) {
       {/* POST ANALYTICS MODAL */}
       <Modal
         {...analyticsModalProps}
-        title={item.user.id === me?.id ? "Post Analytics" : "Views"}
+        title={post.user.id === me?.id ? "Post Analytics" : "Views"}
         size="full"
         closeButton
       >
-        <PostAnalytics item={item} />
+        <PostAnalytics post={post} />
       </Modal>
     </>
   )

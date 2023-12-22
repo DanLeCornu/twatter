@@ -4,7 +4,6 @@ import { Service } from "typedi"
 import { S3_URL } from "../../lib/config"
 import { prisma } from "../../lib/prisma"
 import { Mention } from "../mention/mention.model"
-import { Reply } from "../reply/reply.model"
 import { UseCacheControl } from "../shared/middleware/UseCacheControl"
 import { User } from "../user/user.model"
 import { Post } from "./post.model"
@@ -24,7 +23,7 @@ export default class PostFieldResolver {
     return prisma.post.findUnique({ where: { id: post.id } }).user()
   }
 
-  @FieldResolver(() => [Reply])
+  @FieldResolver(() => [Post])
   replies(@Root() post: Post) {
     return prisma.post
       .findUnique({ where: { id: post.id } })
@@ -38,7 +37,7 @@ export default class PostFieldResolver {
 
   @FieldResolver(() => Number)
   replyCount(@Root() post: Post) {
-    return prisma.reply.count({ where: { postId: post.id, archivedAt: null } })
+    return prisma.post.count({ where: { parentId: post.id, archivedAt: null } })
   }
 
   @FieldResolver(() => Number)

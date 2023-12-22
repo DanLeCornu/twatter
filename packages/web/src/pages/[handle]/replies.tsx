@@ -14,6 +14,7 @@ function ProfileReplies() {
   const handle = router.query.handle as string
 
   const { data, loading } = useGetPostsQuery({
+    fetchPolicy: "cache-and-network",
     variables: {
       orderBy: { createdAt: SortOrder.Desc },
       where: {

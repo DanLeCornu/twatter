@@ -26,8 +26,8 @@ import type { PostItemFragment } from "lib/graphql"
 import { useHighlightedText } from "lib/hooks/useHighlightText"
 import { useMe } from "lib/hooks/useMe"
 
-import { ItemHeading } from "./ItemHeading"
-import { ItemMenu } from "./ItemMenu"
+import { PostHeading } from "./PostHeading"
+import { PostMenu } from "./PostMenu"
 import { LikePost } from "./LikePost"
 import { Modal } from "./Modal"
 import { PostAnalytics } from "./PostAnalytics"
@@ -96,10 +96,10 @@ export function PostItem({ post, isPinned = false }: Props) {
               <HStack pl={2} justify="space-between" spacing={0} h="24px">
                 <Box w="calc(100% - 35px)">
                   {/* NAME & HANDLE */}
-                  <ItemHeading item={post} />
+                  <PostHeading post={post} />
                 </Box>
                 {/* MENU */}
-                <ItemMenu item={post} />
+                <PostMenu post={post} />
               </HStack>
               {/* CONTENT */}
               <Text pl={2} pb={3} pr={2} fontSize="sm">
@@ -164,7 +164,7 @@ export function PostItem({ post, isPinned = false }: Props) {
         size="full"
         closeButton
       >
-        <PostAnalytics item={post} />
+        <PostAnalytics post={post} />
       </Modal>
     </>
   )

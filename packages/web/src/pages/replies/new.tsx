@@ -2,7 +2,6 @@ import * as React from "react"
 import { BiArrowBack } from "react-icons/bi"
 import { BiImage } from "react-icons/bi"
 import { CgClose } from "react-icons/cg"
-import { gql } from "@apollo/client"
 import {
   Avatar,
   Box,
@@ -23,9 +22,9 @@ import { useRouter } from "next/router"
 import {
   GetPostsDocument,
   SortOrder,
-  useCreateReplyMutation,
+  useCreatePostMutation,
   useGetPostQuery,
-  useUpdateReplyMutation,
+  useUpdatePostMutation,
 } from "lib/graphql"
 import { useForm } from "lib/hooks/useForm"
 import { useMe } from "lib/hooks/useMe"
@@ -36,22 +35,9 @@ import type { AttachedImage } from "components/AttachImage"
 import { AttachImage } from "components/AttachImage"
 import { Form } from "components/Form"
 import { withAuth } from "components/hoc/withAuth"
-import { ItemHeading } from "components/ItemHeading"
+import { PostHeading } from "components/PostHeading"
 import { NoData } from "components/NoData"
-import { Textarea } from "components/Textarea"
-
-const _ = gql`
-  mutation CreateReply($data: CreateReplyInput!) {
-    createReply(data: $data) {
-      ...ReplyItem
-    }
-  }
-  mutation UpdateReply($replyId: String!, $data: ReplyUpdateInput!) {
-    updateReply(replyId: $replyId, data: $data) {
-      ...ReplyItem
-    }
-  }
-`
+import { PostTextArea } from "components/PostTextArea"
 
 export const ReplySchema = yup.object().shape({
   text: yup.string().required(),
@@ -63,6 +49,8 @@ function NewReply() {
   const postId = router.query.postId as string
   const [submitDisabled, setSubmitDisabled] = React.useState(true)
   const [image, setImage] = React.useState<AttachedImage | null>(null)
+  const [tags, setTags] = React.useState<string[]>([])
+  const [handles, setHandles] = React.useState<string[]>([])
 
   const { data, loading } = useGetPostQuery({
     fetchPolicy: "cache-and-network",
@@ -71,34 +59,56 @@ function NewReply() {
   })
   const post = data?.post
 
-  const [create, { loading: submitLoading }] = useCreateReplyMutation({
+  const [create, { loading: createLoading }] = useCreatePostMutation({
     refetchQueries: [
       {
         query: GetPostsDocument,
-        variables: { orderBy: { createdAt: SortOrder.Desc }, where: { userId: { not: { equals: me?.id } } } },
+        variables: {
+          orderBy: { createdAt: SortOrder.Desc },
+          where: { userId: { not: { equals: me?.id } } },
+        },
       },
     ],
   })
   const [upload] = useS3Upload()
-  const [update] = useUpdateReplyMutation()
+  const [update] = useUpdatePostMutation()
 
   const form = useForm({ schema: ReplySchema })
 
   const handleSubmit = (data: yup.InferType<typeof ReplySchema>) => {
     if (!post) return
-    return form.handler(() => create({ variables: { data: { postId, ...data } } }), {
-      onSuccess: async (data) => {
-        router.push(`/posts/${postId}`)
-        if (image) {
-          const replyId = data.createReply.id
-          const imageKey = (await upload(image.file, { path: UPLOAD_PATHS.replyImage(replyId) })).fileKey
-          return form.handler(() => update({ variables: { replyId, data: { image: imageKey } } }))
-        }
+    // TODO check if there is one last tag without a space at the end, and add it to the tags list
+    const tagConnectOrCreate = tags.map((tag) => ({
+      where: { name: tag },
+      create: { name: tag },
+    }))
+    return form.handler(
+      () =>
+        create({
+          variables: {
+            data: {
+              parentId: postId,
+              text: data.text,
+              tags: { connectOrCreate: tagConnectOrCreate },
+              handles,
+            },
+          },
+        }),
+      {
+        onSuccess: async (data) => {
+          router.push(`/posts/${postId}`)
+          if (image) {
+            const postId = data.createPost.id
+            const imageKey = (await upload(image.file, { path: UPLOAD_PATHS.replyImage(postId) })).fileKey
+            return form.handler(() => update({ variables: { postId, data: { image: imageKey } } }))
+          }
+        },
       },
-    })
+    )
   }
 
   const dividerColor = useColorModeValue("gray.400", "gray.600")
+  const textAreaHeight = !!image ? "40px" : "150px"
 
   if (loading && !post)
     return (
@@ -122,7 +132,7 @@ function NewReply() {
           m={2}
           onClick={() => router.back()}
         />
-        <Button isDisabled={submitDisabled} isLoading={submitLoading} type="submit" mt={3} mr={4} size="sm">
+        <Button isDisabled={submitDisabled} isLoading={createLoading} type="submit" mt={3} mr={4} size="sm">
           Reply
         </Button>
       </Flex>
@@ -138,7 +148,7 @@ function NewReply() {
           w="100%" // Needed to prevent user name width collapsing
           pr={4}
         >
-          <ItemHeading item={post} noPopover />
+          <PostHeading post={post} noPopover />
           <Stack justify="space-between">
             <Text fontSize="sm" w="100%">
               {post.text}
@@ -170,17 +180,15 @@ function NewReply() {
             <Avatar src={me?.avatar || undefined} boxSize="40px" />
           </Box>
           <Stack pt={3} pr={5} justify="space-between" h="100%">
-            <Textarea
-              name="text"
-              variant="unstyled"
+            <PostTextArea
+              h={textAreaHeight}
+              setSubmitDisabled={setSubmitDisabled}
+              tags={tags}
+              setTags={setTags}
+              handles={handles}
+              setHandles={setHandles}
+              form={form}
               placeholder="Post your reply"
-              size="lg"
-              autoFocus
-              bordered={false}
-              validations={false}
-              onChange={(e) => {
-                e.target.value ? setSubmitDisabled(false) : setSubmitDisabled(true)
-              }}
             />
             {image && (
               <Box position="relative">

@@ -33,10 +33,9 @@ import NextLink from "next/link"
 import { useRouter } from "next/router"
 import { ReplySchema } from "pages/replies/new"
 
-import type { PostDetailFragment } from "lib/graphql"
-import { useUpdateReplyMutation } from "lib/graphql"
+import { PostDetailFragment, useCreatePostMutation, useUpdatePostMutation } from "lib/graphql"
 import { MeDocument, useUnblockUserMutation } from "lib/graphql"
-import { GetPostDocument, useCreateReplyMutation, useGetPostQuery } from "lib/graphql"
+import { GetPostDocument, useGetPostQuery } from "lib/graphql"
 import { useForm } from "lib/hooks/useForm"
 import { useHighlightedText } from "lib/hooks/useHighlightText"
 import { useMe } from "lib/hooks/useMe"
@@ -53,29 +52,20 @@ import { FollowButton } from "components/FollowButton"
 import { Form } from "components/Form"
 import { withAuth } from "components/hoc/withAuth"
 import { HomeLayout } from "components/HomeLayout"
-import { ItemMenu } from "components/ItemMenu"
+import { PostMenu } from "components/PostMenu"
 import { LikePost } from "components/LikePost"
 import { Modal } from "components/Modal"
 import { NoData } from "components/NoData"
 import { PostDetailShareMenu } from "components/PostDetailShareMenu"
-import { ReplyItem } from "components/ReplyItem"
-import { Textarea } from "components/Textarea"
+import { PostItem } from "components/PostItem"
 import { UserPopover } from "components/UserPopover"
 import { stringsOnly } from "lib/helpers/utils"
+import { PostTextArea } from "components/PostTextArea"
 
 export const _ = gql`
-  fragment ReplyItem on Reply {
-    id
-    postId
-    text
-    image
-    createdAt
-    user {
-      ...UserDetail
-    }
-  }
   fragment PostDetail on Post {
     id
+    parentId
     text
     createdAt
     replyCount
@@ -86,7 +76,7 @@ export const _ = gql`
       ...UserDetail
     }
     replies {
-      ...ReplyItem
+      ...PostItem
     }
     mentions {
       id
@@ -284,7 +274,7 @@ function Post() {
                 )
               )}
               {/* MENU */}
-              <ItemMenu item={post} />
+              <PostMenu post={post} />
             </HStack>
           </HStack>
         </Box>
@@ -343,7 +333,7 @@ function Post() {
         </BrowserView>
       </Stack>
       {/* REPLIES */}
-      {replies.length > 0 ? replies.map((reply) => <ReplyItem key={reply.id} reply={reply} />) : null}
+      {replies.length > 0 ? replies.map((reply) => <PostItem key={reply.id} post={reply} />) : null}
     </Box>
   )
 }
@@ -361,28 +351,47 @@ function ReplyForm({ post }: ReplyFormProps) {
   const [isActive, setIsActive] = React.useState(false)
   const [submitDisabled, setSubmitDisabled] = React.useState(true)
   const [image, setImage] = React.useState<AttachedImage | null>(null)
+  const [tags, setTags] = React.useState<string[]>([])
+  const [handles, setHandles] = React.useState<string[]>([])
 
-  const [create, { loading }] = useCreateReplyMutation({
+  const [create, { loading }] = useCreatePostMutation({
     refetchQueries: [{ query: GetPostDocument, variables: { where: { id: { equals: post.id } } } }],
   })
   const [upload] = useS3Upload()
-  const [update] = useUpdateReplyMutation()
+  const [update] = useUpdatePostMutation()
 
   const form = useForm({ schema: ReplySchema, shouldResetAfterSubmit: true })
 
   const handleSubmit = (data: yup.InferType<typeof ReplySchema>) => {
-    return form.handler(() => create({ variables: { data: { postId: post.id, ...data } } }), {
-      onSuccess: async (data) => {
-        setIsActive(false)
-        setSubmitDisabled(true)
-        if (image) {
-          setImage(null)
-          const replyId = data.createReply.id
-          const imageKey = (await upload(image.file, { path: UPLOAD_PATHS.replyImage(replyId) })).fileKey
-          return form.handler(() => update({ variables: { replyId, data: { image: imageKey } } }))
-        }
+    const tagConnectOrCreate = tags.map((tag) => ({
+      where: { name: tag },
+      create: { name: tag },
+    }))
+    return form.handler(
+      () =>
+        create({
+          variables: {
+            data: {
+              parentId: post.id,
+              text: data.text,
+              tags: { connectOrCreate: tagConnectOrCreate },
+              handles,
+            },
+          },
+        }),
+      {
+        onSuccess: async (data) => {
+          setIsActive(false)
+          setSubmitDisabled(true)
+          if (image) {
+            setImage(null)
+            const postId = data.createPost.id
+            const imageKey = (await upload(image.file, { path: UPLOAD_PATHS.replyImage(postId) })).fileKey
+            return form.handler(() => update({ variables: { postId, data: { image: imageKey } } }))
+          }
+        },
       },
-    })
+    )
   }
   const containerHeight = isActive && !image ? "200px" : isActive ? "auto" : "45px"
 
@@ -404,19 +413,14 @@ function ReplyForm({ post }: ReplyFormProps) {
             <Avatar src={me?.avatar || undefined} boxSize="40px" />
           </Box>
           <Stack pt={0} justify="space-between" h="100%" position="relative">
-            <Textarea
-              name="text"
-              pl={2}
-              variant="unstyled"
+            <PostTextArea
+              setSubmitDisabled={setSubmitDisabled}
+              tags={tags}
+              setTags={setTags}
+              handles={handles}
+              setHandles={setHandles}
+              form={form}
               placeholder="Post your reply"
-              size="lg"
-              autoFocus
-              bordered={false}
-              validations={false}
-              onChange={(e) => {
-                e.target.value ? setSubmitDisabled(false) : setSubmitDisabled(true)
-              }}
-              onClick={() => setIsActive(true)}
             />
             {image && (
               <Box pl={3} pb={1} position="relative">

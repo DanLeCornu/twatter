@@ -14,6 +14,9 @@ export class Post extends BaseModel implements Prisma.Post {
   @Field()
   userId: string
 
+  @Field(() => String, { nullable: true })
+  parentId: string | null
+
   @Field(() => Date, { nullable: true })
   archivedAt: Date | null
 }

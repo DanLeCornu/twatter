@@ -67,10 +67,6 @@ const _ = gql`
       id
       text
     }
-    reply {
-      id
-      text
-    }
   }
   query GetNotifications($orderBy: [NotificationOrderByWithRelationInput!], $where: NotificationWhereInput) {
     notifications(orderBy: $orderBy, where: $where) {
@@ -303,7 +299,7 @@ function NotificationItem({ notification }: Props) {
       href = `/posts/${notification.post?.id}`
       icon = FaRegComment
       heading = "replied to your post"
-      content = notification.reply?.text
+      content = notification.post?.text
       break
     default:
       href = ""
