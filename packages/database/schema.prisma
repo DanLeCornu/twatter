@@ -98,6 +98,7 @@ model User {
   messagesSent           Message[]      @relation("MessagesSent")
   messagesReceived       Message[]      @relation("MessagesReceived")
   mentions               Mention[]
+  searches               Search[]
 }
 
 model Post {
@@ -237,6 +238,16 @@ model Mention {
   postId    String   @db.Uuid
   user      User     @relation(fields: [userId], references: [id])
   userId    String   @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+}
+
+model Search {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  text      String
+  hidden    Boolean  @default(false)
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 }

@@ -249,6 +249,11 @@ export type BookmarksResponse = {
   items: Array<Bookmark>;
 };
 
+export type BoolFilter = {
+  equals?: InputMaybe<Scalars['Boolean']>;
+  not?: InputMaybe<NestedBoolFilter>;
+};
+
 export type Conversation = {
   __typename?: 'Conversation';
   id: Scalars['String'];
@@ -1173,11 +1178,14 @@ export type Mutation = {
   __typename?: 'Mutation';
   blockUser: Scalars['Boolean'];
   clearAllBookmarks: Scalars['Boolean'];
+  clearAllSearches: Scalars['Boolean'];
+  clearSearch: Scalars['Boolean'];
   createBookmark: Scalars['Boolean'];
   createLike: Scalars['Boolean'];
   createMessage: Scalars['Boolean'];
   createPost: Post;
   createReport: Scalars['Boolean'];
+  createSearch: Scalars['Boolean'];
   createUser: User;
   createView: Scalars['Boolean'];
   deactivateAccount: Scalars['Boolean'];
@@ -1210,6 +1218,11 @@ export type MutationBlockUserArgs = {
 };
 
 
+export type MutationClearSearchArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationCreateBookmarkArgs = {
   postId: Scalars['String'];
 };
@@ -1232,6 +1245,11 @@ export type MutationCreatePostArgs = {
 
 export type MutationCreateReportArgs = {
   data: CreateReportInput;
+};
+
+
+export type MutationCreateSearchArgs = {
+  text: Scalars['String'];
 };
 
 
@@ -1348,6 +1366,11 @@ export type MutationUpdatePostArgs = {
 
 export type MutationVerifyArgs = {
   data: VerifyInput;
+};
+
+export type NestedBoolFilter = {
+  equals?: InputMaybe<Scalars['Boolean']>;
+  not?: InputMaybe<NestedBoolFilter>;
 };
 
 export type NestedDateTimeFilter = {
@@ -2760,6 +2783,7 @@ export type Query = {
   notifications: NotificationsResponse;
   post?: Maybe<Post>;
   posts: PostsResponse;
+  recentSearches: SearchesResponse;
   refreshToken?: Maybe<RefreshTokenResponse>;
   tags: TagsResponse;
   user?: Maybe<User>;
@@ -3289,6 +3313,139 @@ export type S3SignedUrlInput = {
   key: Scalars['String'];
 };
 
+export type Search = {
+  __typename?: 'Search';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  text: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  userId: Scalars['String'];
+};
+
+export type SearchCreateManyUserInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  text: Scalars['String'];
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type SearchCreateManyUserInputEnvelope = {
+  data: Array<SearchCreateManyUserInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type SearchCreateNestedManyWithoutUserInput = {
+  connect?: InputMaybe<Array<SearchWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<SearchCreateOrConnectWithoutUserInput>>;
+  create?: InputMaybe<Array<SearchCreateWithoutUserInput>>;
+  createMany?: InputMaybe<SearchCreateManyUserInputEnvelope>;
+};
+
+export type SearchCreateOrConnectWithoutUserInput = {
+  create: SearchCreateWithoutUserInput;
+  where: SearchWhereUniqueInput;
+};
+
+export type SearchCreateWithoutUserInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  text: Scalars['String'];
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type SearchListRelationFilter = {
+  every?: InputMaybe<SearchWhereInput>;
+  none?: InputMaybe<SearchWhereInput>;
+  some?: InputMaybe<SearchWhereInput>;
+};
+
+export type SearchOrderByRelationAggregateInput = {
+  _count?: InputMaybe<SortOrder>;
+};
+
+export type SearchScalarWhereInput = {
+  AND?: InputMaybe<Array<SearchScalarWhereInput>>;
+  NOT?: InputMaybe<Array<SearchScalarWhereInput>>;
+  OR?: InputMaybe<Array<SearchScalarWhereInput>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  hidden?: InputMaybe<BoolFilter>;
+  id?: InputMaybe<UuidFilter>;
+  text?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  userId?: InputMaybe<UuidFilter>;
+};
+
+export type SearchUpdateManyMutationInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type SearchUpdateManyWithWhereWithoutUserInput = {
+  data: SearchUpdateManyMutationInput;
+  where: SearchScalarWhereInput;
+};
+
+export type SearchUpdateManyWithoutUserNestedInput = {
+  connect?: InputMaybe<Array<SearchWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<SearchCreateOrConnectWithoutUserInput>>;
+  create?: InputMaybe<Array<SearchCreateWithoutUserInput>>;
+  createMany?: InputMaybe<SearchCreateManyUserInputEnvelope>;
+  delete?: InputMaybe<Array<SearchWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<SearchScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<SearchWhereUniqueInput>>;
+  set?: InputMaybe<Array<SearchWhereUniqueInput>>;
+  update?: InputMaybe<Array<SearchUpdateWithWhereUniqueWithoutUserInput>>;
+  updateMany?: InputMaybe<Array<SearchUpdateManyWithWhereWithoutUserInput>>;
+  upsert?: InputMaybe<Array<SearchUpsertWithWhereUniqueWithoutUserInput>>;
+};
+
+export type SearchUpdateWithWhereUniqueWithoutUserInput = {
+  data: SearchUpdateWithoutUserInput;
+  where: SearchWhereUniqueInput;
+};
+
+export type SearchUpdateWithoutUserInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type SearchUpsertWithWhereUniqueWithoutUserInput = {
+  create: SearchCreateWithoutUserInput;
+  update: SearchUpdateWithoutUserInput;
+  where: SearchWhereUniqueInput;
+};
+
+export type SearchWhereInput = {
+  AND?: InputMaybe<Array<SearchWhereInput>>;
+  NOT?: InputMaybe<Array<SearchWhereInput>>;
+  OR?: InputMaybe<Array<SearchWhereInput>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  hidden?: InputMaybe<BoolFilter>;
+  id?: InputMaybe<UuidFilter>;
+  text?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  user?: InputMaybe<UserRelationFilter>;
+  userId?: InputMaybe<UuidFilter>;
+};
+
+export type SearchWhereUniqueInput = {
+  id?: InputMaybe<Scalars['String']>;
+};
+
+export type SearchesResponse = {
+  __typename?: 'SearchesResponse';
+  count: Scalars['Int'];
+  items: Array<Search>;
+};
+
 export type SignedResponse = {
   __typename?: 'SignedResponse';
   key: Scalars['String'];
@@ -3553,6 +3710,7 @@ export type UserCreateInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -3789,6 +3947,7 @@ export type UserCreateWithoutBlockedAccountsInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -3827,6 +3986,7 @@ export type UserCreateWithoutBlockedByInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -3865,6 +4025,7 @@ export type UserCreateWithoutBookmarksInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -3903,6 +4064,7 @@ export type UserCreateWithoutCreatedReportsInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -3941,6 +4103,7 @@ export type UserCreateWithoutFollowersInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -3979,6 +4142,7 @@ export type UserCreateWithoutFollowingInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4017,6 +4181,7 @@ export type UserCreateWithoutLikesInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4055,6 +4220,7 @@ export type UserCreateWithoutMentionsInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4093,6 +4259,7 @@ export type UserCreateWithoutMessagesReceivedInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4131,6 +4298,7 @@ export type UserCreateWithoutMessagesSentInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4169,6 +4337,7 @@ export type UserCreateWithoutMutedAccountsInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4207,6 +4376,7 @@ export type UserCreateWithoutMutedByInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4245,6 +4415,7 @@ export type UserCreateWithoutNotificationInitiatorsInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4283,6 +4454,7 @@ export type UserCreateWithoutNotificationsInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4321,6 +4493,7 @@ export type UserCreateWithoutPinnedPostInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4359,6 +4532,7 @@ export type UserCreateWithoutPostsInput = {
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4397,6 +4571,7 @@ export type UserCreateWithoutReportsInput = {
   pinnedPost?: InputMaybe<PostCreateNestedOneWithoutPinnedUserInput>;
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewCreateNestedManyWithoutUserInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4436,6 +4611,7 @@ export type UserCreateWithoutViewsInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   reports?: InputMaybe<ReportCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchCreateNestedManyWithoutUserInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   website?: InputMaybe<Scalars['String']>;
 };
@@ -4485,6 +4661,7 @@ export type UserOrderByWithRelationInput = {
   posts?: InputMaybe<PostOrderByRelationAggregateInput>;
   reports?: InputMaybe<ReportOrderByRelationAggregateInput>;
   role?: InputMaybe<SortOrder>;
+  searches?: InputMaybe<SearchOrderByRelationAggregateInput>;
   updatedAt?: InputMaybe<SortOrder>;
   views?: InputMaybe<ViewOrderByRelationAggregateInput>;
   website?: InputMaybe<SortOrderInput>;
@@ -4834,6 +5011,7 @@ export type UserUpdateWithoutBlockedAccountsInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4872,6 +5050,7 @@ export type UserUpdateWithoutBlockedByInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4910,6 +5089,7 @@ export type UserUpdateWithoutBookmarksInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4948,6 +5128,7 @@ export type UserUpdateWithoutCreatedReportsInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -4986,6 +5167,7 @@ export type UserUpdateWithoutFollowersInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5024,6 +5206,7 @@ export type UserUpdateWithoutFollowingInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5062,6 +5245,7 @@ export type UserUpdateWithoutLikesInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5100,6 +5284,7 @@ export type UserUpdateWithoutMentionsInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5138,6 +5323,7 @@ export type UserUpdateWithoutMessagesReceivedInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5176,6 +5362,7 @@ export type UserUpdateWithoutMessagesSentInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5214,6 +5401,7 @@ export type UserUpdateWithoutMutedAccountsInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5252,6 +5440,7 @@ export type UserUpdateWithoutMutedByInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5290,6 +5479,7 @@ export type UserUpdateWithoutNotificationInitiatorsInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5328,6 +5518,7 @@ export type UserUpdateWithoutNotificationsInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5366,6 +5557,7 @@ export type UserUpdateWithoutPinnedPostInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5404,6 +5596,7 @@ export type UserUpdateWithoutPostsInput = {
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5442,6 +5635,7 @@ export type UserUpdateWithoutReportsInput = {
   pinnedPost?: InputMaybe<PostUpdateOneWithoutPinnedUserNestedInput>;
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   views?: InputMaybe<ViewUpdateManyWithoutUserNestedInput>;
   website?: InputMaybe<Scalars['String']>;
@@ -5481,6 +5675,7 @@ export type UserUpdateWithoutViewsInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   reports?: InputMaybe<ReportUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<Role>;
+  searches?: InputMaybe<SearchUpdateManyWithoutUserNestedInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   website?: InputMaybe<Scalars['String']>;
 };
@@ -5619,6 +5814,7 @@ export type UserWhereInput = {
   posts?: InputMaybe<PostListRelationFilter>;
   reports?: InputMaybe<ReportListRelationFilter>;
   role?: InputMaybe<EnumRoleFilter>;
+  searches?: InputMaybe<SearchListRelationFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   views?: InputMaybe<ViewListRelationFilter>;
   website?: InputMaybe<StringNullableFilter>;
@@ -5986,7 +6182,10 @@ export type PinPostMutation = { __typename?: 'Mutation', updateMe: { __typename?
 export type TagItemFragment = { __typename?: 'Tag', id: string, name: string };
 
 export type GetTagsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<TagOrderByWithRelationInput> | TagOrderByWithRelationInput>;
   where?: InputMaybe<TagWhereInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -6025,6 +6224,18 @@ export type UnblockUserMutationVariables = Exact<{
 
 
 export type UnblockUserMutation = { __typename?: 'Mutation', unblockUser: boolean };
+
+export type ClearSearchMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ClearSearchMutation = { __typename?: 'Mutation', clearSearch: boolean };
+
+export type ClearAllSearchesMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ClearAllSearchesMutation = { __typename?: 'Mutation', clearAllSearches: boolean };
 
 export type CreateReportMutationVariables = Exact<{
   data: CreateReportInput;
@@ -6136,6 +6347,20 @@ export type GetSearchUsersQueryVariables = Exact<{
 
 
 export type GetSearchUsersQuery = { __typename?: 'Query', users: { __typename?: 'UsersResponse', count: number, items: Array<{ __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null }> } };
+
+export type RecentSearchItemFragment = { __typename?: 'Search', id: string, text: string };
+
+export type GetRecentSearchesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRecentSearchesQuery = { __typename?: 'Query', recentSearches: { __typename?: 'SearchesResponse', count: number, items: Array<{ __typename?: 'Search', id: string, text: string }> } };
+
+export type LogSearchMutationVariables = Exact<{
+  text: Scalars['String'];
+}>;
+
+
+export type LogSearchMutation = { __typename?: 'Mutation', createSearch: boolean };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -6450,6 +6675,12 @@ export const UserSearchItemFragmentDoc = gql`
   name
   avatar
   handle
+}
+    `;
+export const RecentSearchItemFragmentDoc = gql`
+    fragment RecentSearchItem on Search {
+  id
+  text
 }
     `;
 export const MessageItemFragmentDoc = gql`
@@ -6840,8 +7071,8 @@ export type PinPostMutationHookResult = ReturnType<typeof usePinPostMutation>;
 export type PinPostMutationResult = Apollo.MutationResult<PinPostMutation>;
 export type PinPostMutationOptions = Apollo.BaseMutationOptions<PinPostMutation, PinPostMutationVariables>;
 export const GetTagsDocument = gql`
-    query GetTags($where: TagWhereInput) {
-  tags(where: $where) {
+    query GetTags($orderBy: [TagOrderByWithRelationInput!], $where: TagWhereInput, $skip: Int, $take: Int) {
+  tags(take: $take, orderBy: $orderBy, where: $where, skip: $skip) {
     items {
       ...TagItem
     }
@@ -6920,6 +7151,30 @@ export function useUnblockUserMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UnblockUserMutationHookResult = ReturnType<typeof useUnblockUserMutation>;
 export type UnblockUserMutationResult = Apollo.MutationResult<UnblockUserMutation>;
 export type UnblockUserMutationOptions = Apollo.BaseMutationOptions<UnblockUserMutation, UnblockUserMutationVariables>;
+export const ClearSearchDocument = gql`
+    mutation ClearSearch($id: String!) {
+  clearSearch(id: $id)
+}
+    `;
+export function useClearSearchMutation(baseOptions?: Apollo.MutationHookOptions<ClearSearchMutation, ClearSearchMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ClearSearchMutation, ClearSearchMutationVariables>(ClearSearchDocument, options);
+      }
+export type ClearSearchMutationHookResult = ReturnType<typeof useClearSearchMutation>;
+export type ClearSearchMutationResult = Apollo.MutationResult<ClearSearchMutation>;
+export type ClearSearchMutationOptions = Apollo.BaseMutationOptions<ClearSearchMutation, ClearSearchMutationVariables>;
+export const ClearAllSearchesDocument = gql`
+    mutation ClearAllSearches {
+  clearAllSearches
+}
+    `;
+export function useClearAllSearchesMutation(baseOptions?: Apollo.MutationHookOptions<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>(ClearAllSearchesDocument, options);
+      }
+export type ClearAllSearchesMutationHookResult = ReturnType<typeof useClearAllSearchesMutation>;
+export type ClearAllSearchesMutationResult = Apollo.MutationResult<ClearAllSearchesMutation>;
+export type ClearAllSearchesMutationOptions = Apollo.BaseMutationOptions<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>;
 export const CreateReportDocument = gql`
     mutation CreateReport($data: CreateReportInput!) {
   createReport(data: $data)
@@ -7153,6 +7408,39 @@ export function useGetSearchUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetSearchUsersQueryHookResult = ReturnType<typeof useGetSearchUsersQuery>;
 export type GetSearchUsersLazyQueryHookResult = ReturnType<typeof useGetSearchUsersLazyQuery>;
 export type GetSearchUsersQueryResult = Apollo.QueryResult<GetSearchUsersQuery, GetSearchUsersQueryVariables>;
+export const GetRecentSearchesDocument = gql`
+    query GetRecentSearches {
+  recentSearches {
+    items {
+      ...RecentSearchItem
+    }
+    count
+  }
+}
+    ${RecentSearchItemFragmentDoc}`;
+export function useGetRecentSearchesQuery(baseOptions?: Apollo.QueryHookOptions<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>(GetRecentSearchesDocument, options);
+      }
+export function useGetRecentSearchesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>(GetRecentSearchesDocument, options);
+        }
+export type GetRecentSearchesQueryHookResult = ReturnType<typeof useGetRecentSearchesQuery>;
+export type GetRecentSearchesLazyQueryHookResult = ReturnType<typeof useGetRecentSearchesLazyQuery>;
+export type GetRecentSearchesQueryResult = Apollo.QueryResult<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>;
+export const LogSearchDocument = gql`
+    mutation LogSearch($text: String!) {
+  createSearch(text: $text)
+}
+    `;
+export function useLogSearchMutation(baseOptions?: Apollo.MutationHookOptions<LogSearchMutation, LogSearchMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LogSearchMutation, LogSearchMutationVariables>(LogSearchDocument, options);
+      }
+export type LogSearchMutationHookResult = ReturnType<typeof useLogSearchMutation>;
+export type LogSearchMutationResult = Apollo.MutationResult<LogSearchMutation>;
+export type LogSearchMutationOptions = Apollo.BaseMutationOptions<LogSearchMutation, LogSearchMutationVariables>;
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
   forgotPassword(email: $email)

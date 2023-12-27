@@ -30,8 +30,8 @@ const _ = gql`
     id
     name
   }
-  query GetTags($where: TagWhereInput) {
-    tags(where: $where) {
+  query GetTags($orderBy: [TagOrderByWithRelationInput!], $where: TagWhereInput, $skip: Int, $take: Int) {
+    tags(take: $take, orderBy: $orderBy, where: $where, skip: $skip) {
       items {
         ...TagItem
       }
@@ -64,7 +64,7 @@ export function PostTextArea({
   const [text, setText] = React.useState("")
 
   const { data: tagData, loading: tagsLoading } = useGetTagsQuery({
-    // Eventually will need to filter the query instead of getting all users and filtering onthe front end, but there
+    // Eventually will need to filter the query instead of getting all tags and filtering onthe front end, but there
     // were some funky loading states to sort out so that's a problem for future dan
     // variables: {
     //   where: {

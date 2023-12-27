@@ -13,7 +13,7 @@ import { LikesResponse } from "./responses/likes.response"
 @Service()
 @Resolver(() => Like)
 export default class LikeResolver {
-  // ALL LIKES
+  // GET LIKES
   @UseAuth()
   @Query(() => LikesResponse)
   async likes(@Args() args: FindManyLikeArgs): Promise<LikesResponse> {
