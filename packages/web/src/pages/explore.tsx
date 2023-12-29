@@ -1,30 +1,19 @@
 import * as React from "react"
 import { MobileView } from "react-device-detect"
-import { BiSearch, BiX } from "react-icons/bi"
+import { BiArrowBack } from "react-icons/bi"
 import { gql } from "@apollo/client"
-import { Button, Divider, InputProps, Stack, useDisclosure } from "@chakra-ui/react"
-import { Center, Flex, Spinner } from "@chakra-ui/react"
-import {
-  Box,
-  HStack,
-  IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-  useColorModeValue,
-  Text,
-} from "@chakra-ui/react"
+import { Divider, Stack } from "@chakra-ui/react"
+import { Center, Spinner } from "@chakra-ui/react"
+import { Box, HStack, IconButton, useColorModeValue, Text } from "@chakra-ui/react"
 import Head from "next/head"
+import NextLink from "next/link"
 
 import {
-  GetRecentSearchesDocument,
   QueryMode,
-  useClearAllSearchesMutation,
-  useGetRecentSearchesQuery,
+  SortOrder,
   useGetSearchUsersQuery,
   useGetTagsQuery,
-  useLogSearchMutation,
+  useGetTrendingTagsQuery,
 } from "lib/graphql"
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { withAuth } from "components/hoc/withAuth"
@@ -32,9 +21,9 @@ import { HomeLayout } from "components/HomeLayout"
 import { MobileTopBarAvatar } from "components/MobileTopBarAvatar"
 import { UserSearchItem } from "components/UserSearchItem"
 import { TagSearchItem } from "components/TagSearchItem"
-import { useMutationHandler } from "lib/hooks/useMutationHandler"
-import { RecentSearchItem } from "components/RecentSearchItem"
-import { Modal } from "components/Modal"
+import { ExploreTrendItem } from "components/ExploreTrendItem"
+import { ExploreSearch } from "components/ExploreSearch"
+import { RecentSearches } from "components/RecentSearches"
 
 const _ = gql`
   fragment UserSearchItem on User {
@@ -56,32 +45,29 @@ const _ = gql`
       count
     }
   }
-  fragment RecentSearchItem on Search {
-    id
-    text
+  mutation LogSearch($text: String!) {
+    createSearch(text: $text)
   }
-  query GetRecentSearches {
-    recentSearches {
+  query GetTrendingTags($orderBy: [TagOrderByWithRelationInput!], $take: Int) {
+    tags(orderBy: $orderBy, take: $take) {
       items {
-        ...RecentSearchItem
+        ...ExploreTagItem
       }
       count
     }
   }
-  mutation LogSearch($text: String!) {
-    createSearch(text: $text)
-  }
-  mutation ClearAllSearches {
-    clearAllSearches
-  }
 `
 
 function Explore() {
-  const handler = useMutationHandler()
-  const modalProps = useDisclosure()
   const [search, setSearch] = React.useState("")
+  const [isSearchActive, setIsSearchActive] = React.useState(false)
 
-  const { data: recentSearchData, loading: recentSearchesLoading } = useGetRecentSearchesQuery()
+  const { data: trendingTagData, loading: trendingTagsLoading } = useGetTrendingTagsQuery({
+    variables: {
+      take: 5,
+      orderBy: { posts: { _count: SortOrder.Desc } },
+    },
+  })
   const { data: tagData, loading: tagsLoading } = useGetTagsQuery({
     variables: {
       take: 3,
@@ -103,25 +89,14 @@ function Explore() {
       },
     },
   })
-  const [clearAllSearches, { loading: clearAllLoading }] = useClearAllSearchesMutation({
-    refetchQueries: [{ query: GetRecentSearchesDocument }],
-  })
-
-  const handleClearAll = () => {
-    return handler(() => clearAllSearches(), {
-      onSuccess: () => {
-        modalProps.onClose()
-      },
-    })
-  }
 
   const users = userData?.users.items || []
   const tags = tagData?.tags.items || []
-  const recentSearches = recentSearchData?.recentSearches.items || []
+  const trendingTags = trendingTagData?.tags.items || []
 
   const bgColor = useColorModeValue(`rgba(${WHITE_RGB}, 0.85)`, `rgba(${BG_DARK_RGB}, 0.80)`)
   const borderColor = useColorModeValue("gray.100", "gray.700")
-  const isLoading = usersLoading || tagsLoading || recentSearchesLoading
+  const isLoading = usersLoading || tagsLoading || trendingTagsLoading
 
   return (
     <Box position="relative">
@@ -142,71 +117,72 @@ function Explore() {
         spacing={5}
         borderBottom="1px"
         borderColor={borderColor}
+        justify="center"
+        w="100%"
       >
         <MobileView>
-          <MobileTopBarAvatar />
+          {isSearchActive ? (
+            <IconButton
+              minW="30px" // needed otherwise chakra default will be 40px width
+              aria-label="back"
+              icon={<Box as={BiArrowBack} boxSize="18px" />}
+              variant="ghost"
+              onClick={() => {
+                setIsSearchActive(false)
+                setSearch("")
+              }}
+            />
+          ) : (
+            <MobileTopBarAvatar />
+          )}
         </MobileView>
-        <ExploreSearch search={search} setSearch={setSearch} />
+        <ExploreSearch
+          search={search}
+          setSearch={setSearch}
+          isSearchActive={isSearchActive}
+          setIsSearchActive={setIsSearchActive}
+        />
       </HStack>
       <Box pt="60px">
         {isLoading ? (
           <Center>
             <Spinner />
           </Center>
-        ) : !isLoading && !search ? (
-          recentSearches.length === 0 ? (
-            <Text fontSize="sm" color="gray.400" textAlign="center" w="100%">
-              Try searching for people, tags, or keywords
+        ) : isSearchActive && !search ? (
+          <RecentSearches setIsSearchActive={setIsSearchActive} />
+        ) : !isSearchActive && !search ? (
+          <Stack mx={4} spacing={6}>
+            <Text fontSize="xl" fontWeight="bold">
+              Trends for you
             </Text>
-          ) : (
-            <>
-              <HStack justify="space-between" px={4}>
-                <Text fontSize="lg" fontWeight="bold">
-                  Recent
-                </Text>
-                <Button variant="ghost" onClick={modalProps.onOpen} color="brand.blue" size="sm">
-                  Clear all
-                </Button>
-              </HStack>
-              {recentSearches.map((search, i) => (
-                <RecentSearchItem key={i} search={search} />
+            <Stack spacing={4}>
+              {trendingTags.map((tag, i) => (
+                <ExploreTrendItem key={i} tag={tag} />
               ))}
-              <Modal {...modalProps} title="Clear all recent searches?">
-                <Text mb={6}>This can't be undone and you'll remove all your recent searches</Text>
-                <Stack>
-                  <Button
-                    onClick={handleClearAll}
-                    isLoading={clearAllLoading}
-                    bg="red"
-                    _hover={{ bg: "red" }}
-                  >
-                    Clear
-                  </Button>
-                  <Button colorScheme="monochrome" variant="outline" onClick={modalProps.onClose}>
-                    Cancel
-                  </Button>
-                </Stack>
-              </Modal>
-            </>
-          )
+            </Stack>
+          </Stack>
         ) : (
           <Box>
             {tags.length > 0 ? (
-              tags.map((tag, i) => <TagSearchItem key={i} tag={tag} />)
+              tags.map((tag, i) => <TagSearchItem key={i} tag={tag} setIsSearchActive={setIsSearchActive} />)
             ) : (
-              // TODO link to /search?query={search}
-              <Text px={4} py={2}>
-                Search for "{search}"
-              </Text>
+              <NextLink href={`/search?q=${search}`}>
+                <Text px={4} py={2}>
+                  Search for "{search}"
+                </Text>
+              </NextLink>
             )}
             <Divider my={2} />
             {users.length > 0 ? (
-              users.map((user, i) => <UserSearchItem key={i} user={user} />)
+              users.map((user, i) => (
+                <UserSearchItem key={i} user={user} setIsSearchActive={setIsSearchActive} />
+              ))
             ) : (
-              // TODO link to /search?query={search}
-              <Text px={4} py={2}>
-                Go to @{search}
-              </Text>
+              <NextLink href={`/search?q=${search}`}>
+                <Text px={4} py={2}>
+                  Go to @{search}
+                </Text>
+              </NextLink>
             )}
           </Box>
         )}
@@ -218,68 +194,3 @@ function Explore() {
 Explore.getLayout = (page: React.ReactNode) => <HomeLayout>{page}</HomeLayout>
 
 export default withAuth(Explore)
-
-interface Props extends InputProps {
-  search: string
-  setSearch: React.Dispatch<React.SetStateAction<string>>
-}
-
-function ExploreSearch({ search, setSearch, ...props }: Props) {
-  // const router = useRouter()
-  const handler = useMutationHandler()
-  const [logSearch] = useLogSearchMutation({ refetchQueries: [{ query: GetRecentSearchesDocument }] })
-  const [previousSearch, setPreviousSearch] = React.useState("")
-
-  const handleSubmit = () => {
-    if (!search || search.trim() === previousSearch.trim()) return
-    setPreviousSearch(search.trim())
-    handler(() => logSearch({ variables: { text: search.trim() } })) // async log the search without blocking
-    // router.push(`/search?query=${search}`)
-  }
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault() // stops page refreshing, default html form behaviour
-        handleSubmit()
-      }}
-    >
-      <InputGroup>
-        <InputLeftElement h="100%" pl={2}>
-          <Flex align="center">
-            <IconButton
-              rounded="full"
-              size="sm"
-              aria-label="search"
-              variant="ghost"
-              color="gray.500"
-              icon={<Box as={BiSearch} boxSize="20px" />}
-              type="submit"
-            />
-          </Flex>
-        </InputLeftElement>
-        <Input
-          rounded="full"
-          pl="50px !important"
-          px={10}
-          size="sm"
-          value={search}
-          {...props}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search"
-          fontSize="15px"
-        />
-        <InputRightElement h="100%" pr={2}>
-          {!!search && (
-            <IconButton
-              rounded="full"
-              onClick={() => setSearch("")}
-              size="xs"
-              aria-label="clear search"
-              icon={<Box as={BiX} boxSize="20px" color="black.500" />}
-            />
-          )}
-        </InputRightElement>
-      </InputGroup>
-    </form>
-  )
-}

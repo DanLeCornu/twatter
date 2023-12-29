@@ -3316,6 +3316,7 @@ export type S3SignedUrlInput = {
 export type Search = {
   __typename?: 'Search';
   createdAt: Scalars['DateTime'];
+  hidden: Scalars['Boolean'];
   id: Scalars['String'];
   text: Scalars['String'];
   updatedAt: Scalars['DateTime'];
@@ -3498,6 +3499,7 @@ export type Tag = {
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   name: Scalars['String'];
+  postCount: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
 };
 
@@ -6081,6 +6083,8 @@ export type DeleteConversationMutationVariables = Exact<{
 
 export type DeleteConversationMutation = { __typename?: 'Mutation', deleteConversation: boolean };
 
+export type ExploreTagItemFragment = { __typename?: 'Tag', id: string, name: string, postCount: number };
+
 export type FollowUserMutationVariables = Exact<{
   userId: Scalars['String'];
 }>;
@@ -6232,11 +6236,6 @@ export type ClearSearchMutationVariables = Exact<{
 
 export type ClearSearchMutation = { __typename?: 'Mutation', clearSearch: boolean };
 
-export type ClearAllSearchesMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ClearAllSearchesMutation = { __typename?: 'Mutation', clearAllSearches: boolean };
-
 export type CreateReportMutationVariables = Exact<{
   data: CreateReportInput;
 }>;
@@ -6361,6 +6360,19 @@ export type LogSearchMutationVariables = Exact<{
 
 
 export type LogSearchMutation = { __typename?: 'Mutation', createSearch: boolean };
+
+export type ClearAllSearchesMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ClearAllSearchesMutation = { __typename?: 'Mutation', clearAllSearches: boolean };
+
+export type GetTrendingTagsQueryVariables = Exact<{
+  orderBy?: InputMaybe<Array<TagOrderByWithRelationInput> | TagOrderByWithRelationInput>;
+  take?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetTrendingTagsQuery = { __typename?: 'Query', tags: { __typename?: 'TagsResponse', count: number, items: Array<{ __typename?: 'Tag', id: string, name: string, postCount: number }> } };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -6497,6 +6509,13 @@ export type UpdateProfileMutationVariables = Exact<{
 
 export type UpdateProfileMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string, avatar?: string | null, cover?: string | null, name: string, bio?: string | null, location?: string | null, website?: string | null, dob?: string | null, dobDayMonthPrivacy: DobPrivacy, dobYearPrivacy: DobPrivacy } };
 
+export const ExploreTagItemFragmentDoc = gql`
+    fragment ExploreTagItem on Tag {
+  id
+  name
+  postCount
+}
+    `;
 export const TagItemFragmentDoc = gql`
     fragment TagItem on Tag {
   id
@@ -7163,18 +7182,6 @@ export function useClearSearchMutation(baseOptions?: Apollo.MutationHookOptions<
 export type ClearSearchMutationHookResult = ReturnType<typeof useClearSearchMutation>;
 export type ClearSearchMutationResult = Apollo.MutationResult<ClearSearchMutation>;
 export type ClearSearchMutationOptions = Apollo.BaseMutationOptions<ClearSearchMutation, ClearSearchMutationVariables>;
-export const ClearAllSearchesDocument = gql`
-    mutation ClearAllSearches {
-  clearAllSearches
-}
-    `;
-export function useClearAllSearchesMutation(baseOptions?: Apollo.MutationHookOptions<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>(ClearAllSearchesDocument, options);
-      }
-export type ClearAllSearchesMutationHookResult = ReturnType<typeof useClearAllSearchesMutation>;
-export type ClearAllSearchesMutationResult = Apollo.MutationResult<ClearAllSearchesMutation>;
-export type ClearAllSearchesMutationOptions = Apollo.BaseMutationOptions<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>;
 export const CreateReportDocument = gql`
     mutation CreateReport($data: CreateReportInput!) {
   createReport(data: $data)
@@ -7441,6 +7448,39 @@ export function useLogSearchMutation(baseOptions?: Apollo.MutationHookOptions<Lo
 export type LogSearchMutationHookResult = ReturnType<typeof useLogSearchMutation>;
 export type LogSearchMutationResult = Apollo.MutationResult<LogSearchMutation>;
 export type LogSearchMutationOptions = Apollo.BaseMutationOptions<LogSearchMutation, LogSearchMutationVariables>;
+export const ClearAllSearchesDocument = gql`
+    mutation ClearAllSearches {
+  clearAllSearches
+}
+    `;
+export function useClearAllSearchesMutation(baseOptions?: Apollo.MutationHookOptions<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>(ClearAllSearchesDocument, options);
+      }
+export type ClearAllSearchesMutationHookResult = ReturnType<typeof useClearAllSearchesMutation>;
+export type ClearAllSearchesMutationResult = Apollo.MutationResult<ClearAllSearchesMutation>;
+export type ClearAllSearchesMutationOptions = Apollo.BaseMutationOptions<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>;
+export const GetTrendingTagsDocument = gql`
+    query GetTrendingTags($orderBy: [TagOrderByWithRelationInput!], $take: Int) {
+  tags(orderBy: $orderBy, take: $take) {
+    items {
+      ...ExploreTagItem
+    }
+    count
+  }
+}
+    ${ExploreTagItemFragmentDoc}`;
+export function useGetTrendingTagsQuery(baseOptions?: Apollo.QueryHookOptions<GetTrendingTagsQuery, GetTrendingTagsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTrendingTagsQuery, GetTrendingTagsQueryVariables>(GetTrendingTagsDocument, options);
+      }
+export function useGetTrendingTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTrendingTagsQuery, GetTrendingTagsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTrendingTagsQuery, GetTrendingTagsQueryVariables>(GetTrendingTagsDocument, options);
+        }
+export type GetTrendingTagsQueryHookResult = ReturnType<typeof useGetTrendingTagsQuery>;
+export type GetTrendingTagsLazyQueryHookResult = ReturnType<typeof useGetTrendingTagsLazyQuery>;
+export type GetTrendingTagsQueryResult = Apollo.QueryResult<GetTrendingTagsQuery, GetTrendingTagsQueryVariables>;
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
   forgotPassword(email: $email)

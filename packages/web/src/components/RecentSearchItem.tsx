@@ -14,9 +14,10 @@ const _ = gql`
 
 interface Props {
   search: RecentSearchItemFragment
+  setIsSearchActive: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function RecentSearchItem({ search }: Props) {
+export function RecentSearchItem({ search, setIsSearchActive }: Props) {
   const handler = useMutationHandler()
   const [clearSearch] = useClearSearchMutation({ refetchQueries: [{ query: GetRecentSearchesDocument }] })
 
@@ -27,8 +28,8 @@ export function RecentSearchItem({ search }: Props) {
   const bgHover = useColorModeValue("gray.50", "#182234")
 
   return (
-    <NextLink href={`/search?query=${search.text}`}>
-      <HStack _hover={{ bg: bgHover }} p={4} justify="space-between">
+    <NextLink href={`/search?q=${search.text}`}>
+      <HStack _hover={{ bg: bgHover }} p={4} justify="space-between" onClick={() => setIsSearchActive(false)}>
         <HStack spacing={5}>
           <Box as={BiSearch} boxSize="25px" />
           <Text>{search.text}</Text>

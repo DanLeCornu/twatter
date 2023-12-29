@@ -33,7 +33,7 @@ export const DESKTOP_NAV_WIDTH = 68
 export function DesktopNav() {
   const { me } = useMe()
   const logout = useLogout()
-  const { asPath } = useRouter()
+  const { pathname } = useRouter()
   const modalProps = useDisclosure()
   const { colorMode, toggleColorMode } = useColorMode()
 
@@ -73,7 +73,7 @@ export function DesktopNav() {
                   <Box
                     as={BiHomeCircle}
                     boxSize="28px"
-                    color={asPath === "/home" ? "primary.500" : undefined}
+                    color={pathname === "/home" ? "primary.500" : undefined}
                   />
                 }
                 variant="ghost"
@@ -87,7 +87,7 @@ export function DesktopNav() {
                   <Box
                     as={BiSearch}
                     boxSize="25px"
-                    color={asPath === "/explore" ? "primary.500" : undefined}
+                    color={["/explore", "/search"].includes(pathname) ? "primary.500" : undefined}
                   />
                 }
                 variant="ghost"
@@ -101,7 +101,7 @@ export function DesktopNav() {
                   <Box
                     as={BiBell}
                     boxSize="25px"
-                    color={asPath === "/notifications" ? "primary.500" : undefined}
+                    color={pathname === "/notifications" ? "primary.500" : undefined}
                   />
                 }
                 variant="ghost"
@@ -115,7 +115,7 @@ export function DesktopNav() {
                   <Box
                     as={FiMail}
                     boxSize="25px"
-                    color={asPath === "/messages" ? "primary.500" : undefined}
+                    color={pathname === "/messages" ? "primary.500" : undefined}
                   />
                 }
                 variant="ghost"
@@ -129,7 +129,7 @@ export function DesktopNav() {
                   <Box
                     as={BiUser}
                     boxSize="25px"
-                    color={asPath.includes(`/${me?.handle}`) ? "primary.500" : undefined}
+                    color={pathname === "/[handle]" ? "primary.500" : undefined}
                   />
                 }
                 variant="ghost"

@@ -8,13 +8,19 @@ interface Props {
   user: UserSearchItemFragment
   size?: "big" | "small"
   path?: string
+  setIsSearchActive?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function UserSearchItem({ user, size = "big", path }: Props) {
+export function UserSearchItem({ user, size = "big", path, setIsSearchActive }: Props) {
   const bgHover = useColorModeValue("gray.50", "#182234")
   return (
     <NextLink href={path ? path : `/${user.handle}`}>
-      <HStack _hover={{ bg: bgHover }} px={4} py={size === "big" ? 4 : 2}>
+      <HStack
+        _hover={{ bg: bgHover }}
+        px={4}
+        py={size === "big" ? 4 : 2}
+        onClick={() => setIsSearchActive && setIsSearchActive(false)}
+      >
         <Avatar src={user.avatar || undefined} boxSize="40px" />
         <Stack spacing={0} w="100%">
           <Text fontWeight="bold" fontSize={size === "big" ? "md" : "sm"} isTruncated w="80%">

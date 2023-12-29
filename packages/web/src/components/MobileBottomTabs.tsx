@@ -21,7 +21,7 @@ export const MOBILE_BOTTOM_TAB_HEIGHT = 50
 
 export function MobileBottomTabs() {
   const { me } = useMe()
-  const { asPath } = useRouter()
+  const { pathname } = useRouter()
   const { colorMode } = useColorMode()
 
   const notificationCount = me?.unreadNotificationCount || 0
@@ -50,7 +50,7 @@ export function MobileBottomTabs() {
         <IconButton
           aria-label="home"
           icon={
-            <Box as={BiHomeCircle} boxSize="28px" color={asPath === "/home" ? "primary.500" : undefined} />
+            <Box as={BiHomeCircle} boxSize="28px" color={pathname === "/home" ? "primary.500" : undefined} />
           }
           variant="ghost"
           boxSize="42px"
@@ -60,7 +60,11 @@ export function MobileBottomTabs() {
         <IconButton
           aria-label="explore"
           icon={
-            <Box as={BiSearch} boxSize="25px" color={asPath === "/explore" ? "primary.500" : undefined} />
+            <Box
+              as={BiSearch}
+              boxSize="25px"
+              color={["/explore", "/search"].includes(pathname) ? "primary.500" : undefined}
+            />
           }
           variant="ghost"
           boxSize="42px"
@@ -107,7 +111,7 @@ export function MobileBottomTabs() {
               <Icon
                 as={BiBell}
                 boxSize="25px"
-                color={asPath === "/notifications" ? "primary.500" : undefined}
+                color={pathname === "/notifications" ? "primary.500" : undefined}
               />
             </Box>
           }
@@ -118,7 +122,9 @@ export function MobileBottomTabs() {
       <NextLink href="/messages">
         <IconButton
           aria-label="messages"
-          icon={<Box as={FiMail} boxSize="25px" color={asPath === "/messages" ? "primary.500" : undefined} />}
+          icon={
+            <Box as={FiMail} boxSize="25px" color={pathname === "/messages" ? "primary.500" : undefined} />
+          }
           variant="ghost"
           boxSize="42px"
         />

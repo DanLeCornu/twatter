@@ -47,7 +47,7 @@ import { FollowButton } from "./FollowButton"
 import { Modal } from "./Modal"
 import { NoData } from "./NoData"
 import { ProfileMenu } from "./ProfileMenu"
-import { ProfileTab } from "./ProfileTab"
+import { CustomTab } from "./CustomTab"
 
 const _ = gql`
   fragment UserProfile on User {
@@ -427,9 +427,9 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
       ) : (
         <Box borderBottom="1px" borderColor={borderColor}>
           <Flex overflowX="scroll" sx={{ "&::-webkit-scrollbar": { display: "none" } }}>
-            <ProfileTab href={`/${user.handle}`}>Posts</ProfileTab>
-            <ProfileTab href={`/${user.handle}/replies`}>Replies</ProfileTab>
-            <ProfileTab href={`/${user.handle}/likes`}>Likes</ProfileTab>
+            <CustomTab href={`/${user.handle}`}>Posts</CustomTab>
+            <CustomTab href={`/${user.handle}/replies`}>Replies</CustomTab>
+            <CustomTab href={`/${user.handle}/likes`}>Likes</CustomTab>
           </Flex>
         </Box>
       )}

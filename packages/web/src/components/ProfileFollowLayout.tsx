@@ -19,7 +19,7 @@ import { useRouter } from "next/router"
 import { useGetProfileFollowQuery } from "lib/graphql"
 
 import { NoData } from "./NoData"
-import { ProfileTab } from "./ProfileTab"
+import { CustomTab } from "./CustomTab"
 
 const _ = gql`
   fragment UserFollowItem on User {
@@ -95,8 +95,8 @@ export function ProfileFollowLayout({ children }: { children: React.ReactNode })
       {/* TABS */}
       <Box borderBottom="1px" borderColor={borderColor}>
         <Flex overflowX="scroll" sx={{ "&::-webkit-scrollbar": { display: "none" } }}>
-          <ProfileTab href={`/${user.handle}/followers`}>Followers</ProfileTab>
-          <ProfileTab href={`/${user.handle}/following`}>Following</ProfileTab>
+          <CustomTab href={`/${user.handle}/followers`}>Followers</CustomTab>
+          <CustomTab href={`/${user.handle}/following`}>Following</CustomTab>
         </Flex>
       </Box>
 

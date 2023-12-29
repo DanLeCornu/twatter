@@ -6,13 +6,14 @@ import NextLink from "next/link"
 
 interface Props {
   tag: TagItemFragment
+  setIsSearchActive: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function TagSearchItem({ tag }: Props) {
+export function TagSearchItem({ tag, setIsSearchActive }: Props) {
   const bgHover = useColorModeValue("gray.50", "#182234")
   return (
-    <NextLink href={`/search?tag=${tag.name}`}>
-      <HStack _hover={{ bg: bgHover }} p={4} spacing={5}>
+    <NextLink href={`/search?q=${tag.name}`}>
+      <HStack _hover={{ bg: bgHover }} p={4} spacing={5} onClick={() => setIsSearchActive(false)}>
         <Box as={BiSearch} boxSize="25px" />
         <Text>#{tag.name}</Text>
       </HStack>

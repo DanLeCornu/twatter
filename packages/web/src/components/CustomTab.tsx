@@ -6,10 +6,11 @@ import { useRouter } from "next/router"
 
 interface Props extends LinkProps {
   href: string
+  isActive?: boolean
 }
-export function ProfileTab({ href, ...props }: Props) {
+export function CustomTab({ href, isActive, ...props }: Props) {
   const { asPath } = useRouter()
-  const isActive = href === asPath
+  const active = isActive || href === asPath
 
   const activeColor = useColorModeValue("black", "white")
   const inactiveColor = useColorModeValue("gray.600", "gray.500")
@@ -26,9 +27,9 @@ export function ProfileTab({ href, ...props }: Props) {
       _hover={{ color: useColorModeValue("black", "white") }}
     >
       <Box
-        color={isActive ? activeColor : inactiveColor}
+        color={active ? activeColor : inactiveColor}
         borderBottom="3.5px solid"
-        borderColor={isActive ? "brand.blue" : "transparent"}
+        borderColor={active ? "brand.blue" : "transparent"}
         pb={2}
         px={1}
       >
