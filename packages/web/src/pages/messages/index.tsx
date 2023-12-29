@@ -4,8 +4,7 @@ import { BiSearch, BiX } from "react-icons/bi"
 import { FiSettings } from "react-icons/fi"
 import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import { gql } from "@apollo/client"
-import type {
-  InputProps} from "@chakra-ui/react";
+import type { InputProps } from "@chakra-ui/react"
 import {
   Avatar,
   Box,

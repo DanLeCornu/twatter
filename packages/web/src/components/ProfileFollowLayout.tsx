@@ -18,8 +18,8 @@ import { useRouter } from "next/router"
 
 import { useGetProfileFollowQuery } from "lib/graphql"
 
-import { NoData } from "./NoData"
 import { CustomTab } from "./CustomTab"
+import { NoData } from "./NoData"
 
 const _ = gql`
   fragment UserFollowItem on User {

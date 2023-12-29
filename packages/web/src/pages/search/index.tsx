@@ -1,3 +1,6 @@
+import * as React from "react"
+import { MobileView } from "react-device-detect"
+import { BiArrowBack } from "react-icons/bi"
 import {
   Box,
   Center,
@@ -7,22 +10,20 @@ import {
   IconButton,
   Spinner,
   Stack,
-  useColorModeValue,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react"
+import Head from "next/head"
+import NextLink from "next/link"
+import { useRouter } from "next/router"
+
+import { QueryMode, useGetSearchUsersQuery, useGetTagsQuery } from "lib/graphql"
+import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
+import { CustomTab } from "components/CustomTab"
 import { ExploreSearch } from "components/ExploreSearch"
 import { withAuth } from "components/hoc/withAuth"
 import { HomeLayout } from "components/HomeLayout"
-import { CustomTab } from "components/CustomTab"
-import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
-import Head from "next/head"
-import { useRouter } from "next/router"
-import NextLink from "next/link"
-import * as React from "react"
-import { MobileView } from "react-device-detect"
-import { BiArrowBack } from "react-icons/bi"
 import { RecentSearches } from "components/RecentSearches"
-import { QueryMode, useGetSearchUsersQuery, useGetTagsQuery } from "lib/graphql"
 import { TagSearchItem } from "components/TagSearchItem"
 import { UserSearchItem } from "components/UserSearchItem"
 

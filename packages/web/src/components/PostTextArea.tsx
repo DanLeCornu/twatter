@@ -1,5 +1,6 @@
 import * as React from "react"
 import { gql } from "@apollo/client"
+import type { TextareaProps } from "@chakra-ui/react"
 import {
   Avatar,
   Box,
@@ -11,7 +12,6 @@ import {
   Spinner,
   Stack,
   Text,
-  TextareaProps,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { matchSorter } from "match-sorter"

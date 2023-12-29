@@ -1,9 +1,11 @@
-import { Box, HStack, IconButton, Text, useColorModeValue } from "@chakra-ui/react"
-import { GetRecentSearchesDocument, RecentSearchItemFragment, useClearSearchMutation } from "lib/graphql"
 import * as React from "react"
 import { BiSearch, BiX } from "react-icons/bi"
-import NextLink from "next/link"
 import { gql } from "@apollo/client"
+import { Box, HStack, IconButton, Text, useColorModeValue } from "@chakra-ui/react"
+import NextLink from "next/link"
+
+import type { RecentSearchItemFragment } from "lib/graphql"
+import { GetRecentSearchesDocument, useClearSearchMutation } from "lib/graphql"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
 
 const _ = gql`

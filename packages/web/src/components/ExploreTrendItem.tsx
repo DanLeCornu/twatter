@@ -1,8 +1,9 @@
+import * as React from "react"
 import { gql } from "@apollo/client"
 import { Stack, Text } from "@chakra-ui/react"
-import { ExploreTagItemFragment } from "lib/graphql"
-import * as React from "react"
 import NextLink from "next/link"
+
+import type { ExploreTagItemFragment } from "lib/graphql"
 
 const _ = gql`
   fragment ExploreTagItem on Tag {

@@ -1,8 +1,9 @@
-import { Box, HStack, Text, useColorModeValue } from "@chakra-ui/react"
-import { TagItemFragment } from "lib/graphql"
 import * as React from "react"
 import { BiSearch } from "react-icons/bi"
+import { Box, HStack, Text, useColorModeValue } from "@chakra-ui/react"
 import NextLink from "next/link"
+
+import type { TagItemFragment } from "lib/graphql"
 
 interface Props {
   tag: TagItemFragment

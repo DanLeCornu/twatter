@@ -4,7 +4,7 @@ import { BiArrowBack } from "react-icons/bi"
 import { gql } from "@apollo/client"
 import { Divider, Stack } from "@chakra-ui/react"
 import { Center, Spinner } from "@chakra-ui/react"
-import { Box, HStack, IconButton, useColorModeValue, Text } from "@chakra-ui/react"
+import { Box, HStack, IconButton, Text, useColorModeValue } from "@chakra-ui/react"
 import Head from "next/head"
 import NextLink from "next/link"
 
@@ -16,14 +16,14 @@ import {
   useGetTrendingTagsQuery,
 } from "lib/graphql"
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
+import { ExploreSearch } from "components/ExploreSearch"
+import { ExploreTrendItem } from "components/ExploreTrendItem"
 import { withAuth } from "components/hoc/withAuth"
 import { HomeLayout } from "components/HomeLayout"
 import { MobileTopBarAvatar } from "components/MobileTopBarAvatar"
-import { UserSearchItem } from "components/UserSearchItem"
-import { TagSearchItem } from "components/TagSearchItem"
-import { ExploreTrendItem } from "components/ExploreTrendItem"
-import { ExploreSearch } from "components/ExploreSearch"
 import { RecentSearches } from "components/RecentSearches"
+import { TagSearchItem } from "components/TagSearchItem"
+import { UserSearchItem } from "components/UserSearchItem"
 
 const _ = gql`
   fragment UserSearchItem on User {

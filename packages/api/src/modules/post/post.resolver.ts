@@ -8,6 +8,7 @@ import {
   PostUpdateInput,
 } from "@twatter/database/dist/generated"
 
+import { stringsOnly, uniq } from "../../lib/helpers"
 import { prisma } from "../../lib/prisma"
 import { CurrentUser } from "../shared/currentUser"
 import { UseAuth } from "../shared/middleware/UseAuth"
@@ -15,7 +16,6 @@ import { User } from "../user/user.model"
 import { CreatePostInput } from "./inputs/createPost.input"
 import { Post } from "./post.model"
 import { PostsResponse } from "./responses/posts.response"
-import { stringsOnly, uniq } from "../../lib/helpers"
 
 @Service()
 @Resolver(() => Post)

@@ -1,12 +1,14 @@
+import * as React from "react"
 import { gql } from "@apollo/client"
-import { HStack, Button, Stack, Text, useDisclosure } from "@chakra-ui/react"
+import { Button, HStack, Stack, Text, useDisclosure } from "@chakra-ui/react"
+
 import {
   GetRecentSearchesDocument,
   useClearAllSearchesMutation,
   useGetRecentSearchesQuery,
 } from "lib/graphql"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
-import * as React from "react"
+
 import { Modal } from "./Modal"
 import { RecentSearchItem } from "./RecentSearchItem"
 

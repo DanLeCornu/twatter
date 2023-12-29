@@ -43,11 +43,11 @@ import { useMe } from "lib/hooks/useMe"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 
+import { CustomTab } from "./CustomTab"
 import { FollowButton } from "./FollowButton"
 import { Modal } from "./Modal"
 import { NoData } from "./NoData"
 import { ProfileMenu } from "./ProfileMenu"
-import { CustomTab } from "./CustomTab"
 
 const _ = gql`
   fragment UserProfile on User {

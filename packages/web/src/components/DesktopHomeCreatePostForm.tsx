@@ -19,6 +19,7 @@ import { GetPostsDocument, SortOrder, useCreatePostMutation, useUpdatePostMutati
 import { useForm } from "lib/hooks/useForm"
 import { useMe } from "lib/hooks/useMe"
 import { useS3Upload } from "lib/hooks/useS3"
+import { useToast } from "lib/hooks/useToast"
 import { UPLOAD_PATHS } from "lib/uploadPaths"
 import type yup from "lib/yup"
 
@@ -26,7 +27,6 @@ import type { AttachedImage } from "./AttachImage"
 import { AttachImage } from "./AttachImage"
 import { Form } from "./Form"
 import { PostTextArea } from "./PostTextArea"
-import { useToast } from "lib/hooks/useToast"
 
 export function DesktopHomeCreatePostForm() {
   const { me } = useMe()

@@ -5,8 +5,8 @@ import { prisma } from "../../lib/prisma"
 import { CurrentUser } from "../shared/currentUser"
 import { UseAuth } from "../shared/middleware/UseAuth"
 import { User } from "../user/user.model"
-import { Search } from "./search.model"
 import { SearchesResponse } from "./responses/searches.response"
+import { Search } from "./search.model"
 
 @Service()
 @Resolver(() => Search)

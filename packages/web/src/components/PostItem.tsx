@@ -23,17 +23,17 @@ import {
 import NextLink from "next/link"
 
 import type { PostItemFragment } from "lib/graphql"
+import { stringsOnly } from "lib/helpers/utils"
 import { useHighlightedText } from "lib/hooks/useHighlightText"
 import { useMe } from "lib/hooks/useMe"
 
-import { PostHeading } from "./PostHeading"
-import { PostMenu } from "./PostMenu"
 import { LikePost } from "./LikePost"
 import { Modal } from "./Modal"
 import { PostAnalytics } from "./PostAnalytics"
+import { PostHeading } from "./PostHeading"
 import { PostItemShareMenu } from "./PostItemShareMenu"
+import { PostMenu } from "./PostMenu"
 import { UserPopover } from "./UserPopover"
-import { stringsOnly } from "lib/helpers/utils"
 
 interface Props {
   post: PostItemFragment

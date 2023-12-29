@@ -35,8 +35,8 @@ import type { AttachedImage } from "components/AttachImage"
 import { AttachImage } from "components/AttachImage"
 import { Form } from "components/Form"
 import { withAuth } from "components/hoc/withAuth"
-import { PostHeading } from "components/PostHeading"
 import { NoData } from "components/NoData"
+import { PostHeading } from "components/PostHeading"
 import { PostTextArea } from "components/PostTextArea"
 
 export const ReplySchema = yup.object().shape({

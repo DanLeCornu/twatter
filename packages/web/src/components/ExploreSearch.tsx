@@ -1,18 +1,19 @@
-import {
-  InputProps,
-  InputGroup,
-  InputLeftElement,
-  Flex,
-  IconButton,
-  Box,
-  Input,
-  InputRightElement,
-} from "@chakra-ui/react"
-import { useLogSearchMutation, GetRecentSearchesDocument } from "lib/graphql"
-import { useMutationHandler } from "lib/hooks/useMutationHandler"
-import { useRouter } from "next/router"
 import * as React from "react"
 import { BiSearch, BiX } from "react-icons/bi"
+import type { InputProps } from "@chakra-ui/react"
+import {
+  Box,
+  Flex,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+} from "@chakra-ui/react"
+import { useRouter } from "next/router"
+
+import { GetRecentSearchesDocument, useLogSearchMutation } from "lib/graphql"
+import { useMutationHandler } from "lib/hooks/useMutationHandler"
 
 interface Props extends InputProps {
   search: string
