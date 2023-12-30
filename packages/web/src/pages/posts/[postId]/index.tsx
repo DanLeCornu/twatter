@@ -267,12 +267,8 @@ function Post() {
                   </Modal>
                 </>
               ) : (
-                post.user.id !== me?.id && (
-                  <>
-                    {/* FOLLOW */}
-                    <FollowButton userId={post.user.id} handle={post.user.handle} />
-                  </>
-                )
+                // FOLLOW
+                post.user.id !== me?.id && <FollowButton userId={post.user.id} handle={post.user.handle} />
               )}
               {/* MENU */}
               <PostMenu post={post} />

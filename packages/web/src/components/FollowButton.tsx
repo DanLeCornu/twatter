@@ -56,7 +56,14 @@ export function FollowButton({ userId, handle, defaultShowFollowing }: Props) {
   if (!handle) return null
   if (!hasFollowed)
     return (
-      <Button colorScheme="monochrome" size="sm" onClick={handleFollow}>
+      <Button
+        colorScheme="monochrome"
+        size="sm"
+        onClick={(e) => {
+          e.preventDefault()
+          handleFollow()
+        }}
+      >
         Follow
       </Button>
     )
@@ -66,7 +73,10 @@ export function FollowButton({ userId, handle, defaultShowFollowing }: Props) {
         colorScheme="monochrome"
         variant="outline"
         size="sm"
-        onClick={handleUnfollow}
+        onClick={(e) => {
+          e.preventDefault()
+          handleUnfollow()
+        }}
         sx={{
           "::after": {
             content: '"Following"',

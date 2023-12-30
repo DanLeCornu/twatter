@@ -31,6 +31,7 @@ const _ = gql`
     name
     avatar
     handle
+    bio
   }
   query GetSearchUsers(
     $orderBy: [UserOrderByWithRelationInput!]
@@ -64,7 +65,7 @@ function Explore() {
 
   const { data: trendingTagData, loading: trendingTagsLoading } = useGetTrendingTagsQuery({
     variables: {
-      take: 5,
+      take: 7,
       orderBy: { posts: { _count: SortOrder.Desc } },
     },
   })

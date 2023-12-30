@@ -7,6 +7,7 @@ import { Button } from "./components/Button"
 import { Input } from "./components/Input"
 import { Link } from "./components/Link"
 import { Select } from "./components/Select"
+import { Text } from "./components/Text"
 import { Textarea } from "./components/Textarea"
 
 export const theme = extendTheme({
@@ -25,6 +26,7 @@ export const theme = extendTheme({
     Select,
     Textarea,
     Link,
+    Text,
   },
   styles: {
     global: (props: StyleFunctionProps) => ({

@@ -58,6 +58,9 @@ const variantOutline: SystemStyleFunction = (props) => {
 export const Button = {
   baseStyle: {
     borderRadius: "full",
+    // TODO figure out bext way to increase paddingX for normal buttons but not IconButtons which fucks up styling
+    // paddingLeft: "18px !important",
+    // paddingRight: "18px !important",
   },
   variants: {
     solid: variantSolid,

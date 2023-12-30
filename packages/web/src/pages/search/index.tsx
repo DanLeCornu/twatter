@@ -24,6 +24,9 @@ import { ExploreSearch } from "components/ExploreSearch"
 import { withAuth } from "components/hoc/withAuth"
 import { HomeLayout } from "components/HomeLayout"
 import { RecentSearches } from "components/RecentSearches"
+import { SearchLatest } from "components/SearchLatest"
+import { SearchPeople } from "components/SearchPeople"
+import { SearchTop } from "components/SearchTop"
 import { TagSearchItem } from "components/TagSearchItem"
 import { UserSearchItem } from "components/UserSearchItem"
 
@@ -116,6 +119,7 @@ function Search() {
             setSearch={setSearch}
             isSearchActive={isSearchActive}
             setIsSearchActive={setIsSearchActive}
+            tab={tab}
           />
         </HStack>
         {!isSearchActive && (
@@ -181,12 +185,13 @@ function Search() {
               </NextLink>
             )}
           </Box>
-        ) : (
-          <>
-            <p>else</p>
-            <p>search: {search}</p>
-          </>
-        )}
+        ) : tab === "top" ? (
+          <SearchTop search={search} />
+        ) : tab === "latest" ? (
+          <SearchLatest />
+        ) : tab === "people" ? (
+          <SearchPeople search={search} />
+        ) : null}
       </Box>
     </Box>
   )

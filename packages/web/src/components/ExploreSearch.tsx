@@ -20,9 +20,17 @@ interface Props extends InputProps {
   setSearch: React.Dispatch<React.SetStateAction<string>>
   isSearchActive: boolean
   setIsSearchActive: React.Dispatch<React.SetStateAction<boolean>>
+  tab?: string
 }
 
-export function ExploreSearch({ search, setSearch, isSearchActive, setIsSearchActive, ...props }: Props) {
+export function ExploreSearch({
+  search,
+  setSearch,
+  isSearchActive,
+  setIsSearchActive,
+  tab = "top",
+  ...props
+}: Props) {
   const router = useRouter()
   const handler = useMutationHandler()
   const [logSearch] = useLogSearchMutation({ refetchQueries: [{ query: GetRecentSearchesDocument }] })
@@ -33,7 +41,7 @@ export function ExploreSearch({ search, setSearch, isSearchActive, setIsSearchAc
     setPreviousSearch(search.trim())
     handler(() => logSearch({ variables: { text: search.trim() } })) // async log the search without blocking
     setIsSearchActive(false)
-    router.push(`/search?q=${search}`)
+    router.push(`/search?q=${search}&t=${tab}`)
   }
   return (
     <form

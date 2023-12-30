@@ -19,7 +19,7 @@ export function UserPopover({ user }: PostItemUserProps) {
     <Stack p={2} onClick={(e) => e.stopPropagation()}>
       <HStack align="flex-start" justify="space-between">
         <Avatar src={user.avatar || undefined} boxSize="60px" />
-        {user.id !== me?.id && <FollowButton userId={user.id} defaultShowFollowing />}
+        {user.id !== me?.id && <FollowButton userId={user.id} handle={user.handle} defaultShowFollowing />}
       </HStack>
       <Stack spacing={0}>
         <Text fontWeight="bold">{user.name}</Text>

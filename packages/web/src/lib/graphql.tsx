@@ -6236,6 +6236,18 @@ export type ClearSearchMutationVariables = Exact<{
 
 export type ClearSearchMutation = { __typename?: 'Mutation', clearSearch: boolean };
 
+export type RecentSearchItemFragment = { __typename?: 'Search', id: string, text: string };
+
+export type GetRecentSearchesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRecentSearchesQuery = { __typename?: 'Query', recentSearches: { __typename?: 'SearchesResponse', count: number, items: Array<{ __typename?: 'Search', id: string, text: string }> } };
+
+export type ClearAllSearchesMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ClearAllSearchesMutation = { __typename?: 'Mutation', clearAllSearches: boolean };
+
 export type CreateReportMutationVariables = Exact<{
   data: CreateReportInput;
 }>;
@@ -6335,7 +6347,7 @@ export type GetMyBookmarksQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetMyBookmarksQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, bookmarks: Array<{ __typename?: 'Bookmark', id: string, post: { __typename?: 'Post', id: string, text: string, image?: string | null, createdAt: string, replyCount: number, likeCount: number, viewCount: number, user: { __typename?: 'User', id: string, name: string, handle?: string | null, avatar?: string | null, bio?: string | null, followerCount: number, followingCount: number, pinnedPostId?: string | null }, mentions: Array<{ __typename?: 'Mention', id: string, user: { __typename?: 'User', id: string, handle?: string | null } }> } }> } | null };
 
-export type UserSearchItemFragment = { __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null };
+export type UserSearchItemFragment = { __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null, bio?: string | null };
 
 export type GetSearchUsersQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<UserOrderByWithRelationInput> | UserOrderByWithRelationInput>;
@@ -6345,14 +6357,7 @@ export type GetSearchUsersQueryVariables = Exact<{
 }>;
 
 
-export type GetSearchUsersQuery = { __typename?: 'Query', users: { __typename?: 'UsersResponse', count: number, items: Array<{ __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null }> } };
-
-export type RecentSearchItemFragment = { __typename?: 'Search', id: string, text: string };
-
-export type GetRecentSearchesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetRecentSearchesQuery = { __typename?: 'Query', recentSearches: { __typename?: 'SearchesResponse', count: number, items: Array<{ __typename?: 'Search', id: string, text: string }> } };
+export type GetSearchUsersQuery = { __typename?: 'Query', users: { __typename?: 'UsersResponse', count: number, items: Array<{ __typename?: 'User', id: string, name: string, avatar?: string | null, handle?: string | null, bio?: string | null }> } };
 
 export type LogSearchMutationVariables = Exact<{
   text: Scalars['String'];
@@ -6360,11 +6365,6 @@ export type LogSearchMutationVariables = Exact<{
 
 
 export type LogSearchMutation = { __typename?: 'Mutation', createSearch: boolean };
-
-export type ClearAllSearchesMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ClearAllSearchesMutation = { __typename?: 'Mutation', clearAllSearches: boolean };
 
 export type GetTrendingTagsQueryVariables = Exact<{
   orderBy?: InputMaybe<Array<TagOrderByWithRelationInput> | TagOrderByWithRelationInput>;
@@ -6571,6 +6571,12 @@ export const UserProfileFragmentDoc = gql`
   }
 }
     `;
+export const RecentSearchItemFragmentDoc = gql`
+    fragment RecentSearchItem on Search {
+  id
+  text
+}
+    `;
 export const UserDetailFragmentDoc = gql`
     fragment UserDetail on User {
   id
@@ -6694,12 +6700,7 @@ export const UserSearchItemFragmentDoc = gql`
   name
   avatar
   handle
-}
-    `;
-export const RecentSearchItemFragmentDoc = gql`
-    fragment RecentSearchItem on Search {
-  id
-  text
+  bio
 }
     `;
 export const MessageItemFragmentDoc = gql`
@@ -7182,6 +7183,39 @@ export function useClearSearchMutation(baseOptions?: Apollo.MutationHookOptions<
 export type ClearSearchMutationHookResult = ReturnType<typeof useClearSearchMutation>;
 export type ClearSearchMutationResult = Apollo.MutationResult<ClearSearchMutation>;
 export type ClearSearchMutationOptions = Apollo.BaseMutationOptions<ClearSearchMutation, ClearSearchMutationVariables>;
+export const GetRecentSearchesDocument = gql`
+    query GetRecentSearches {
+  recentSearches {
+    items {
+      ...RecentSearchItem
+    }
+    count
+  }
+}
+    ${RecentSearchItemFragmentDoc}`;
+export function useGetRecentSearchesQuery(baseOptions?: Apollo.QueryHookOptions<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>(GetRecentSearchesDocument, options);
+      }
+export function useGetRecentSearchesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>(GetRecentSearchesDocument, options);
+        }
+export type GetRecentSearchesQueryHookResult = ReturnType<typeof useGetRecentSearchesQuery>;
+export type GetRecentSearchesLazyQueryHookResult = ReturnType<typeof useGetRecentSearchesLazyQuery>;
+export type GetRecentSearchesQueryResult = Apollo.QueryResult<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>;
+export const ClearAllSearchesDocument = gql`
+    mutation ClearAllSearches {
+  clearAllSearches
+}
+    `;
+export function useClearAllSearchesMutation(baseOptions?: Apollo.MutationHookOptions<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>(ClearAllSearchesDocument, options);
+      }
+export type ClearAllSearchesMutationHookResult = ReturnType<typeof useClearAllSearchesMutation>;
+export type ClearAllSearchesMutationResult = Apollo.MutationResult<ClearAllSearchesMutation>;
+export type ClearAllSearchesMutationOptions = Apollo.BaseMutationOptions<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>;
 export const CreateReportDocument = gql`
     mutation CreateReport($data: CreateReportInput!) {
   createReport(data: $data)
@@ -7415,27 +7449,6 @@ export function useGetSearchUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetSearchUsersQueryHookResult = ReturnType<typeof useGetSearchUsersQuery>;
 export type GetSearchUsersLazyQueryHookResult = ReturnType<typeof useGetSearchUsersLazyQuery>;
 export type GetSearchUsersQueryResult = Apollo.QueryResult<GetSearchUsersQuery, GetSearchUsersQueryVariables>;
-export const GetRecentSearchesDocument = gql`
-    query GetRecentSearches {
-  recentSearches {
-    items {
-      ...RecentSearchItem
-    }
-    count
-  }
-}
-    ${RecentSearchItemFragmentDoc}`;
-export function useGetRecentSearchesQuery(baseOptions?: Apollo.QueryHookOptions<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>(GetRecentSearchesDocument, options);
-      }
-export function useGetRecentSearchesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>(GetRecentSearchesDocument, options);
-        }
-export type GetRecentSearchesQueryHookResult = ReturnType<typeof useGetRecentSearchesQuery>;
-export type GetRecentSearchesLazyQueryHookResult = ReturnType<typeof useGetRecentSearchesLazyQuery>;
-export type GetRecentSearchesQueryResult = Apollo.QueryResult<GetRecentSearchesQuery, GetRecentSearchesQueryVariables>;
 export const LogSearchDocument = gql`
     mutation LogSearch($text: String!) {
   createSearch(text: $text)
@@ -7448,18 +7461,6 @@ export function useLogSearchMutation(baseOptions?: Apollo.MutationHookOptions<Lo
 export type LogSearchMutationHookResult = ReturnType<typeof useLogSearchMutation>;
 export type LogSearchMutationResult = Apollo.MutationResult<LogSearchMutation>;
 export type LogSearchMutationOptions = Apollo.BaseMutationOptions<LogSearchMutation, LogSearchMutationVariables>;
-export const ClearAllSearchesDocument = gql`
-    mutation ClearAllSearches {
-  clearAllSearches
-}
-    `;
-export function useClearAllSearchesMutation(baseOptions?: Apollo.MutationHookOptions<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>(ClearAllSearchesDocument, options);
-      }
-export type ClearAllSearchesMutationHookResult = ReturnType<typeof useClearAllSearchesMutation>;
-export type ClearAllSearchesMutationResult = Apollo.MutationResult<ClearAllSearchesMutation>;
-export type ClearAllSearchesMutationOptions = Apollo.BaseMutationOptions<ClearAllSearchesMutation, ClearAllSearchesMutationVariables>;
 export const GetTrendingTagsDocument = gql`
     query GetTrendingTags($orderBy: [TagOrderByWithRelationInput!], $take: Int) {
   tags(orderBy: $orderBy, take: $take) {
