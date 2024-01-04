@@ -15,34 +15,40 @@ const _ = gql`
 `
 
 interface Props {
-  search: RecentSearchItemFragment
+  recentSearch: RecentSearchItemFragment
+  setSearch: React.Dispatch<React.SetStateAction<string>>
   setIsSearchActive: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function RecentSearchItem({ search, setIsSearchActive }: Props) {
+export function RecentSearchItem({ recentSearch, setSearch, setIsSearchActive }: Props) {
   const handler = useMutationHandler()
   const [clearSearch] = useClearSearchMutation({ refetchQueries: [{ query: GetRecentSearchesDocument }] })
 
   const handleClick = () => {
-    return handler(() => clearSearch({ variables: { id: search.id } }))
+    setIsSearchActive(false)
+    setSearch(recentSearch.text)
+  }
+  const handleClear = () => {
+    return handler(() => clearSearch({ variables: { id: recentSearch.id } }))
   }
 
   const bgHover = useColorModeValue("gray.50", "#182234")
 
   return (
-    <NextLink href={`/search?q=${search.text}`}>
-      <HStack _hover={{ bg: bgHover }} p={4} justify="space-between" onClick={() => setIsSearchActive(false)}>
+    <NextLink href={`/search?q=${recentSearch.text}`}>
+      <HStack _hover={{ bg: bgHover }} p={4} justify="space-between" onClick={handleClick}>
         <HStack spacing={5}>
           <Box as={BiSearch} boxSize="25px" />
-          <Text>{search.text}</Text>
+          <Text>{recentSearch.text}</Text>
         </HStack>
         <IconButton
-          aria-label={`clear recent search '${search.text}'`}
+          aria-label={`clear recent search '${recentSearch.text}'`}
           icon={<Box as={BiX} boxSize="25px" color="brand.blue" />}
           variant="ghost"
           onClick={(e) => {
+            e.stopPropagation() // Prevent handleClick firing
             e.preventDefault() // prevent NextLink
-            handleClick()
+            handleClear()
           }}
         />
       </HStack>

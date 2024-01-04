@@ -150,7 +150,7 @@ function Explore() {
             <Spinner />
           </Center>
         ) : isSearchActive && !search ? (
-          <RecentSearches setIsSearchActive={setIsSearchActive} />
+          <RecentSearches setSearch={setSearch} setIsSearchActive={setIsSearchActive} />
         ) : !isSearchActive && !search ? (
           <Stack mx={4} spacing={6}>
             <Text fontSize="xl" fontWeight="bold">
@@ -165,7 +165,14 @@ function Explore() {
         ) : (
           <Box>
             {tags.length > 0 ? (
-              tags.map((tag, i) => <TagSearchItem key={i} tag={tag} setIsSearchActive={setIsSearchActive} />)
+              tags.map((tag, i) => (
+                <TagSearchItem
+                  key={i}
+                  tag={tag}
+                  setSearch={setSearch}
+                  setIsSearchActive={setIsSearchActive}
+                />
+              ))
             ) : (
               <NextLink href={`/search?q=${search}`}>
                 <Text px={4} py={2}>

@@ -46,8 +46,8 @@ import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
 import { CustomTab } from "./CustomTab"
 import { FollowButton } from "./FollowButton"
 import { Modal } from "./Modal"
-import { NoData } from "./NoData"
 import { ProfileMenu } from "./ProfileMenu"
+import { ProfileNotFound } from "./ProfileNotFound"
 
 const _ = gql`
   fragment UserProfile on User {
@@ -208,12 +208,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
         <Spinner />
       </Center>
     )
-  if (!user)
-    return (
-      <Center minH="80vh">
-        <NoData>Profile not found</NoData>
-      </Center>
-    )
+  if (!user) return <ProfileNotFound />
   return (
     <Box>
       <Flex

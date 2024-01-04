@@ -77,7 +77,7 @@ export function ExploreSearch({
           onClick={() => setIsSearchActive(true)}
         />
         <InputRightElement h="100%" pr={2}>
-          {!!search && (
+          {!!search && isSearchActive && (
             <IconButton
               rounded="full"
               onClick={() => setSearch("")}

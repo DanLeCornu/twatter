@@ -144,11 +144,18 @@ function Search() {
             <Spinner />
           </Center>
         ) : isSearchActive && !search ? (
-          <RecentSearches setIsSearchActive={setIsSearchActive} />
+          <RecentSearches setSearch={setSearch} setIsSearchActive={setIsSearchActive} />
         ) : isSearchActive && search ? (
           <Box>
             {tags.length > 0 ? (
-              tags.map((tag, i) => <TagSearchItem key={i} tag={tag} setIsSearchActive={setIsSearchActive} />)
+              tags.map((tag, i) => (
+                <TagSearchItem
+                  key={i}
+                  tag={tag}
+                  setSearch={setSearch}
+                  setIsSearchActive={setIsSearchActive}
+                />
+              ))
             ) : (
               <NextLink href={`/search?q=${search}`}>
                 <Text
@@ -171,13 +178,13 @@ function Search() {
                 <UserSearchItem key={i} user={user} setIsSearchActive={setIsSearchActive} />
               ))
             ) : (
-              <NextLink href={`/search?q=${search}`}>
+              <NextLink href={`/${search}`}>
                 <Text
                   px={4}
                   py={2}
                   onClick={() => {
                     setIsSearchActive(false)
-                    setSearch("")
+                    setSearch(search)
                   }}
                 >
                   Go to @{search}

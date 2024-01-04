@@ -47,7 +47,7 @@ export function SearchTop({ search }: Props) {
       {users.length === 0 && posts.length === 0 ? (
         <Stack p={5}>
           <Text fontSize="3xl" fontWeight="bold">
-            No results for "{query}"
+            No results for "{search}"
           </Text>
           <Text color="gray.400">Try searching for something else.</Text>
         </Stack>

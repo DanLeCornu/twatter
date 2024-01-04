@@ -31,10 +31,11 @@ const _ = gql`
 `
 
 interface Props {
+  setSearch: React.Dispatch<React.SetStateAction<string>>
   setIsSearchActive: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function RecentSearches({ setIsSearchActive }: Props) {
+export function RecentSearches({ setSearch, setIsSearchActive }: Props) {
   const modalProps = useDisclosure()
   const handler = useMutationHandler()
 
@@ -69,8 +70,13 @@ export function RecentSearches({ setIsSearchActive }: Props) {
           Clear all
         </Button>
       </HStack>
-      {recentSearches.map((search, i) => (
-        <RecentSearchItem key={i} search={search} setIsSearchActive={setIsSearchActive} />
+      {recentSearches.map((recentSearch, i) => (
+        <RecentSearchItem
+          key={i}
+          recentSearch={recentSearch}
+          setSearch={setSearch}
+          setIsSearchActive={setIsSearchActive}
+        />
       ))}
       <Modal {...modalProps} title="Clear all recent searches?">
         <Text mb={6}>This can't be undone and you'll remove all your recent searches</Text>

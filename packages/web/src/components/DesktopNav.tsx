@@ -42,18 +42,7 @@ export function DesktopNav() {
   const bgColor = useColorModeValue("white", "brand.bgDark")
 
   return (
-    <Flex
-      position="fixed"
-      top={0}
-      left={0}
-      w={DESKTOP_NAV_WIDTH + "px"}
-      borderRight="1px solid"
-      borderColor={borderColor}
-      bg={bgColor}
-      p={2}
-      h="100vh"
-      zIndex={1}
-    >
+    <Flex w="68px" borderRight="1px solid" borderColor={borderColor} bg={bgColor} p={2} h="100vh" zIndex={1}>
       <Flex justify="space-between" direction="column">
         <Flex direction="column">
           <NextLink href="/home">
