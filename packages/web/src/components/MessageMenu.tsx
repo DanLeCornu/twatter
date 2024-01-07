@@ -1,7 +1,5 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import { BiFlag, BiTrash } from "react-icons/bi"
-import { LuCopyPlus } from "react-icons/lu"
 import { gql } from "@apollo/client"
 import {
   Box,
@@ -22,6 +20,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { CopyPlus, Flag, Trash } from "lucide-react"
 import NextLink from "next/link"
 
 import type { MessageItemFragment } from "lib/graphql"
@@ -95,7 +94,7 @@ export function MessageMenu({ message, disclosureProps, refetch }: Props) {
                 {message.senderId !== me?.id && (
                   <NextLink href={`/messages/report/${message.id}`}>
                     <HStack spacing={3}>
-                      <Icon as={BiFlag} boxSize="18px" />
+                      <Icon as={Flag} boxSize="18px" />
                       <Text fontWeight="bold" fontSize="sm">
                         Report message
                       </Text>
@@ -105,7 +104,7 @@ export function MessageMenu({ message, disclosureProps, refetch }: Props) {
 
                 {/* COPY */}
                 <HStack spacing={3} onClick={handleCopy}>
-                  <Icon as={LuCopyPlus} boxSize="18px" />
+                  <Icon as={CopyPlus} boxSize="18px" />
                   <Text fontWeight="bold" fontSize="sm">
                     Copy message
                   </Text>
@@ -113,7 +112,7 @@ export function MessageMenu({ message, disclosureProps, refetch }: Props) {
 
                 {/* DELETE */}
                 <HStack spacing={3} onClick={handleOpenModal}>
-                  <Icon as={BiTrash} boxSize="18px" />
+                  <Icon as={Trash} boxSize="18px" />
                   <Text fontWeight="bold" fontSize="sm">
                     Delete for you
                   </Text>
@@ -134,19 +133,19 @@ export function MessageMenu({ message, disclosureProps, refetch }: Props) {
               {/* REPORT */}
               {message.senderId !== me?.id && (
                 <NextLink href={`/messages/report/${message.id}`}>
-                  <MenuItem icon={<Box as={BiFlag} />} fontWeight="bold" py={2}>
+                  <MenuItem icon={<Box as={Flag} />} fontWeight="bold" py={2}>
                     Report message
                   </MenuItem>
                 </NextLink>
               )}
 
               {/* COPY */}
-              <MenuItem icon={<Box as={BiFlag} />} fontWeight="bold" py={2} onClick={handleCopy}>
+              <MenuItem icon={<Box as={Flag} />} fontWeight="bold" py={2} onClick={handleCopy}>
                 Copy message
               </MenuItem>
 
               {/* DELETE */}
-              <MenuItem icon={<Box as={BiTrash} />} fontWeight="bold" py={2} onClick={handleOpenModal}>
+              <MenuItem icon={<Box as={Trash} />} fontWeight="bold" py={2} onClick={handleOpenModal}>
                 Delete for you
               </MenuItem>
             </MenuList>

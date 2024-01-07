@@ -1,6 +1,6 @@
 import * as React from "react"
-import { BiArrowBack } from "react-icons/bi"
-import { Box, Heading, HStack, IconButton, Stack, Text,useColorModeValue } from "@chakra-ui/react"
+import { Box, Heading, HStack, IconButton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
+import { ArrowLeft } from "lucide-react"
 import { useRouter } from "next/router"
 
 import { BG_DARK_RGB, WHITE_RGB } from "lib/theme/colors"
@@ -25,7 +25,7 @@ export function ProfileNotFound() {
       >
         <IconButton
           aria-label="back"
-          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          icon={<Box as={ArrowLeft} boxSize="20px" />}
           variant="ghost"
           m={2}
           onClick={() => router.back()}

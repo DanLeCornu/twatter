@@ -1,5 +1,4 @@
 import * as React from "react"
-import { BiArrowBack } from "react-icons/bi"
 import { gql } from "@apollo/client"
 import {
   Box,
@@ -17,6 +16,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { ArrowLeft } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -146,7 +146,7 @@ function ReportMessage() {
             <HStack position="relative" spacing={3} w="calc(100% - 28px)">
               <IconButton
                 aria-label="back"
-                icon={<Box as={BiArrowBack} boxSize="20px" />}
+                icon={<Box as={ArrowLeft} boxSize="20px" />}
                 variant="ghost"
                 onClick={() => router.back()}
               />

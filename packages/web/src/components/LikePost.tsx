@@ -1,7 +1,7 @@
 import * as React from "react"
-import { AiOutlineHeart } from "react-icons/ai"
 import { gql } from "@apollo/client"
 import { Box, Button } from "@chakra-ui/react"
+import { Heart } from "lucide-react"
 
 import {
   GetMyBookmarksDocument,
@@ -88,7 +88,7 @@ export function LikePost({ postId, likeCount, size = "large" }: Props) {
       size={size === "small" ? "sm" : undefined}
       color={active ? "red.500" : "gray"}
       _hover={{ color: "red.500" }}
-      leftIcon={<Box as={AiOutlineHeart} boxSize={size === "large" ? "25px" : "18px"} />}
+      leftIcon={<Box as={Heart} boxSize={size === "large" ? "25px" : "18px"} />}
       onClick={handleClick}
     >
       {likeCount > 0 && likeCount.toLocaleString()}

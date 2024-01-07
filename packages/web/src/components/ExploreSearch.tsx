@@ -1,5 +1,4 @@
 import * as React from "react"
-import { BiSearch, BiX } from "react-icons/bi"
 import type { InputProps } from "@chakra-ui/react"
 import {
   Box,
@@ -10,6 +9,7 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react"
+import { Search, X } from "lucide-react"
 import { useRouter } from "next/router"
 
 import { GetRecentSearchesDocument, useLogSearchMutation } from "lib/graphql"
@@ -59,7 +59,7 @@ export function ExploreSearch({
               aria-label="search"
               variant="ghost"
               color={isSearchActive ? "brand.blue" : "gray.500"}
-              icon={<Box as={BiSearch} boxSize="20px" />}
+              icon={<Box as={Search} boxSize="20px" />}
               type="submit"
             />
           </Flex>
@@ -83,7 +83,7 @@ export function ExploreSearch({
               onClick={() => setSearch("")}
               size="xs"
               aria-label="clear search"
-              icon={<Box as={BiX} boxSize="20px" color="black.500" />}
+              icon={<Box as={X} boxSize="20px" color="black.500" />}
             />
           )}
         </InputRightElement>

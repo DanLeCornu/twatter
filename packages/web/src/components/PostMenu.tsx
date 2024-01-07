@@ -1,10 +1,5 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import { BiBlock, BiFlag, BiTrash, BiVolumeFull, BiVolumeMute } from "react-icons/bi"
-import { BsPin } from "react-icons/bs"
-import { HiOutlineDotsHorizontal } from "react-icons/hi"
-import { IoIosStats } from "react-icons/io"
-import { RiUserFollowLine, RiUserUnfollowLine } from "react-icons/ri"
 import { gql } from "@apollo/client"
 import {
   Box,
@@ -27,6 +22,18 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import {
+  Ban,
+  BarChart3,
+  Flag,
+  MoreHorizontal,
+  Pin,
+  Trash,
+  UserRoundCheck,
+  UserRoundX,
+  Volume2,
+  VolumeX,
+} from "lucide-react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
@@ -269,7 +276,7 @@ export function PostMenu({ post }: Props) {
           variant="ghost"
           boxSize="35px"
           minW="35px" // needed otherwise Chakra default styling overrides and makes it wider
-          icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" color="gray.400" />}
+          icon={<Box as={MoreHorizontal} boxSize="20px" color="gray.400" />}
           onClick={(e) => {
             e.preventDefault() // Stops Next link
             drawerProps.onOpen()
@@ -290,7 +297,7 @@ export function PostMenu({ post }: Props) {
                         modalProps.onOpen()
                       }}
                     >
-                      <Icon as={BiTrash} color="red.500" boxSize="18px" />
+                      <Icon as={Trash} color="red.500" boxSize="18px" />
                       <Text fontWeight="bold" color="red.500">
                         Delete
                       </Text>
@@ -301,7 +308,7 @@ export function PostMenu({ post }: Props) {
                       spacing={3}
                       onClick={me.pinnedPost?.id === post.id ? handleUnpinPost : handlePinPost}
                     >
-                      <Icon as={BsPin} boxSize="18px" />
+                      <Icon as={Pin} boxSize="18px" />
                       <Text fontWeight="bold">
                         {me.pinnedPost?.id === post.id ? "Unpin from profile" : "Pin to your profile"}
                       </Text>
@@ -315,7 +322,7 @@ export function PostMenu({ post }: Props) {
                         analyticsModalProps.onOpen()
                       }}
                     >
-                      <Icon as={IoIosStats} boxSize="18px" />
+                      <Icon as={BarChart3} boxSize="18px" />
                       <Text fontWeight="bold">View post engagements</Text>
                     </HStack>
                   </>
@@ -323,14 +330,14 @@ export function PostMenu({ post }: Props) {
                   <>
                     {/* FOLLOW */}
                     <HStack spacing={3} onClick={hasFollowed ? handleUnfollow : handleFollow}>
-                      <Icon as={hasFollowed ? RiUserUnfollowLine : RiUserFollowLine} boxSize="18px" />
+                      <Icon as={hasFollowed ? UserRoundX : UserRoundCheck} boxSize="18px" />
                       <Text fontWeight="bold">
                         {`${hasFollowed ? "Unfollow" : "Follow"} @${post.user.handle}`}
                       </Text>
                     </HStack>
                     {/* MUTE */}
                     <HStack spacing={3} onClick={hasMuted ? handleUnmute : handleMute}>
-                      <Icon as={hasMuted ? BiVolumeFull : BiVolumeMute} boxSize="18px" />
+                      <Icon as={hasMuted ? Volume2 : VolumeX} boxSize="18px" />
                       <Text fontWeight="bold">{`${hasMuted ? "Unmute" : "Mute"} @${post.user.handle}`}</Text>
                     </HStack>
                     {/* BLOCK */}
@@ -341,7 +348,7 @@ export function PostMenu({ post }: Props) {
                         blockModalProps.onOpen()
                       }}
                     >
-                      <Icon as={BiBlock} boxSize="18px" />
+                      <Icon as={Ban} boxSize="18px" />
                       <Text fontWeight="bold">
                         {hasBlocked ? "Unblock" : "Block"} @{post.user.handle}
                       </Text>
@@ -350,7 +357,7 @@ export function PostMenu({ post }: Props) {
                     {/* <NextLink href={`/${isPost ? "posts" : "replies"}/${item.id}/report`}> */}
                     <NextLink href={`/posts/${post.id}/report`}>
                       <HStack spacing={3}>
-                        <Icon as={BiFlag} boxSize="18px" />
+                        <Icon as={Flag} boxSize="18px" />
                         <Text fontWeight="bold">Report post</Text>
                       </HStack>
                     </NextLink>
@@ -372,7 +379,7 @@ export function PostMenu({ post }: Props) {
             variant="ghost"
             boxSize="35px"
             minW="35px" // needed otherwise Chakra default styling overrides and makes it wider
-            icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" color="gray.400" />}
+            icon={<Box as={MoreHorizontal} boxSize="20px" color="gray.400" />}
             onClick={(e) => {
               e.preventDefault() // Stops Next link
               menuProps.onToggle()
@@ -385,7 +392,7 @@ export function PostMenu({ post }: Props) {
                   {/* DELETE */}
                   <MenuItem
                     color="red"
-                    icon={<Box as={BiTrash} boxSize="18px" />}
+                    icon={<Box as={Trash} boxSize="18px" />}
                     fontWeight="medium"
                     onClick={modalProps.onOpen}
                   >
@@ -395,7 +402,7 @@ export function PostMenu({ post }: Props) {
                   {/* {isPost && ( */}
                   {/* // TODO ability to pin a reply */}
                   <MenuItem
-                    icon={<Box as={BsPin} boxSize="18px" />}
+                    icon={<Box as={Pin} boxSize="18px" />}
                     fontWeight="medium"
                     onClick={me.pinnedPost?.id === post.id ? handleUnpinPost : handlePinPost}
                   >
@@ -404,7 +411,7 @@ export function PostMenu({ post }: Props) {
                   {/* )} */}
                   {/* POST ANALYTICS */}
                   <MenuItem
-                    icon={<Box as={IoIosStats} boxSize="18px" />}
+                    icon={<Box as={BarChart3} boxSize="18px" />}
                     fontWeight="medium"
                     onClick={analyticsModalProps.onOpen}
                   >
@@ -416,7 +423,7 @@ export function PostMenu({ post }: Props) {
                   {/* FOLLOW */}
                   <MenuItem
                     closeOnSelect
-                    icon={<Box as={hasFollowed ? RiUserUnfollowLine : RiUserFollowLine} boxSize="18px" />}
+                    icon={<Box as={hasFollowed ? UserRoundX : UserRoundCheck} boxSize="18px" />}
                     fontWeight="medium"
                     onClick={hasFollowed ? handleUnfollow : handleFollow}
                   >
@@ -424,7 +431,7 @@ export function PostMenu({ post }: Props) {
                   </MenuItem>
                   {/* MUTE */}
                   <MenuItem
-                    icon={<Box as={hasMuted ? BiVolumeFull : BiVolumeMute} boxSize="18px" />}
+                    icon={<Box as={hasMuted ? Volume2 : VolumeX} boxSize="18px" />}
                     fontWeight="medium"
                     onClick={hasMuted ? handleUnmute : handleMute}
                   >
@@ -432,7 +439,7 @@ export function PostMenu({ post }: Props) {
                   </MenuItem>
                   {/* BLOCK */}
                   <MenuItem
-                    icon={<Box as={BiBlock} boxSize="18px" />}
+                    icon={<Box as={Ban} boxSize="18px" />}
                     fontWeight="medium"
                     onClick={blockModalProps.onOpen}
                   >
@@ -440,7 +447,7 @@ export function PostMenu({ post }: Props) {
                   </MenuItem>
                   {/* REPORT */}
                   <NextLink href={`/posts/${post.id}/report`}>
-                    <MenuItem icon={<Box as={BiFlag} boxSize="18px" />} fontWeight="medium">
+                    <MenuItem icon={<Box as={Flag} boxSize="18px" />} fontWeight="medium">
                       Report post
                     </MenuItem>
                   </NextLink>

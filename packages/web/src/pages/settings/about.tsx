@@ -1,6 +1,4 @@
 import * as React from "react"
-import { BiArrowBack } from "react-icons/bi"
-import { FiExternalLink } from "react-icons/fi"
 import {
   Box,
   Center,
@@ -14,6 +12,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowLeft, ExternalLink } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 import router from "next/router"
@@ -53,7 +52,7 @@ function SettingsAbout() {
       >
         <IconButton
           aria-label="back"
-          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          icon={<Box as={ArrowLeft} boxSize="20px" />}
           variant="ghost"
           onClick={() => router.back()}
         />
@@ -74,19 +73,19 @@ function SettingsAbout() {
         <NextLink href="https://e3.365dm.com/18/09/2048x1152/skynews-elon-musk-weed_4414031.jpg?20180907122237">
           <HStack justify="space-between">
             <Text fontSize="sm">Cookie Policy</Text>
-            <Icon color="gray.400" as={FiExternalLink} />
+            <Icon color="gray.400" as={ExternalLink} />
           </HStack>
         </NextLink>
         <NextLink href="https://e3.365dm.com/18/09/2048x1152/skynews-elon-musk-weed_4414031.jpg?20180907122237">
           <HStack justify="space-between">
             <Text fontSize="sm">Privacy Policy</Text>
-            <Icon color="gray.400" as={FiExternalLink} />
+            <Icon color="gray.400" as={ExternalLink} />
           </HStack>
         </NextLink>
         <NextLink href="https://e3.365dm.com/18/09/2048x1152/skynews-elon-musk-weed_4414031.jpg?20180907122237">
           <HStack justify="space-between">
             <Text fontSize="sm">Terms of Service</Text>
-            <Icon color="gray.400" as={FiExternalLink} />
+            <Icon color="gray.400" as={ExternalLink} />
           </HStack>
         </NextLink>
 
@@ -97,7 +96,7 @@ function SettingsAbout() {
         <NextLink href="https://e3.365dm.com/18/09/2048x1152/skynews-elon-musk-weed_4414031.jpg?20180907122237">
           <HStack justify="space-between">
             <Text fontSize="sm">About</Text>
-            <Icon color="gray.400" as={FiExternalLink} />
+            <Icon color="gray.400" as={ExternalLink} />
           </HStack>
         </NextLink>
       </Stack>

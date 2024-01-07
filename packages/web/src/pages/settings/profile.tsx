@@ -1,6 +1,4 @@
 import * as React from "react"
-import { BiArrowBack } from "react-icons/bi"
-import { TbCameraPlus } from "react-icons/tb"
 import { gql } from "@apollo/client"
 import {
   Avatar,
@@ -20,6 +18,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import dayjs from "dayjs"
+import { ArrowLeft, Camera } from "lucide-react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
@@ -147,7 +146,7 @@ function EditProfile() {
         >
           <IconButton
             aria-label="back"
-            icon={<Box as={BiArrowBack} boxSize="20px" />}
+            icon={<Box as={ArrowLeft} boxSize="20px" />}
             variant="ghost"
             m={2}
             onClick={() => {
@@ -189,7 +188,7 @@ function EditProfile() {
             >
               <Center h="100%">
                 <Flex rounded="full" bg="rgba(0, 0, 0, 0.5)" p={2}>
-                  <Icon as={TbCameraPlus} boxSize="24px" />
+                  <Icon as={Camera} boxSize="24px" />
                 </Flex>
               </Center>
             </ImageUploader>
@@ -203,7 +202,7 @@ function EditProfile() {
               <Avatar src={me?.avatar || undefined} boxSize={{ base: "80px", sm: "95px" }} />
               <Center position="absolute" top={0} left={0} w="100%" h="100%">
                 <Flex rounded="full" bg="rgba(0, 0, 0, 0.5)" p={2}>
-                  <Icon as={TbCameraPlus} boxSize="24px" />
+                  <Icon as={Camera} boxSize="24px" />
                 </Flex>
               </Center>
             </ImageUploader>

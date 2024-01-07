@@ -1,5 +1,4 @@
 import * as React from "react"
-import type { IconType } from "react-icons"
 import type { ModalProps } from "@chakra-ui/react"
 import { Icon, Image } from "@chakra-ui/react"
 import {
@@ -10,10 +9,11 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
+import type { LucideIcon } from "lucide-react"
 
 interface Props extends ModalProps {
   title?: string
-  icon?: IconType
+  icon?: LucideIcon
   image?: string
   closeButton?: boolean
 }

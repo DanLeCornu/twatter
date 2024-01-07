@@ -1,7 +1,5 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import { BiSearch, BiX } from "react-icons/bi"
-import { CgClose } from "react-icons/cg"
 import { gql } from "@apollo/client"
 import type { InputProps } from "@chakra-ui/react"
 import {
@@ -20,6 +18,7 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Search, X } from "lucide-react"
 import Head from "next/head"
 import { useRouter } from "next/router"
 
@@ -125,7 +124,7 @@ function NewMessage() {
           >
             <HStack position="relative" spacing={4}>
               <IconButton
-                icon={<Box as={CgClose} boxSize="20px" />}
+                icon={<Box as={X} boxSize="20px" />}
                 aria-label="close"
                 variant="ghost"
                 onClick={() => router.back()}
@@ -186,7 +185,7 @@ function NewMessageSearch({ search, setSearch, ...props }: Props) {
             aria-label="search"
             variant="ghost"
             color="gray.500"
-            icon={<Box as={BiSearch} boxSize="20px" />}
+            icon={<Box as={Search} boxSize="20px" />}
           />
         </Flex>
       </InputLeftElement>
@@ -211,7 +210,7 @@ function NewMessageSearch({ search, setSearch, ...props }: Props) {
             onClick={() => setSearch("")}
             size="xs"
             aria-label="clear search"
-            icon={<Box as={BiX} boxSize="20px" color="black.500" />}
+            icon={<Box as={X} boxSize="20px" color="black.500" />}
           />
         )}
       </InputRightElement>

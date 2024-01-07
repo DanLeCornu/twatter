@@ -1,4 +1,3 @@
-import { BiArrowBack, BiChevronRight } from "react-icons/bi"
 import {
   Box,
   Center,
@@ -13,6 +12,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import dayjs from "dayjs"
+import { ArrowLeft } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -84,7 +85,7 @@ function AccountDataSettings() {
       >
         <IconButton
           aria-label="back"
-          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          icon={<Box as={ArrowLeft} boxSize="20px" />}
           variant="ghost"
           onClick={() => router.back()}
         />
@@ -109,7 +110,7 @@ function AccountDataSettings() {
                     {listItem.subTitle}
                   </Text>
                 </Stack>
-                <Icon as={BiChevronRight} boxSize="24px" color="gray.400" />
+                <Icon as={ChevronRight} boxSize="24px" color="gray.400" />
               </HStack>
             </NextLink>
           ) : (

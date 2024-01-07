@@ -1,7 +1,7 @@
 import * as React from "react"
-import { BiSearch, BiX } from "react-icons/bi"
 import { gql } from "@apollo/client"
 import { Box, HStack, IconButton, Text, useColorModeValue } from "@chakra-ui/react"
+import { Search, X } from "lucide-react"
 import NextLink from "next/link"
 
 import type { RecentSearchItemFragment } from "lib/graphql"
@@ -38,12 +38,12 @@ export function RecentSearchItem({ recentSearch, setSearch, setIsSearchActive }:
     <NextLink href={`/search?q=${recentSearch.text}`}>
       <HStack _hover={{ bg: bgHover }} p={4} justify="space-between" onClick={handleClick}>
         <HStack spacing={5}>
-          <Box as={BiSearch} boxSize="25px" />
+          <Box as={Search} boxSize="25px" />
           <Text>{recentSearch.text}</Text>
         </HStack>
         <IconButton
           aria-label={`clear recent search '${recentSearch.text}'`}
-          icon={<Box as={BiX} boxSize="25px" color="brand.blue" />}
+          icon={<Box as={X} boxSize="25px" color="brand.blue" />}
           variant="ghost"
           onClick={(e) => {
             e.stopPropagation() // Prevent handleClick firing

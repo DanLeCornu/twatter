@@ -1,6 +1,4 @@
 import * as React from "react"
-import { BiArrowBack, BiChevronRight, BiVolumeMute } from "react-icons/bi"
-import { FiExternalLink, FiMail } from "react-icons/fi"
 import {
   Box,
   Center,
@@ -14,6 +12,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowLeft, ChevronRight, ExternalLink, Mail, VolumeX } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 import router from "next/router"
@@ -25,13 +24,13 @@ import { HEADING_CONTAINER_HEIGHT, HomeLayout } from "components/HomeLayout"
 
 const LIST_ITEMS = [
   {
-    icon: BiVolumeMute,
+    icon: VolumeX,
     title: "Mute and block",
     subTitle: "Manage the accounts that you've muted or blocked",
     path: "/settings/privacy/mute-and-block",
   },
   {
-    icon: FiMail,
+    icon: Mail,
     title: "Direct Messages",
     subTitle: "Manage who can message your directly",
     path: "/settings/privacy/messages",
@@ -68,7 +67,7 @@ function PrivacySettings() {
       >
         <IconButton
           aria-label="back"
-          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          icon={<Box as={ArrowLeft} boxSize="20px" />}
           variant="ghost"
           onClick={() => router.back()}
         />
@@ -102,7 +101,7 @@ function PrivacySettings() {
                     </Text>
                   </Stack>
                 </HStack>
-                <Icon as={BiChevronRight} boxSize="24px" color="gray.400" />
+                <Icon as={ChevronRight} boxSize="24px" color="gray.400" />
               </HStack>
             </NextLink>
           ))}
@@ -115,13 +114,13 @@ function PrivacySettings() {
             <NextLink href="">
               <HStack justify="space-between">
                 <Text fontSize="sm">Privacy Policy</Text>
-                <Icon color="gray.400" as={FiExternalLink} />
+                <Icon color="gray.400" as={ExternalLink} />
               </HStack>
             </NextLink>
             <NextLink href="">
               <HStack justify="space-between">
                 <Text fontSize="sm">Contact us</Text>
-                <Icon color="gray.400" as={FiExternalLink} />
+                <Icon color="gray.400" as={ExternalLink} />
               </HStack>
             </NextLink>
           </Stack>

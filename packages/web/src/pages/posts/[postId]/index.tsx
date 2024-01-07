@@ -1,10 +1,5 @@
 import * as React from "react"
 import { BrowserView } from "react-device-detect"
-import { BiArrowBack, BiImage } from "react-icons/bi"
-import { BsPinFill } from "react-icons/bs"
-import { CgClose } from "react-icons/cg"
-import { FaRegComment } from "react-icons/fa"
-import { FiBookmark } from "react-icons/fi"
 import { gql } from "@apollo/client"
 import {
   Avatar,
@@ -29,6 +24,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import dayjs from "dayjs"
+import { ArrowLeft, Bookmark, Image as ImageIcon, MessageCircle, Pin, X } from "lucide-react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 import { ReplySchema } from "pages/replies/new"
@@ -177,7 +173,7 @@ function Post() {
         >
           <IconButton
             aria-label="back"
-            icon={<Box as={BiArrowBack} boxSize="20px" />}
+            icon={<Box as={ArrowLeft} boxSize="20px" />}
             variant="ghost"
             m={2}
             onClick={() => router.back()}
@@ -190,7 +186,7 @@ function Post() {
         <Box pt="56px">
           {post.user.pinnedPostId === post.id && (
             <HStack pl="46px" my={1}>
-              <Icon as={BsPinFill} color="gray.400" boxSize="14px" />
+              <Icon as={Pin} color="gray.400" boxSize="14px" />
               <Text color="gray.400" fontWeight="medium" fontSize="13px">
                 Pinned
               </Text>
@@ -298,7 +294,7 @@ function Post() {
               variant="ghost"
               color="gray"
               _hover={{ color: "primary.500" }}
-              leftIcon={<Box as={FaRegComment} boxSize="22px" />}
+              leftIcon={<Box as={MessageCircle} boxSize="22px" />}
             >
               {post.replyCount > 0 && post.replyCount.toLocaleString()}
             </Button>
@@ -312,7 +308,7 @@ function Post() {
                 variant="ghost"
                 color={hasBookmarked ? "primary.500" : "gray"}
                 _hover={{ color: "primary.500" }}
-                leftIcon={<Box as={FiBookmark} boxSize="25px" />}
+                leftIcon={<Box as={Bookmark} boxSize="25px" />}
               >
                 {post.bookmarkCount > 0 && post.bookmarkCount.toLocaleString()}
               </Button>
@@ -423,7 +419,7 @@ function ReplyForm({ post }: ReplyFormProps) {
               <Box pl={3} pb={1} position="relative">
                 <IconButton
                   aria-label="remove image"
-                  icon={<Box as={CgClose} boxSize="20px" />}
+                  icon={<Box as={X} boxSize="20px" />}
                   position="absolute"
                   top={1}
                   right={1}
@@ -446,7 +442,7 @@ function ReplyForm({ post }: ReplyFormProps) {
                 <AttachImage image={image} setImage={setImage}>
                   <IconButton
                     aria-label="media"
-                    icon={<Box as={BiImage} boxSize="22px" />}
+                    icon={<Box as={ImageIcon} boxSize="22px" />}
                     variant="ghost"
                     color="primary.500"
                   />

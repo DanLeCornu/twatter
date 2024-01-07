@@ -296,6 +296,9 @@ importers:
       graphql:
         specifier: 15.8.0
         version: 15.8.0
+      lucide-react:
+        specifier: ^0.307.0
+        version: 0.307.0(react@18.2.0)
       match-sorter:
         specifier: ^6.3.1
         version: 6.3.1
@@ -323,9 +326,6 @@ importers:
       react-hook-form:
         specifier: 7.45.0
         version: 7.45.0(react@18.2.0)
-      react-icons:
-        specifier: 4.10.1
-        version: 4.10.1(react@18.2.0)
       yup:
         specifier: ^1.0.2
         version: 1.3.2
@@ -8813,6 +8813,14 @@ packages:
     resolution: {integrity: sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==}
     dev: false
 
+  /lucide-react@0.307.0(react@18.2.0):
+    resolution: {integrity: sha512-+vZ+vUiWPZTMnLHURg4aoIaz6NHOWXVVcVd8iLROu1k4LbyjcnHIKmbjXHCmulz7XAYLWRVXzhJJgIr+Aq3vOg==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /magic-string@0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
     engines: {node: '>=12'}
@@ -9995,14 +10003,6 @@ packages:
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
-    dependencies:
-      react: 18.2.0
-    dev: false
-
-  /react-icons@4.10.1(react@18.2.0):
-    resolution: {integrity: sha512-/ngzDP/77tlCfqthiiGNZeYFACw85fUjZtLbedmJ5DTlNDIwETxhwBzdOJ21zj4iJdvc0J3y7yOsX3PpxAJzrw==}
-    peerDependencies:
-      react: '*'
     dependencies:
       react: 18.2.0
     dev: false

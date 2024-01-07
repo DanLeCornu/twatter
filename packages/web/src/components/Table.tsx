@@ -1,7 +1,7 @@
 import * as React from "react"
-import { CgArrowLongDown, CgArrowLongUp } from "react-icons/cg"
 import type { FlexProps } from "@chakra-ui/react"
 import { Box, Button, Center, Flex, Link, Spinner, Text, useColorModeValue } from "@chakra-ui/react"
+import { MoveDown, MoveUp } from "lucide-react"
 import NextLink from "next/link"
 
 import { SortOrder } from "lib/graphql"
@@ -95,9 +95,9 @@ export function Table<T extends DataType>(props: Props<T>) {
                 {props.sort && props.onSort && !!sortKey && (
                   <Center ml={2}>
                     {props.sort[sortKey as string] && props.sort[sortKey as string] === SortOrder.Asc ? (
-                      <Box as={CgArrowLongUp} size="16px" m="-4px" />
+                      <Box as={MoveUp} size="16px" m="-4px" />
                     ) : props.sort[sortKey as string] && props.sort[sortKey as string] === SortOrder.Desc ? (
-                      <Box as={CgArrowLongDown} size="16px" m="-4px" />
+                      <Box as={MoveDown} size="16px" m="-4px" />
                     ) : null}
                   </Center>
                 )}

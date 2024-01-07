@@ -1,5 +1,4 @@
 import * as React from "react"
-import { BiArrowBack } from "react-icons/bi"
 import { gql } from "@apollo/client"
 import {
   Box,
@@ -13,6 +12,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowLeft } from "lucide-react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
@@ -75,12 +75,7 @@ export function ProfileFollowLayout({ children }: { children: React.ReactNode })
     <Box>
       <HStack>
         <NextLink href={`/${user.handle}`}>
-          <IconButton
-            aria-label="back"
-            icon={<Box as={BiArrowBack} boxSize="20px" />}
-            variant="ghost"
-            m={2}
-          />
+          <IconButton aria-label="back" icon={<Box as={ArrowLeft} boxSize="20px" />} variant="ghost" m={2} />
         </NextLink>
         <Stack spacing={0} w="100%">
           <Heading as="h1" fontSize="md" noOfLines={1} maxW="90%">

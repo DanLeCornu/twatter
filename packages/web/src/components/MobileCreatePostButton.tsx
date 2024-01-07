@@ -1,8 +1,6 @@
 import * as React from "react"
-import { FaRegComment } from "react-icons/fa"
-import { FiFeather, FiMail } from "react-icons/fi"
-import { IoMdAdd } from "react-icons/io"
 import { Box, Icon, IconButton } from "@chakra-ui/react"
+import { Feather, Mail, MessageCircle, Plus } from "lucide-react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
@@ -30,7 +28,7 @@ export function MobileCreatePostButton() {
             aria-label="post"
             icon={
               <Box
-                as={isReplying ? FaRegComment : isMessaging ? FiMail : FiFeather}
+                as={isReplying ? MessageCircle : isMessaging ? Mail : Feather}
                 boxSize="22px"
                 color="white"
               />
@@ -42,7 +40,7 @@ export function MobileCreatePostButton() {
           />
           {isMessaging && (
             <Icon
-              as={IoMdAdd}
+              as={Plus}
               color="white"
               position="absolute"
               zIndex={1}
@@ -55,7 +53,7 @@ export function MobileCreatePostButton() {
           )}
           {!isReplying && !isMessaging && (
             <Icon
-              as={IoMdAdd}
+              as={Plus}
               color="white"
               position="absolute"
               zIndex={1}

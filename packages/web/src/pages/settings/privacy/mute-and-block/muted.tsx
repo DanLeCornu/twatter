@@ -1,5 +1,4 @@
 import * as React from "react"
-import { BiArrowBack, BiVolumeFull, BiVolumeMute } from "react-icons/bi"
 import {
   Avatar,
   Box,
@@ -13,6 +12,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowLeft, Volume2, VolumeX } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 import router from "next/router"
@@ -61,7 +61,7 @@ function PrivacyMutedSettings() {
       >
         <IconButton
           aria-label="back"
-          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          icon={<Box as={ArrowLeft} boxSize="20px" />}
           variant="ghost"
           onClick={() => router.back()}
         />
@@ -151,7 +151,7 @@ function MutedAccountItem({ user, isMuted }: Props) {
         {muteState === "muted" ? (
           <IconButton
             aria-label={`Unmute ${user.handle}`}
-            icon={<Box as={BiVolumeMute} boxSize="18px" />}
+            icon={<Box as={VolumeX} boxSize="18px" />}
             variant="outline"
             borderColor="red.500"
             color="red.500"
@@ -165,7 +165,7 @@ function MutedAccountItem({ user, isMuted }: Props) {
         ) : (
           <IconButton
             aria-label={`Mute ${user.handle}`}
-            icon={<Box as={BiVolumeFull} boxSize="18px" />}
+            icon={<Box as={Volume2} boxSize="18px" />}
             variant="outline"
             size="sm"
             onClick={async (e) => {

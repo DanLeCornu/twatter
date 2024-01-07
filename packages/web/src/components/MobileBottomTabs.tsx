@@ -1,6 +1,4 @@
 import * as React from "react"
-import { BiBell, BiHomeCircle, BiSearch } from "react-icons/bi"
-import { FiMail } from "react-icons/fi"
 import {
   Box,
   Center,
@@ -11,6 +9,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Bell, Home, Mail, Search } from "lucide-react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
@@ -49,9 +48,7 @@ export function MobileBottomTabs() {
       <NextLink href="/home">
         <IconButton
           aria-label="home"
-          icon={
-            <Box as={BiHomeCircle} boxSize="28px" color={pathname === "/home" ? "primary.500" : undefined} />
-          }
+          icon={<Box as={Home} boxSize="28px" color={pathname === "/home" ? "primary.500" : undefined} />}
           variant="ghost"
           boxSize="42px"
         />
@@ -61,7 +58,7 @@ export function MobileBottomTabs() {
           aria-label="explore"
           icon={
             <Box
-              as={BiSearch}
+              as={Search}
               boxSize="25px"
               color={["/explore", "/search"].includes(pathname) ? "primary.500" : undefined}
             />
@@ -109,7 +106,7 @@ export function MobileBottomTabs() {
                 </Center>
               ) : null}
               <Icon
-                as={BiBell}
+                as={Bell}
                 boxSize="25px"
                 color={pathname === "/notifications" ? "primary.500" : undefined}
               />
@@ -122,9 +119,7 @@ export function MobileBottomTabs() {
       <NextLink href="/messages">
         <IconButton
           aria-label="messages"
-          icon={
-            <Box as={FiMail} boxSize="25px" color={pathname === "/messages" ? "primary.500" : undefined} />
-          }
+          icon={<Box as={Mail} boxSize="25px" color={pathname === "/messages" ? "primary.500" : undefined} />}
           variant="ghost"
           boxSize="42px"
         />

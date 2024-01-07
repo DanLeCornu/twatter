@@ -1,7 +1,4 @@
 import * as React from "react"
-import { BiArrowBack, BiChevronRight, BiUser } from "react-icons/bi"
-import { BsHeartbreak } from "react-icons/bs"
-import { GoKey } from "react-icons/go"
 import {
   Box,
   Center,
@@ -14,6 +11,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowLeft, ChevronRight, HeartCrack, KeyRound, User } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -25,19 +23,19 @@ import { HEADING_CONTAINER_HEIGHT, HomeLayout } from "components/HomeLayout"
 
 const LIST_ITEMS = [
   {
-    icon: BiUser,
+    icon: User,
     title: "Account information",
     subTitle: "See your account information like your phone number and email address",
     path: "/settings/account/data",
   },
   {
-    icon: GoKey,
+    icon: KeyRound,
     title: "Change your password",
     subTitle: "Change your password at any time",
     path: "/settings/account/password",
   },
   {
-    icon: BsHeartbreak,
+    icon: HeartCrack,
     title: "Deactivate your account",
     subTitle: "Find out how you can deactivate your account",
     path: "/settings/account/deactivate",
@@ -75,7 +73,7 @@ function AccountSettings() {
       >
         <IconButton
           aria-label="back"
-          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          icon={<Box as={ArrowLeft} boxSize="20px" />}
           variant="ghost"
           onClick={() => router.back()}
         />
@@ -105,7 +103,7 @@ function AccountSettings() {
                   </Text>
                 </Stack>
               </HStack>
-              <Icon as={BiChevronRight} boxSize="24px" color="gray.400" />
+              <Icon as={ChevronRight} boxSize="24px" color="gray.400" />
             </HStack>
           </NextLink>
         ))}

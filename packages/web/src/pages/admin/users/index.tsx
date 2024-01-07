@@ -1,8 +1,8 @@
 import * as React from "react"
-import { CgSoftwareDownload, CgUserAdd } from "react-icons/cg"
 import { gql } from "@apollo/client"
 import { Box, Button, Checkbox, Heading, useDisclosure, Wrap } from "@chakra-ui/react"
 import dayjs from "dayjs"
+import { Download, UserRoundPlus } from "lucide-react"
 import Head from "next/head"
 
 import type { UserItemFragment } from "lib/graphql"
@@ -85,11 +85,11 @@ export default function Users() {
       </Heading>
       <Wrap mb={4} spacing={2}>
         <Search search={search} onSearch={setSearch} placeholder="Search users" />
-        <Button leftIcon={<Box boxSize="20px" as={CgSoftwareDownload} />}>Download</Button>
+        <Button leftIcon={<Box boxSize="20px" as={Download} />}>Download</Button>
         <Button
           colorScheme="blue"
           onClick={modalProps.onOpen}
-          leftIcon={<Box boxSize="18px" as={CgUserAdd} />}
+          leftIcon={<Box boxSize="18px" as={UserRoundPlus} />}
         >
           Create user
         </Button>

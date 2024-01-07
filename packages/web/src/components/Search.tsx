@@ -1,7 +1,7 @@
 import * as React from "react"
-import { CgClose, CgSearch } from "react-icons/cg"
 import type { BoxProps } from "@chakra-ui/react"
 import { Box, IconButton, InputGroup, InputLeftElement, InputRightElement } from "@chakra-ui/react"
+import { Search as SearchIcon, X } from "lucide-react"
 
 import { useForm } from "lib/hooks/useForm"
 
@@ -40,7 +40,7 @@ export function Search({ onSearch, search, ...props }: Props) {
               size="sm"
               aria-label="search"
               variant="ghost"
-              icon={<Box as={CgSearch} />}
+              icon={<Box as={SearchIcon} />}
             />
           </InputLeftElement>
           <Input
@@ -57,7 +57,7 @@ export function Search({ onSearch, search, ...props }: Props) {
                 size="sm"
                 aria-label="clear search"
                 variant="ghost"
-                icon={<Box as={CgClose} />}
+                icon={<Box as={X} />}
               />
             )}
           </InputRightElement>

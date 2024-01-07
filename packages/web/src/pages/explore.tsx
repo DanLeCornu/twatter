@@ -1,10 +1,10 @@
 import * as React from "react"
 import { MobileView } from "react-device-detect"
-import { BiArrowBack } from "react-icons/bi"
 import { gql } from "@apollo/client"
 import { Divider, Stack } from "@chakra-ui/react"
 import { Center, Spinner } from "@chakra-ui/react"
 import { Box, HStack, IconButton, Text, useColorModeValue } from "@chakra-ui/react"
+import { ArrowLeft } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 
@@ -126,7 +126,7 @@ function Explore() {
             <IconButton
               minW="30px" // needed otherwise chakra default will be 40px width
               aria-label="back"
-              icon={<Box as={BiArrowBack} boxSize="18px" />}
+              icon={<Box as={ArrowLeft} boxSize="18px" />}
               variant="ghost"
               onClick={() => {
                 setIsSearchActive(false)

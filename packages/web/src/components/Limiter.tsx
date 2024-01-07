@@ -10,9 +10,8 @@ export const Limiter: React.FC<BoxProps> = (props) => {
       h="100%"
       maxW={{ base: "688px", md: "688px", lg: "1100px", xl: "1280px" }}
       m="0 auto"
-      border="1px"
-      borderColor="red"
-      zIndex={10000}
+      // border="1px"
+      // borderColor="red"
     >
       {props.children}
     </Box>

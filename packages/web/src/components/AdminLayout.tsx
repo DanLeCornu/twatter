@@ -1,6 +1,4 @@
 import * as React from "react"
-import { BiMoon, BiSun } from "react-icons/bi"
-import { CgExternal, CgHome, CgUser } from "react-icons/cg"
 import type { LinkProps } from "@chakra-ui/react"
 import {
   Box,
@@ -16,6 +14,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Home, LogOut, Moon, Sun, User } from "lucide-react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
@@ -65,10 +64,10 @@ export function AdminLayout(props: Props) {
         borderColor={borderColor}
       >
         <Stack spacing={4}>
-          <SidebarLink href="/" icon={<Box boxSize="18px" as={CgHome} />} color={homeLinkColor}>
+          <SidebarLink href="/" icon={<Box boxSize="18px" as={Home} />} color={homeLinkColor}>
             Home
           </SidebarLink>
-          <SidebarLink href="/admin/users" icon={<Box boxSize="18px" as={CgUser} />}>
+          <SidebarLink href="/admin/users" icon={<Box boxSize="18px" as={User} />}>
             Users
           </SidebarLink>
         </Stack>
@@ -78,11 +77,11 @@ export function AdminLayout(props: Props) {
               aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
               variant="ghost"
               onClick={toggleColorMode}
-              icon={<Box as={isDark ? BiSun : BiMoon} boxSize="20px" />}
+              icon={<Box as={isDark ? Sun : Moon} boxSize="20px" />}
             />
           </Center>
           <Button variant="outline" onClick={() => logout()} size="sm">
-            <Icon boxSize="20px" as={CgExternal} mr={{ base: 0, md: 2 }} />
+            <Icon boxSize="20px" as={LogOut} mr={{ base: 0, md: 2 }} />
             <Text display={{ base: "none", md: "block" }}>Logout</Text>
           </Button>
         </Stack>

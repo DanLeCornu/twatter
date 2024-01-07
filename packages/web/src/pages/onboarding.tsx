@@ -1,6 +1,6 @@
 import * as React from "react"
-import { CgClose } from "react-icons/cg"
 import { Box, Center, HStack, IconButton, Spinner, Text, useColorModeValue } from "@chakra-ui/react"
+import { X } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 
@@ -50,14 +50,14 @@ function Onboarding() {
       >
         {step === 3 ? (
           <IconButton
-            icon={<Box as={CgClose} boxSize="20px" />}
+            icon={<Box as={X} boxSize="20px" />}
             aria-label="close"
             variant="ghost"
             onClick={logout}
           />
         ) : (
           <NextLink href="/home">
-            <IconButton icon={<Box as={CgClose} boxSize="20px" />} aria-label="close" variant="ghost" />
+            <IconButton icon={<Box as={X} boxSize="20px" />} aria-label="close" variant="ghost" />
           </NextLink>
         )}
         <Text fontWeight="bold" fontSize="xl">

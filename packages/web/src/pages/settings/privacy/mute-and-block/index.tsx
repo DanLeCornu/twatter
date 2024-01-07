@@ -1,5 +1,4 @@
 import * as React from "react"
-import { BiArrowBack, BiChevronRight } from "react-icons/bi"
 import {
   Box,
   Center,
@@ -12,6 +11,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ChevronRight } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 import router from "next/router"
@@ -56,7 +57,7 @@ function PrivacyMuteBlockSettings() {
       >
         <IconButton
           aria-label="back"
-          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          icon={<Box as={ArrowLeft} boxSize="20px" />}
           variant="ghost"
           onClick={() => router.back()}
         />
@@ -79,7 +80,7 @@ function PrivacyMuteBlockSettings() {
                 <Text color="gray.300" fontSize="sm">
                   {listItem.text}
                 </Text>
-                <Icon as={BiChevronRight} boxSize="24px" color="gray.400" />
+                <Icon as={ChevronRight} boxSize="24px" color="gray.400" />
               </HStack>
             </NextLink>
           ))}

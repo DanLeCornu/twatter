@@ -1,8 +1,8 @@
 import * as React from "react"
-import { FiAlertTriangle } from "react-icons/fi"
 import type { FlexProps } from "@chakra-ui/react"
 import { useColorModeValue } from "@chakra-ui/react"
 import { Box, HStack, Text } from "@chakra-ui/react"
+import { AlertTriangle } from "lucide-react"
 
 interface Props extends FlexProps {
   children: React.ReactNode
@@ -19,7 +19,7 @@ export function NoData(props: Props) {
       spacing={4}
       align="center"
     >
-      <Box as={FiAlertTriangle} color="gray.500" />
+      <Box as={AlertTriangle} color="gray.500" />
       <Text color="gray.500">{props.children}</Text>
     </HStack>
   )

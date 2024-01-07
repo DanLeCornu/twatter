@@ -1,4 +1,3 @@
-import { BiArrowBack } from "react-icons/bi"
 import {
   Box,
   Button,
@@ -11,6 +10,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowLeft } from "lucide-react"
 import Head from "next/head"
 import { useRouter } from "next/router"
 
@@ -77,7 +77,7 @@ function AccountDataEmailSettings() {
       >
         <IconButton
           aria-label="back"
-          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          icon={<Box as={ArrowLeft} boxSize="20px" />}
           variant="ghost"
           onClick={() => router.back()}
         />

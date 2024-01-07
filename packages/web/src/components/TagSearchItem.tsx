@@ -1,6 +1,6 @@
 import * as React from "react"
-import { BiSearch } from "react-icons/bi"
 import { Box, HStack, Text, useColorModeValue } from "@chakra-ui/react"
+import { Search } from "lucide-react"
 import NextLink from "next/link"
 
 import type { TagItemFragment } from "lib/graphql"
@@ -20,7 +20,7 @@ export function TagSearchItem({ tag, setSearch, setIsSearchActive }: Props) {
   return (
     <NextLink href={`/search?q=${tag.name}`}>
       <HStack _hover={{ bg: bgHover }} p={4} spacing={5} onClick={handleClick}>
-        <Box as={BiSearch} boxSize="25px" />
+        <Box as={Search} boxSize="25px" />
         <Text>#{tag.name}</Text>
       </HStack>
     </NextLink>

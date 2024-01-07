@@ -1,8 +1,5 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import { BsPinFill } from "react-icons/bs"
-import { FaRegComment } from "react-icons/fa"
-import { IoIosStats } from "react-icons/io"
 import {
   Avatar,
   Box,
@@ -20,6 +17,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { BarChart3, MessageCircle, Pin } from "lucide-react"
 import NextLink from "next/link"
 
 import type { PostItemFragment } from "lib/graphql"
@@ -65,7 +63,7 @@ export function PostItem({ post, isPinned = false }: Props) {
         >
           {isPinned && (
             <HStack pl="26px" my={1}>
-              <Icon as={BsPinFill} color="gray.400" boxSize="14px" />
+              <Icon as={Pin} color="gray.400" boxSize="14px" />
               <Text color="gray.400" fontWeight="medium" fontSize="13px">
                 Pinned
               </Text>
@@ -130,7 +128,7 @@ export function PostItem({ post, isPinned = false }: Props) {
                       size="sm"
                       color="gray"
                       _hover={{ color: "primary.500" }}
-                      leftIcon={<Box as={FaRegComment} boxSize="16px" />}
+                      leftIcon={<Box as={MessageCircle} boxSize="16px" />}
                     >
                       {post.replyCount > 0 && post.replyCount.toLocaleString()}
                     </Button>
@@ -143,7 +141,7 @@ export function PostItem({ post, isPinned = false }: Props) {
                     size="sm"
                     color="gray"
                     _hover={{ color: "primary.500" }}
-                    leftIcon={<Box as={IoIosStats} boxSize="16px" />}
+                    leftIcon={<Box as={BarChart3} boxSize="16px" />}
                     onClick={modalProps.onOpen}
                   >
                     {post.viewCount.toLocaleString()}

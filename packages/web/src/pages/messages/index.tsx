@@ -1,8 +1,5 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import { BiSearch, BiX } from "react-icons/bi"
-import { FiSettings } from "react-icons/fi"
-import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import { gql } from "@apollo/client"
 import type { InputProps } from "@chakra-ui/react"
 import {
@@ -25,6 +22,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { MoreHorizontal, Search, Settings, X } from "lucide-react"
 import { matchSorter } from "match-sorter"
 import Head from "next/head"
 import NextLink from "next/link"
@@ -144,7 +142,7 @@ function Messages() {
                 <Heading fontSize="lg">Messages</Heading>
               </HStack>
               <NextLink href="/settings/privacy/messages">
-                <Icon as={FiSettings} />
+                <Icon as={Settings} />
               </NextLink>
             </HStack>
           </Box>
@@ -248,7 +246,7 @@ function ConversationItem({ conversation, handleOpenMenu }: ConversationItemProp
             variant="ghost"
             boxSize="25px"
             minW="25px" // needed otherwise Chakra default styling overrides and makes it wider
-            icon={<Box as={HiOutlineDotsHorizontal} boxSize="18px" color="gray.400" />}
+            icon={<Box as={MoreHorizontal} boxSize="18px" color="gray.400" />}
             onClick={(e) => {
               e.preventDefault() // Stops Next link
               handleOpenMenu(conversation)
@@ -277,7 +275,7 @@ function MessagesSearch({ search, setSearch, ...props }: SearchProps) {
             aria-label="search"
             variant="ghost"
             color="gray.500"
-            icon={<Box as={BiSearch} boxSize="20px" />}
+            icon={<Box as={Search} boxSize="20px" />}
           />
         </Flex>
       </InputLeftElement>
@@ -303,7 +301,7 @@ function MessagesSearch({ search, setSearch, ...props }: SearchProps) {
             onClick={() => setSearch("")}
             size="xs"
             aria-label="clear search"
-            icon={<Box as={BiX} boxSize="20px" color="black.500" />}
+            icon={<Box as={X} boxSize="20px" color="black.500" />}
           />
         )}
       </InputRightElement>

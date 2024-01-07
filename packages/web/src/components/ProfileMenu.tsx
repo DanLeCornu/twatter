@@ -1,9 +1,5 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import { AiOutlineLink } from "react-icons/ai"
-import { BiBlock, BiFlag, BiVolumeFull, BiVolumeMute } from "react-icons/bi"
-import { CgUnblock } from "react-icons/cg"
-import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import {
   Box,
   Button,
@@ -24,6 +20,7 @@ import {
   useClipboard,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Ban, CircleSlash, Flag, Link2, MoreHorizontal, Volume2, VolumeX } from "lucide-react"
 import NextLink from "next/link"
 
 import { WEB_URL } from "lib/config"
@@ -78,7 +75,7 @@ export function ProfileMenu({
           variant="outline"
           minW="34px"
           boxSize="34px"
-          icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" color="gray.200" />}
+          icon={<Box as={MoreHorizontal} boxSize="20px" color="gray.200" />}
           onClick={drawerProps.onOpen}
         />
         <Drawer {...drawerProps} placement="bottom" trapFocus={false}>
@@ -90,25 +87,25 @@ export function ProfileMenu({
                   <>
                     {/* COPY */}
                     <HStack spacing={3} onClick={handleCopy}>
-                      <Icon as={AiOutlineLink} boxSize="18px" />
+                      <Icon as={Link2} boxSize="18px" />
                       <Text fontWeight="bold">Copy link to profile</Text>
                     </HStack>
                     {/* MUTE */}
                     <HStack spacing={3} onClick={isMuted ? handleUnmute : handleMute}>
-                      <Icon as={isMuted ? BiVolumeFull : BiVolumeMute} boxSize="18px" />
+                      <Icon as={isMuted ? Volume2 : VolumeX} boxSize="18px" />
                       <Text fontWeight="bold">{`${isMuted ? "Unmute" : "Mute"} @${handle}`}</Text>
                     </HStack>
                   </>
                 )}
                 {/* BLOCK */}
                 <HStack spacing={3} onClick={onOpen}>
-                  <Icon as={isBlocked ? CgUnblock : BiBlock} boxSize="18px" />
+                  <Icon as={isBlocked ? CircleSlash : Ban} boxSize="18px" />
                   <Text fontWeight="bold">{`${isBlocked ? "Unblock" : "Block"} @${handle}`}</Text>
                 </HStack>
                 {/* REPORT */}
                 <NextLink href={`/${handle}/report`}>
                   <HStack spacing={3}>
-                    <Icon as={BiFlag} boxSize="18px" />
+                    <Icon as={Flag} boxSize="18px" />
                     <Text fontWeight="bold">Report @{handle}</Text>
                   </HStack>
                 </NextLink>
@@ -125,7 +122,7 @@ export function ProfileMenu({
         <Menu placement="bottom">
           <MenuButton
             as={IconButton}
-            icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" color="gray.200" />}
+            icon={<Box as={MoreHorizontal} boxSize="20px" color="gray.200" />}
             variant="outline"
             minW="34px"
             boxSize="34px"
@@ -135,16 +132,12 @@ export function ProfileMenu({
               {!isBlocked && (
                 <>
                   {/* COPY */}
-                  <MenuItem
-                    icon={<Box as={AiOutlineLink} boxSize="18px" />}
-                    fontWeight="medium"
-                    onClick={handleCopy}
-                  >
+                  <MenuItem icon={<Box as={Link2} boxSize="18px" />} fontWeight="medium" onClick={handleCopy}>
                     Copy link to profile
                   </MenuItem>
                   {/* MUTE */}
                   <MenuItem
-                    icon={<Box as={isMuted ? BiVolumeFull : BiVolumeMute} boxSize="18px" />}
+                    icon={<Box as={isMuted ? Volume2 : VolumeX} boxSize="18px" />}
                     fontWeight="medium"
                     onClick={isMuted ? handleUnmute : handleMute}
                   >
@@ -154,7 +147,7 @@ export function ProfileMenu({
               )}
               {/* BLOCK */}
               <MenuItem
-                icon={<Box as={isBlocked ? CgUnblock : BiBlock} boxSize="18px" />}
+                icon={<Box as={isBlocked ? CircleSlash : Ban} boxSize="18px" />}
                 fontWeight="medium"
                 onClick={onOpen}
               >
@@ -162,7 +155,7 @@ export function ProfileMenu({
               </MenuItem>
               {/* REPORT */}
               <NextLink href={`/${handle}/report`}>
-                <MenuItem icon={<Box as={BiFlag} boxSize="18px" />} fontWeight="medium">
+                <MenuItem icon={<Box as={Flag} boxSize="18px" />} fontWeight="medium">
                   Report @{handle}
                 </MenuItem>
               </NextLink>

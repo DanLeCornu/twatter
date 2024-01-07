@@ -1,10 +1,5 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import type { IconType } from "react-icons"
-import { AiOutlineHeart } from "react-icons/ai"
-import { FaCircle, FaRegComment } from "react-icons/fa"
-import { FiMail } from "react-icons/fi"
-import { RiUserFollowLine } from "react-icons/ri"
 import { gql } from "@apollo/client"
 import {
   Avatar,
@@ -23,6 +18,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import type { LucideIcon } from "lucide-react"
+import { Circle, Heart, Mail, MessageCircle, UserRoundCheck } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 
@@ -263,19 +260,19 @@ function NotificationItem({ notification }: Props) {
   }
 
   let href: string
-  let icon: IconType | undefined
+  let icon: LucideIcon | undefined
   let heading: string
   let content: string | undefined
 
   switch (notification.type) {
     case NotificationType.NewFollow:
       href = `/${notification.initiator.handle}`
-      icon = RiUserFollowLine
+      icon = UserRoundCheck
       heading = "started following you"
       break
     case NotificationType.NewLike:
       href = `/posts/${notification.post?.id}`
-      icon = AiOutlineHeart
+      icon = Heart
       heading = "liked your post"
       content = notification.post?.text
       break
@@ -291,13 +288,13 @@ function NotificationItem({ notification }: Props) {
     //   break
     case NotificationType.NewMessage:
       href = `/messages/${notification.message?.sender.id}`
-      icon = FiMail
+      icon = Mail
       heading = "sent you a message"
       content = notification.message?.text
       break
     case NotificationType.NewReply:
       href = `/posts/${notification.post?.id}`
-      icon = FaRegComment
+      icon = MessageCircle
       heading = "replied to your post"
       content = notification.post?.text
       break
@@ -309,7 +306,7 @@ function NotificationItem({ notification }: Props) {
       break
   }
 
-  const isRead = notification.status === NotificationStatus.Unread
+  const isUnread = notification.status === NotificationStatus.Unread
   if (!href || !icon || !heading) return null
   return (
     <Box borderBottom="1px" borderColor={borderColor} onClick={handleClick} _hover={{ bg: bgHover }}>
@@ -332,7 +329,7 @@ function NotificationItem({ notification }: Props) {
               )}
             </Stack>
           </HStack>
-          {isRead && <Icon as={FaCircle} color="brand.blue" boxSize="12px" m={1} />}
+          {isUnread && <Icon as={Circle} color="brand.blue" boxSize="12px" m={1} />}
         </HStack>
       </NextLink>
     </Box>

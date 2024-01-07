@@ -1,6 +1,5 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import { gql } from "@apollo/client"
 import {
   Box,
@@ -21,6 +20,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { MoreHorizontal } from "lucide-react"
 
 import { GetMyBookmarksDocument, useClearAllBookmarksMutation } from "lib/graphql"
 import { useMutationHandler } from "lib/hooks/useMutationHandler"
@@ -67,7 +67,7 @@ export function BookmarksMenu() {
           variant="ghost"
           boxSize="35px"
           minW="35px" // needed otherwise Chakra default styling overrides and makes it wider
-          icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" />}
+          icon={<Box as={MoreHorizontal} boxSize="20px" />}
           onClick={drawerProps.onOpen}
         />
         <Drawer {...drawerProps} placement="bottom" trapFocus={false}>
@@ -97,7 +97,7 @@ export function BookmarksMenu() {
             variant="ghost"
             boxSize="35px"
             minW="35px" // needed otherwise Chakra default styling overrides and makes it wider
-            icon={<Box as={HiOutlineDotsHorizontal} boxSize="20px" />}
+            icon={<Box as={MoreHorizontal} boxSize="20px" />}
             onClick={menuProps.onToggle}
           />
           <Portal>

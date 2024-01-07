@@ -1,5 +1,4 @@
 import * as React from "react"
-import { CgClose } from "react-icons/cg"
 import { gql } from "@apollo/client"
 import {
   Box,
@@ -15,6 +14,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import * as Sentry from "@sentry/nextjs"
+import { X } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -104,7 +104,7 @@ export default function Login() {
     <Center flexDir="column" pt={3} px={6}>
       <NextLink href="/">
         <IconButton
-          icon={<Box as={CgClose} boxSize="20px" />}
+          icon={<Box as={X} boxSize="20px" />}
           aria-label="close"
           colorScheme="monochrome"
           variant="outline"

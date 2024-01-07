@@ -1,6 +1,4 @@
 import * as React from "react"
-import { BiMoon, BiSun, BiUser } from "react-icons/bi"
-import { FiBookmark, FiLogOut, FiSettings } from "react-icons/fi"
 import {
   Accordion,
   AccordionButton,
@@ -22,6 +20,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { Bookmark, LogOut, Moon, Settings, Sun, User } from "lucide-react"
 import NextLink from "next/link"
 
 import { useLogout } from "lib/hooks/useLogout"
@@ -78,7 +77,7 @@ export function MobileTopBarAvatar() {
               </HStack>
               <NextLink href={`/${me?.handle}`}>
                 <HStack spacing={5} py={1} onClick={drawerProps.onClose}>
-                  <Icon as={BiUser} boxSize="25px" />
+                  <Icon as={User} boxSize="25px" />
                   <Text fontWeight="bold" fontSize="xl">
                     Profile
                   </Text>
@@ -86,7 +85,7 @@ export function MobileTopBarAvatar() {
               </NextLink>
               <NextLink href="/bookmarks">
                 <HStack spacing={5} py={1} onClick={drawerProps.onClose}>
-                  <Icon as={FiBookmark} boxSize="25px" />
+                  <Icon as={Bookmark} boxSize="25px" />
                   <Text fontWeight="bold" fontSize="xl">
                     Bookmarks
                   </Text>
@@ -109,20 +108,20 @@ export function MobileTopBarAvatar() {
                         <Stack spacing={4}>
                           <NextLink href="/settings">
                             <HStack spacing={3} onClick={drawerProps.onClose}>
-                              <Icon as={FiSettings} boxSize="15px" />
+                              <Icon as={Settings} boxSize="15px" />
                               <Text fontWeight="medium" fontSize="sm">
                                 Settings and privacy
                               </Text>
                             </HStack>
                           </NextLink>
                           <HStack spacing={3} onClick={toggleColorMode}>
-                            <Icon as={isDark ? BiSun : BiMoon} boxSize="15px" />
+                            <Icon as={isDark ? Sun : Moon} boxSize="15px" />
                             <Text fontWeight="medium" fontSize="sm">
                               Toggle theme
                             </Text>
                           </HStack>
                           <HStack spacing={3} onClick={modalProps.onOpen}>
-                            <Icon as={FiLogOut} boxSize="15px" />
+                            <Icon as={LogOut} boxSize="15px" />
                             <Text fontWeight="medium" fontSize="sm">
                               Log out
                             </Text>

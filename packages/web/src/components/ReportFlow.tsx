@@ -1,5 +1,4 @@
 import * as React from "react"
-import { AiOutlineClose } from "react-icons/ai"
 import { gql } from "@apollo/client"
 import {
   Box,
@@ -17,6 +16,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { X } from "lucide-react"
 import NextLink from "next/link"
 
 import { REPORT_ISSUE_TYPES } from "lib/static/reportIssueTypes"
@@ -59,12 +59,7 @@ export function ReportFlow({ type, setType, handleSubmit }: Props) {
         borderColor={borderColor}
       >
         <NextLink href="/home">
-          <IconButton
-            aria-label="back"
-            icon={<Box as={AiOutlineClose} boxSize="20px" />}
-            variant="ghost"
-            m={2}
-          />
+          <IconButton aria-label="back" icon={<Box as={X} boxSize="20px" />} variant="ghost" m={2} />
         </NextLink>
         <Heading as="h1" size="md">
           {step === 1 ? "Gathering info" : "Confirmation"}

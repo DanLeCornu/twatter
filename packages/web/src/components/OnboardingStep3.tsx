@@ -1,7 +1,7 @@
 import * as React from "react"
-import { TbCameraPlus } from "react-icons/tb"
 import { gql } from "@apollo/client"
 import { Avatar, Button, Center, Flex, Heading, Icon, Spinner, Stack, Text } from "@chakra-ui/react"
+import { Camera } from "lucide-react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
@@ -71,7 +71,7 @@ export function OnboardingStep3() {
             <Avatar src={me.avatar || undefined} boxSize="200px" />
             <Center position="absolute" top={0} left={0} w="100%" h="100%" zIndex={1}>
               <Flex rounded="full" bg="rgba(0, 0, 0, 0.5)" p={2}>
-                <Icon as={TbCameraPlus} boxSize="24px" />
+                <Icon as={Camera} boxSize="24px" />
               </Flex>
             </Center>
           </ImageUploader>

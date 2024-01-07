@@ -61,7 +61,7 @@ function Home() {
 
       {/* Shared underlay that provides blurred background */}
       <Box
-        position="fixed"
+        position="absolute"
         left={0}
         top={0}
         h={TOTAL_HEADER_HEIGHT}
@@ -72,13 +72,22 @@ function Home() {
       />
 
       <BrowserView>
-        <Box position="fixed" top={0} left={0} h={HEADING_CONTAINER_HEIGHT} zIndex={1} pt={4} pl={4}>
+        <Box position="absolute" top={0} left={0} h={HEADING_CONTAINER_HEIGHT} zIndex={1} pt={4} pl={4}>
           <Heading fontSize="xl">Home</Heading>
         </Box>
       </BrowserView>
 
       <MobileView>
-        <Box position="fixed" top={0} left={0} h={HEADING_CONTAINER_HEIGHT} zIndex={1} pt={2} px={4} w="100%">
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          h={HEADING_CONTAINER_HEIGHT}
+          zIndex={1}
+          pt={2}
+          px={4}
+          w="100%"
+        >
           <Box position="relative">
             <MobileTopBarAvatar />
 
@@ -97,7 +106,7 @@ function Home() {
         <Box borderBottom="1px" borderColor={borderColor} pb={1}>
           <TabList
             border="none"
-            position="fixed"
+            position="absolute"
             left={0}
             top={HEADING_CONTAINER_HEIGHT}
             zIndex={1}

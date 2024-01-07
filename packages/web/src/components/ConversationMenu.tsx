@@ -1,6 +1,5 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import { BiTrash } from "react-icons/bi"
 import { gql } from "@apollo/client"
 import {
   Box,
@@ -20,6 +19,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { Trash } from "lucide-react"
 
 import type { ConversationItemFragment } from "lib/graphql"
 import { GetMyConversationsDocument, useDeleteConversationMutation } from "lib/graphql"
@@ -90,7 +90,7 @@ export function ConversationMenu({ conversation, drawerProps, menuProps }: Props
 
                 {/* DELETE */}
                 <HStack spacing={3} onClick={handleOpenModal}>
-                  <Icon as={BiTrash} boxSize="18px" color="red.500" />
+                  <Icon as={Trash} boxSize="18px" color="red.500" />
                   <Text fontWeight="bold" fontSize="sm" color="red.500">
                     Delete conversation
                   </Text>
@@ -120,7 +120,7 @@ export function ConversationMenu({ conversation, drawerProps, menuProps }: Props
               </NextLink> */}
 
               {/* DELETE */}
-              <MenuItem icon={<Box as={BiTrash} />} fontWeight="bold" py={2} onClick={handleOpenModal}>
+              <MenuItem icon={<Box as={Trash} />} fontWeight="bold" py={2} onClick={handleOpenModal}>
                 Delete conversation
               </MenuItem>
             </MenuList>

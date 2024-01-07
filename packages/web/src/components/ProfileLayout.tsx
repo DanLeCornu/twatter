@@ -1,9 +1,4 @@
 import * as React from "react"
-import { AiOutlineLink } from "react-icons/ai"
-import { BiArrowBack } from "react-icons/bi"
-import { BsBalloon, BsCalendar3 } from "react-icons/bs"
-import { FiMail } from "react-icons/fi"
-import { SlLocationPin } from "react-icons/sl"
 import { gql } from "@apollo/client"
 import {
   AspectRatio,
@@ -25,6 +20,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import dayjs from "dayjs"
+import { ArrowLeft, Cake, CalendarDays, Link2, Mail, MapPin } from "lucide-react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
@@ -231,7 +227,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
         {/* Can't decide for router.back or back to /home always */}
         <IconButton
           aria-label="back"
-          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          icon={<Box as={ArrowLeft} boxSize="20px" />}
           variant="ghost"
           m={2}
           onClick={() => router.back()}
@@ -307,7 +303,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                   <>
                     <IconButton
                       aria-label="message"
-                      icon={<Box as={FiMail} boxSize="18px" />}
+                      icon={<Box as={Mail} boxSize="18px" />}
                       variant="outline"
                       boxSize="34px"
                       minW="34px"
@@ -333,7 +329,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                 <Flex flexWrap="wrap">
                   {user.location && (
                     <HStack spacing={1} align="baseline" mr={2}>
-                      <Icon as={SlLocationPin} color="gray.400" boxSize="14px" />
+                      <Icon as={MapPin} color="gray.400" boxSize="14px" />
                       <Text fontSize="sm" color="gray.400">
                         {user.location}
                       </Text>
@@ -341,7 +337,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                   )}
                   {user.website && (
                     <HStack spacing={1} align="center" mr={2}>
-                      <Icon as={AiOutlineLink} color="gray.400" boxSize="18px" />
+                      <Icon as={Link2} color="gray.400" boxSize="18px" />
                       <Link isExternal href={websiteUrl}>
                         <Text fontSize="sm">{user.website}</Text>
                       </Link>
@@ -351,7 +347,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                     (user.dobDayMonthPrivacy === DobPrivacy.Public ||
                       user.dobYearPrivacy === DobPrivacy.Public) && (
                       <HStack spacing={1} align="center" mr={2}>
-                        <Icon as={BsBalloon} color="gray.400" boxSize="16px" />
+                        <Icon as={Cake} color="gray.400" boxSize="16px" />
                         <Text fontSize="sm" color="gray.400">
                           {user.dobDayMonthPrivacy === DobPrivacy.Public &&
                           user.dobYearPrivacy === DobPrivacy.Public
@@ -366,7 +362,7 @@ export function ProfileLayout({ children }: { children: React.ReactNode }) {
                       </HStack>
                     )}
                   <HStack spacing={1} align="baseline">
-                    <Icon as={BsCalendar3} color="gray.400" boxSize="12px" />
+                    <Icon as={CalendarDays} color="gray.400" boxSize="12px" />
                     <Text fontSize="sm" color="gray.400">
                       Joined {dayjs(user.createdAt).format("MMMM YYYY")}
                     </Text>

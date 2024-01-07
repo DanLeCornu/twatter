@@ -1,6 +1,6 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import { Badge, Box, Center, Flex,Spinner, Text, useBreakpointValue } from "@chakra-ui/react"
+import { Badge, Box, Center, Flex, Spinner, Text, useBreakpointValue } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 
 import { useMe } from "lib/hooks/useMe"
@@ -49,7 +49,7 @@ export function HomeLayout({ showCreateButton = true, children }: Props) {
         <MobileBottomTabs />
       </MobileView>
       <BrowserView>
-        <BreakpointBadge />
+        {/* <BreakpointBadge /> */}
         <Limiter>
           <Flex>
             <DesktopNav />
@@ -79,7 +79,7 @@ export function BreakpointBadge() {
       top={2}
       left={2}
       zIndex={1000}
-      fontSize="20px"
+      fontSize="18px"
       colorScheme={
         breakpoint === "base"
           ? "gray"

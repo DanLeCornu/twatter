@@ -1,6 +1,4 @@
 import * as React from "react"
-import { BiImage } from "react-icons/bi"
-import { CgClose } from "react-icons/cg"
 import {
   Avatar,
   Box,
@@ -13,6 +11,7 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Image as ImageIcon, X } from "lucide-react"
 import { PostSchema } from "pages/posts/new"
 
 import { GetPostsDocument, SortOrder, useCreatePostMutation, useUpdatePostMutation } from "lib/graphql"
@@ -116,7 +115,7 @@ export function DesktopHomeCreatePostForm() {
             <Box pl={3} position="relative">
               <IconButton
                 aria-label="remove image"
-                icon={<Box as={CgClose} boxSize="20px" />}
+                icon={<Box as={X} boxSize="20px" />}
                 position="absolute"
                 top={1}
                 right={1}
@@ -140,7 +139,7 @@ export function DesktopHomeCreatePostForm() {
               <AttachImage image={image} setImage={setImage}>
                 <IconButton
                   aria-label="media"
-                  icon={<Box as={BiImage} boxSize="22px" />}
+                  icon={<Box as={ImageIcon} boxSize="22px" />}
                   variant="ghost"
                   color="primary.500"
                   onClick={() => setIsActive(true)}

@@ -1,8 +1,5 @@
 import * as React from "react"
 import { BrowserView, MobileView } from "react-device-detect"
-import { AiOutlineInfoCircle } from "react-icons/ai"
-import { BiArrowBack, BiSend } from "react-icons/bi"
-import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import { gql } from "@apollo/client"
 import {
   Avatar,
@@ -21,6 +18,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import dayjs from "dayjs"
+import { ArrowLeft, Info, MoreHorizontal, SendHorizonal } from "lucide-react"
 import Head from "next/head"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -191,7 +189,7 @@ function UserMessages() {
               <HStack position="relative" spacing={3} w="calc(100% - 28px)">
                 <IconButton
                   aria-label="back"
-                  icon={<Box as={BiArrowBack} boxSize="20px" />}
+                  icon={<Box as={ArrowLeft} boxSize="20px" />}
                   variant="ghost"
                   onClick={() => router.back()}
                 />
@@ -201,7 +199,7 @@ function UserMessages() {
                 </Heading>
               </HStack>
               <NextLink href={`/${user?.handle}`}>
-                <Icon boxSize="20px" as={AiOutlineInfoCircle} />
+                <Icon boxSize="20px" as={Info} />
               </NextLink>
             </HStack>
           </Box>
@@ -251,7 +249,7 @@ function UserMessages() {
           />
           <IconButton
             aria-label="send message"
-            icon={<Box as={BiSend} boxSize="22px" color="brand.blue" />}
+            icon={<Box as={SendHorizonal} boxSize="22px" color="brand.blue" />}
             variant="ghost"
             boxSize="34px"
             minW="34px"
@@ -344,7 +342,7 @@ function MessageItem({
             variant="ghost"
             boxSize="25px"
             minW="25px" // needed otherwise Chakra default styling overrides and makes it wider
-            icon={<Box as={HiOutlineDotsHorizontal} boxSize="18px" color="gray.400" />}
+            icon={<Box as={MoreHorizontal} boxSize="18px" color="gray.400" />}
             onClick={disclosureProps.onOpen}
           />
         )}
@@ -357,7 +355,7 @@ function MessageItem({
             variant="ghost"
             boxSize="25px"
             minW="25px" // needed otherwise Chakra default styling overrides and makes it wider
-            icon={<Box as={HiOutlineDotsHorizontal} boxSize="18px" color="gray.400" />}
+            icon={<Box as={MoreHorizontal} boxSize="18px" color="gray.400" />}
             onClick={disclosureProps.onOpen}
           />
         )}

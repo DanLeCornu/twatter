@@ -1,7 +1,4 @@
 import * as React from "react"
-import { BiArrowBack } from "react-icons/bi"
-import { BiImage } from "react-icons/bi"
-import { CgClose } from "react-icons/cg"
 import {
   Avatar,
   Box,
@@ -16,6 +13,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowLeft, Image as ImageIcon, X } from "lucide-react"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
 
@@ -127,7 +125,7 @@ function NewReply() {
       <Flex justify="space-between" maxW="100vw">
         <IconButton
           aria-label="back"
-          icon={<Box as={BiArrowBack} boxSize="20px" />}
+          icon={<Box as={ArrowLeft} boxSize="20px" />}
           variant="ghost"
           m={2}
           onClick={() => router.back()}
@@ -194,7 +192,7 @@ function NewReply() {
               <Box position="relative">
                 <IconButton
                   aria-label="remove image"
-                  icon={<Box as={CgClose} boxSize="18px" />}
+                  icon={<Box as={X} boxSize="18px" />}
                   position="absolute"
                   top={1}
                   right={1}
@@ -218,7 +216,7 @@ function NewReply() {
           <AttachImage image={image} setImage={setImage}>
             <IconButton
               aria-label="media"
-              icon={<Box as={BiImage} boxSize="22px" />}
+              icon={<Box as={ImageIcon} boxSize="22px" />}
               variant="ghost"
               color="primary.500"
             />
